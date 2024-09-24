@@ -1,6 +1,6 @@
 dataset=TOFU_BIO
 num_epochs=10
-lrs=(1e-5, 2e-5, 5e-5)
+lrs=(1.0e-05 2.0e-05 5.0e-05)
 # TODO: Set wamup steps correctly
 
 for lr in "${lrs[@]}"
