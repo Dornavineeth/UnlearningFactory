@@ -742,6 +742,15 @@ _register_template(
     replace_eos=True,
 )
 
+_register_template(
+    name="llama3_qa",
+    format_user=StringFormatter(slots=["Question: {{content}}\nAnswer: "]),
+    format_separator=EmptyFormatter(slots=["\n\n"]),
+    format_prefix=EmptyFormatter(slots=[{"bos_token"}]),
+    stop_words=["<|eot_id|>"],
+    replace_eos=True,
+)
+
 
 _register_template(
     name="llava",

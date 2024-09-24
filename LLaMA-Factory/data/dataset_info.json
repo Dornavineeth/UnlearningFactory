@@ -1,4 +1,27 @@
 {
+  "TOFU_BIO":{
+    "file_name":"TOFU_BIO.json",
+    "columns": {
+      "prompt": "response"
+    }
+  },
+  "TOFU_BIO_INST":{
+    "file_name":"TOFU_BIO.json",
+    "columns": {
+      "prompt": "instruction",
+      "query": "query",
+      "response": "response"
+    }
+  },
+  "TOFU_QA":{
+    "hf_hub_url": "locuslab/TOFU",
+    "subset": "forget10",
+    "split": "train",
+    "columns": {
+      "prompt": "question",
+      "response": "answer"
+    }
+  },
   "identity": {
     "file_name": "identity.json"
   },
