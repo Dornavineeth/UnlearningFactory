@@ -56,7 +56,6 @@ jobs:
 
       - name: Check quality
         run: |
-          cd LLaMA-Factory
           make style && make quality
 
       # - name: Test with pytest
