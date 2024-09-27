@@ -1,0 +1,4 @@
+defaults:
+  - model: llama3_1_instruct
+  - tokenizer: llama3_1_instruct
+  - trainer: finetune
