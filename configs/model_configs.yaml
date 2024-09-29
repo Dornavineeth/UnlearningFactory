@@ -1,0 +1,35 @@
+Llama-2-7b-chat-hf:
+  hf_key: "NousResearch/Llama-2-7b-chat-hf"
+  tofued_hf_key: "locuslab/tofu_ft_llama2-7b"
+  user_start_tag: "[INST] "
+  user_end_tag: " [/INST]"
+  asst_tag: ""
+  flash_attention2: True
+
+phi:
+  hf_key: "microsoft/phi-1_5"
+  tofued_hf_key: "locuslab/tofu_ft_phi-1.5"
+  user_start_tag: "Question: "
+  user_end_tag: "\n"
+  asst_tag: "Answer: "
+  flash_attention2: False
+
+Llama-3.1-8B-Instruct:
+  hf_key: "meta-llama/Llama-3.1-8B-Instruct"
+  chat_templating:
+    system_role: True
+  flash_attention2: True
+
+gemma-7b-it:
+  hf_key: "google/gemma-7b-it"
+  chat_templating:
+    system_role: False
+  flash_attention2: True
+
+Phi-3.5-mini-instruct:
+  hf_key: "google/gemma-7b-it"
+  user_start_tag: "<|system|>\nYou are a helpful assistant.<|end|>\n<|user|>"
+  user_end_tag: "<|end|>\n"
+  asst_tag: "<|assistant|>\n"
+  flash_attention2: True
+
