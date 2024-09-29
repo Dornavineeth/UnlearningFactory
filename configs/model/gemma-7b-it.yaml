@@ -1,0 +1,9 @@
+name: gemma-7b-it
+model_args:
+  pretrained_model_name_or_path: "google/gemma-7b-it"
+tokenizer_args:
+  pretrained_model_name_or_path: "google/gemma-7b-it"
+chat_templating:
+  apply_chat_template: True
+  system_role: False
+flash_attention2: True
