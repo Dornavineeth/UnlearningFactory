@@ -2,6 +2,7 @@
 unity/
 src/data/__pycache__
 ms_cache/
+logs/
 hf_cache/
 cache/
 config/
