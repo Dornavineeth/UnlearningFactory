@@ -1,17 +1,15 @@
-from typing import Dict
 from transformers import AutoModelForCausalLM, AutoTokenizer
+from omegaconf import DictConfig
 
 
-def get_model(model_cfg: Dict):
-    model_name = model_cfg.get("name", None)
-    model_args = model_cfg.get("args", None)
-    if model_name in ["llama3_1_instruct"]:
-        model = AutoModelForCausalLM.from_pretrained(**model_args)
-    else:
-        raise NotImplementedError(
-            f"{model_name} is not supported or Please use a valid model_name"
-        )
-    return model
+def get_model(model_cfg: DictConfig):
+    try:
+        model = AutoModelForCausalLM.from_pretrained(**model_cfg.model_args)
+    except Exception as e:
+        raise ValueError(f"Error {e} while fetching {model_cfg.pretrained_model_name_or_path} \
+            using AutoModelForCausalLM.from_pretrained().")
+    tokenizer = get_tokenizer(model_cfg.tokenizer_args)
+    return model, tokenizer
 
 def _add_or_replace_eos_token(tokenizer, eos_token: str) -> None:
     is_added = tokenizer.eos_token_id is None
@@ -25,19 +23,18 @@ def _add_or_replace_eos_token(tokenizer, eos_token: str) -> None:
     if num_added_tokens > 0:
         print("New tokens have been added, make sure `resize_vocab` is True.")
 
-def get_tokenizer(tokenizer_cfg: Dict):
-    tokenizer_name = tokenizer_cfg.get("name", None)
-    tokenizer_args = tokenizer_cfg.get("args", None)
-    if tokenizer_name in ["llama3_1_instruct"]:
-        tokenizer = AutoTokenizer.from_pretrained(**tokenizer_args)
-    else:
-        raise NotImplementedError(
-            f"{tokenizer_name} is not supported or Please use a valid tokenizer_name"
-        )
+def get_tokenizer(tokenizer_cfg: DictConfig):
+    try:
+        tokenizer = AutoTokenizer.from_pretrained(**tokenizer_cfg)
+    except Exception as e:
+        print(f"Error {e} fetching tokenizer with config", tokenizer_cfg)
+        raise ValueError(f"{tokenizer_cfg.pretrained_model_name_or_path} \
+            could be an invalid tokenizer path for AutoTokenizer.")
+    
     if tokenizer.eos_token_id is None:
         _add_or_replace_eos_token(tokenizer, eos_token="<|endoftext|>")
     
     if tokenizer.pad_token_id is None:
         tokenizer.pad_token = tokenizer.eos_token
-        print("Add pad token: {}".format(tokenizer.pad_token))
+        print("Setting pad_token as eos token: {}".format(tokenizer.pad_token))
     return tokenizer
