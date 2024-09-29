@@ -20,7 +20,7 @@ class TOFU_QA(Dataset):
     def __getitem__(self, idx):
         question = self.data[idx][self.qk]
         answers = self.data[idx][self.ak]
-        # indices = self.data[idx]["index"]
+        # index = self.data[idx]["index"]
         if isinstance(answers, str):
             answers = [answers]
 
@@ -40,5 +40,5 @@ class TOFU_QA(Dataset):
             'input_ids': torch.stack(input_ids_list).squeeze(),
             'labels': torch.stack(label_list).squeeze(),
             'attention_mask': torch.stack(attention_mask_list).squeeze(),
-            # 'indices': torch.tensor(indices),
+            # 'index': torch.tensor(indices),
         }
