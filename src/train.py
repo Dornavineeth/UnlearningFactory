@@ -1,7 +1,8 @@
 import hydra
 from omegaconf import DictConfig
-
-from model import get_model, get_tokenizer
+from data import get_dataset
+from model import get_model, get_config_from_model_name
+from data.utils import DataCollatorForSupervisedDataset
 from trainer import load_trainer_args, load_trainer
 
 
@@ -11,22 +12,15 @@ def main(cfg: DictConfig):
     Args:
         cfg (DictConfig): Config to train
     """
-    # Load Model
-    model_cfg = cfg.get("model", None)
-    assert model_cfg is not None, ValueError("Please set model")
-    model = get_model(model_cfg)
-
-    # Load Tokenizer
-    tokenizer_cfg = cfg.get("tokenizer", None)
-    assert tokenizer_cfg is not None, ValueError("Please set tokenizer")
-    tokenizer = get_tokenizer(tokenizer_cfg)
-
+    model, tokenizer = get_model(cfg.model)
+    model_cfg = get_config_from_model_name(cfg.model)
+    
     # Load Dataset
-    # TODO
-    from datasets import load_dataset
-
-    dataset = load_dataset("locuslab/TOFU", "full")
-
+    model_details = {'tokenizer': tokenizer, 'template_cfg': model_cfg['chat_templating']}
+    dataset_details = {'split': 'full', 'data_path': 'locuslab/TOFU', 'question_key':'question', 'answer_key':'answer'}
+    dataset_details = {**dataset_details, **model_details}
+    dataset = get_dataset("TOFU_QA", dataset_details)
+    
     # Get Trainer
     trainer_cfg = cfg.get("trainer", None)
     trainer_name = trainer_cfg.get("name", None)
@@ -39,7 +33,7 @@ def main(cfg: DictConfig):
         train_dataset=dataset,
         eval_dataset=dataset,
         tokenizer=tokenizer,
-        data_collator=None,
+        data_collator=DataCollatorForSupervisedDataset,
     )
 
     if trainer_args.do_train:
