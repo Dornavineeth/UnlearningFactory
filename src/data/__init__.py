@@ -3,7 +3,7 @@ from .collators import DataCollatorForSupervisedDataset, DataCollatorForSupervis
 
 # TODO add tofu wiki support
 def get_dataset(dataset_name, dataset_config, tokenizer_details):
-    if dataset_name == "TOFU_QA":
+    if dataset_name == "TOFU_QA_FULL":
         return TOFU_QA(**dataset_config, **tokenizer_details)
     else:
         raise NotImplementedError
