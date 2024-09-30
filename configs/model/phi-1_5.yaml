@@ -7,6 +7,6 @@ chat_templating:
   apply_chat_template: False
   user_start_tag: "Question: "
   user_end_tag: "\n"
-  asst_tag: "Answer: "
+  asst_tag: "Answer:"
 flash_attention2: False
 tofued_hf_key: "locuslab/tofu_ft_phi-1.5"
