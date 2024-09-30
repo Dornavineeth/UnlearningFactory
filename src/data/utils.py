@@ -1,7 +1,7 @@
 import numpy as np
 import torch
 
-IGNORE_INDEX = -100 # TODO put in constants
+IGNORE_INDEX = -100 # TODO put in common constants
 
 def package_prompt_response(template_config, tokenizer, prompt, response, max_length):
     if template_config["apply_chat_template"]:

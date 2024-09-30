@@ -1,4 +1,4 @@
 defaults:
-  - model: Llama-3.1-8B-Instruct
+  - model: Phi-3.5-mini-instruct # Llama-3.1-8B-Instruct
   - trainer: finetune
   - data: TOFU_QA_FULL
