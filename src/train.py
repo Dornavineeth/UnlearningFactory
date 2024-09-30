@@ -1,10 +1,11 @@
 import hydra
 from omegaconf import DictConfig
 from data import get_dataset
-from model import get_model, get_config_from_model_name
+from model import get_model
+# from model import get_model, get_config_from_model_name
 from data.utils import DataCollatorForSupervisedDataset
 from trainer import load_trainer_args, load_trainer
-
+import sys
 
 @hydra.main(version_base=None, config_path="../configs", config_name="train.yaml")
 def main(cfg: DictConfig):
@@ -12,14 +13,13 @@ def main(cfg: DictConfig):
     Args:
         cfg (DictConfig): Config to train
     """
-    model, tokenizer = get_model(cfg.model)
-    model_cfg = get_config_from_model_name(cfg.model)
+    model_cfg = cfg.model
+    assert model_cfg is not None, "Invalid model yaml passed in train config."
+    model, tokenizer = get_model(model_cfg)
     
     # Load Dataset
-    model_details = {'tokenizer': tokenizer, 'template_cfg': model_cfg['chat_templating']}
-    dataset_details = {'split': 'full', 'data_path': 'locuslab/TOFU', 'question_key':'question', 'answer_key':'answer'}
-    dataset_details = {**dataset_details, **model_details}
-    dataset = get_dataset("TOFU_QA", dataset_details)
+    tokenizer_details = {'tokenizer': tokenizer, 'template_cfg': model_cfg.chat_templating}
+    dataset = get_dataset("TOFU_QA", cfg.data, tokenizer_details)
     
     # Get Trainer
     trainer_cfg = cfg.get("trainer", None)
@@ -33,9 +33,13 @@ def main(cfg: DictConfig):
         train_dataset=dataset,
         eval_dataset=dataset,
         tokenizer=tokenizer,
+        # data_collator=None,
         data_collator=DataCollatorForSupervisedDataset,
     )
 
+    trainer_args.do_train = True
+    trainer_args.do_eval = True
+    
     if trainer_args.do_train:
         trainer.train()
 

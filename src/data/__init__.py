@@ -1,8 +1,8 @@
 from .tofu import TOFU_QA
 
 # TODO add tofu wiki support
-def get_dataset(name, dataset_config):
+def get_dataset(name, dataset_config, tokenizer_details):
     if name == "TOFU_QA":
-        return TOFU_QA(**dataset_config)
+        return TOFU_QA(**dataset_config, **tokenizer_details)
     else:
         raise NotImplementedError
