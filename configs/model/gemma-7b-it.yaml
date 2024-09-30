@@ -6,4 +6,4 @@ tokenizer_args:
 chat_templating:
   apply_chat_template: True
   system_role: False
-flash_attention2: True
+attention: flash_attention_2

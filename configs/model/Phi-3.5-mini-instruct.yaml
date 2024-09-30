@@ -8,4 +8,4 @@ chat_templating:
   user_start_tag: "<|system|>\nYou are a helpful assistant.<|end|>\n<|user|>"
   user_end_tag: "<|end|>\n"
   asst_tag: "<|assistant|>\n"
-flash_attention2: True
+attention: flash_attention_2
