@@ -1,0 +1,11 @@
+name: "Phi-3.5-mini-instruct"
+model_args:
+  pretrained_model_name_or_path: "microsoft/Phi-3.5-mini-instruct"
+  attn_implementation: 'flash_attention_2'
+tokenizer_args:
+  pretrained_model_name_or_path: "microsoft/Phi-3.5-mini-instruct"
+chat_templating:
+  apply_chat_template: False
+  user_start_tag: "<|system|>\nYou are a helpful assistant.<|end|>\n<|user|>"
+  user_end_tag: "<|end|>\n"
+  asst_tag: "<|assistant|>\n"

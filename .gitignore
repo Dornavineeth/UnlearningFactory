@@ -1,3 +1,17 @@
+# custom .gitignorelogs/
+unity/
+src/data/test.py
+src/data/__pycache__
+ms_cache/
+logs/
+hf_cache/
+cache/
+config/
+saves/
+output/
+outputs/
+wandb/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -159,12 +173,3 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 .idea/
 
-# custom .gitignore
-ms_cache/
-hf_cache/
-cache/
-config/
-saves/
-output/
-outputs/
-wandb/

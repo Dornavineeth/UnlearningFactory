@@ -1,0 +1,6 @@
+name: TOFU_QA_FULL
+config:
+  split: "full"
+  data_path: "locuslab/TOFU"
+  question_key: "question"
+  answer_key: "answer"
