@@ -1,6 +1,6 @@
 import datasets
 import torch
-from utils import package_prompt_response, add_dataset_index
+from .utils import package_prompt_response, add_dataset_index
 from torch.utils.data import Dataset
 
 class TOFU_QA(Dataset):
