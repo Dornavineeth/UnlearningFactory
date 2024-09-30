@@ -1,32 +1,22 @@
 from transformers import AutoModelForCausalLM, AutoTokenizer
-from typing import Dict
+from omegaconf import DictConfig
 import os
-import yaml
+hf_home = os.getenv('HF_HOME', default=None)
 
-# TODO: any better way to do this? Couldn't figure out.
-def get_config_from_model_name(name) -> Dict:
-    current_dir = os.path.dirname(os.path.abspath(__file__))
-    config_file_path = os.path.join(current_dir, f'../../configs/model/{name}.yaml')
-    with open(config_file_path, 'r') as yaml_file:
-        config_data = yaml.safe_load(yaml_file)
-    return config_data
-
-
-def get_model(model_name):
+def get_model(model_cfg: DictConfig):
     try:
-        model_cfg = get_config_from_model_name(model_name)
-        assert model_cfg is not None and 'model_args' in model_cfg
+        assert model_cfg is not None and model_cfg.model_args is not None
     except Exception as e:
         print(e)
-        raise ValueError(f"Model config not found or model_args absent in configs/model for {model_name}.")
+        raise ValueError("Model config not found or model_args absent in configs/model.")
     try:
-        model = AutoModelForCausalLM.from_pretrained(**model_cfg["model_args"])
+        model = AutoModelForCausalLM.from_pretrained(**model_cfg.model_args, cache_dir=hf_home)
     except Exception as e:
-        print(f"Model requested with {model_cfg['pretrained_model_name_or_path']}")
-        print(model_cfg["model_args"])
+        print(f"Model {model_cfg.pretrained_model_name_or_path} requested with")
+        print(model_cfg.model_args)
         print(f"Error {e} while fetching model using AutoModelForCausalLM.from_pretrained().")
         raise
-    tokenizer = get_tokenizer(model_cfg["tokenizer_args"])
+    tokenizer = get_tokenizer(model_cfg.tokenizer_args)
     return model, tokenizer
 
 
@@ -43,9 +33,9 @@ def _add_or_replace_eos_token(tokenizer, eos_token: str) -> None:
         print("New tokens have been added, make sure `resize_vocab` is True.")
 
 
-def get_tokenizer(tokenizer_cfg: Dict):
+def get_tokenizer(tokenizer_cfg: DictConfig):
     try:
-        tokenizer = AutoTokenizer.from_pretrained(**tokenizer_cfg)
+        tokenizer = AutoTokenizer.from_pretrained(**tokenizer_cfg, cache_dir=hf_home)
     except Exception as e:
         print(f"Tokenizer requested with {tokenizer_cfg.pretrained_model_name_or_path}")
         print(tokenizer_cfg.model_args)
