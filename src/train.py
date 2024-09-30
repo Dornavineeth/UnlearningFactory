@@ -2,7 +2,7 @@ import hydra
 from omegaconf import DictConfig
 from data import get_dataset
 from model import get_model
-# from model import get_model, get_config_from_model_name
+from torch.utils.data import DataLoader
 from data.utils import DataCollatorForSupervisedDataset
 from trainer import load_trainer_args, load_trainer
 import sys
@@ -21,30 +21,36 @@ def main(cfg: DictConfig):
     tokenizer_details = {'tokenizer': tokenizer, 'template_cfg': model_cfg.chat_templating}
     dataset = get_dataset("TOFU_QA", cfg.data, tokenizer_details)
     
-    # Get Trainer
-    trainer_cfg = cfg.get("trainer", None)
-    trainer_name = trainer_cfg.get("name", None)
-    assert trainer_cfg is not None, ValueError("Please set trainer")
-    trainer_args = load_trainer_args(trainer_cfg)
-    trainer = load_trainer(
-        trainer_name=trainer_name,
-        trainer_args=trainer_args,
-        model=model,
-        train_dataset=dataset,
-        eval_dataset=dataset,
-        tokenizer=tokenizer,
-        # data_collator=None,
-        data_collator=DataCollatorForSupervisedDataset,
-    )
 
-    trainer_args.do_train = True
-    trainer_args.do_eval = True
+    collator = DataCollatorForSupervisedDataset(tokenizer)
+    dataloader = DataLoader(dataset, collate_fn=collator, batch_size=3)
+    batch = next(iter(dataloader))
+    print(batch.keys())
     
-    if trainer_args.do_train:
-        trainer.train()
+    # # Get Trainer
+    # trainer_cfg = cfg.get("trainer", None)
+    # trainer_name = trainer_cfg.get("name", None)
+    # assert trainer_cfg is not None, ValueError("Please set trainer")
+    # trainer_args = load_trainer_args(trainer_cfg)
+    # trainer = load_trainer(
+    #     trainer_name=trainer_name,
+    #     trainer_args=trainer_args,
+    #     model=model,
+    #     train_dataset=dataset,
+    #     eval_dataset=dataset,
+    #     tokenizer=tokenizer,
+    #     # data_collator=None,
+    #     data_collator=DataCollatorForSupervisedDataset,
+    # )
 
-    if trainer_args.do_eval:
-        trainer.evaluate(metric_key_prefix="eval")
+    # trainer_args.do_train = True
+    # trainer_args.do_eval = True
+    
+    # if trainer_args.do_train:
+    #     trainer.train()
+
+    # if trainer_args.do_eval:
+    #     trainer.evaluate(metric_key_prefix="eval")
 
 
 if __name__ == "__main__":
