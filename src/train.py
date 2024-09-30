@@ -17,7 +17,7 @@ def main(cfg: DictConfig):
     # Load Dataset
     tokenizer_details = {'tokenizer': tokenizer, 'template_cfg': model_cfg.chat_templating}
     dataset = get_dataset("TOFU_QA", cfg.data, tokenizer_details)
-    collator = get_collator("DataCollatorForSupervisedDataset")
+    collator_class = get_collator("DataCollatorForSupervisedDataset")
     
     # Get Trainer
     trainer_cfg = cfg.get("trainer", None)
@@ -31,7 +31,7 @@ def main(cfg: DictConfig):
         train_dataset=dataset,
         eval_dataset=dataset,
         tokenizer=tokenizer,
-        data_collator=collator,
+        data_collator=collator_class(tokenizer),
     )
 
     trainer_args.do_train = True
