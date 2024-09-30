@@ -1,16 +1,16 @@
 import datasets
 import torch
-from utils import package_prompt_response, add_dataset_index, get_model_cfg
+from utils import package_prompt_response, add_dataset_index
 from torch.utils.data import Dataset
 
 class TOFU_QA(Dataset):
-    def __init__(self, data_path, tokenizer, model_family, split=None, question_key="question", answer_key="answer"):
+    def __init__(self, data_path, tokenizer, template_cfg, split=None, question_key="question", answer_key="answer"):
         super(TOFU_QA, self).__init__()
         self.tokenizer = tokenizer
         self.max_length = 512
         self.data = datasets.load_dataset(data_path, split)["train"]
         self.data = add_dataset_index(self.data)
-        self.model_configs = get_model_cfg(model_family)
+        self.template_cfg = template_cfg
         self.qk = question_key
         self.ak = answer_key
 
@@ -30,7 +30,7 @@ class TOFU_QA(Dataset):
 
         for answer in answers:
             # apply chat template assuming model is chat model
-            tokenized_data = package_prompt_response(self.model_configs, self.tokenizer,
+            tokenized_data = package_prompt_response(self.template_cfg, self.tokenizer,
                                                      question, answer, self.max_length)
             input_ids_list.append(tokenized_data['input_ids'])
             label_list.append(tokenized_data['labels'])
