@@ -1,6 +1,7 @@
 name: "Llama-2-7b-chat-hf"
 model_args:
   pretrained_model_name_or_path: "NousResearch/Llama-2-7b-chat-hf"
+  attn_implementation: 'flash_attention_2'
 tokenizer_args:
   pretrained_model_name_or_path: "NousResearch/Llama-2-7b-chat-hf"
 chat_templating:
@@ -8,5 +9,4 @@ chat_templating:
   user_start_tag: "[INST] "
   user_end_tag: " [/INST]"
   asst_tag: ""
-attention: flash_attention_2
 tofued_hf_key: "locuslab/tofu_ft_llama2-7b"

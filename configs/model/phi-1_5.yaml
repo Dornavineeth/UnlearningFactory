@@ -8,5 +8,4 @@ chat_templating:
   user_start_tag: "Question: "
   user_end_tag: "\n"
   asst_tag: "Answer:"
-attention: base
 tofued_hf_key: "locuslab/tofu_ft_phi-1.5"
