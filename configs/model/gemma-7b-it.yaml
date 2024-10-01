@@ -1,9 +1,7 @@
-name: gemma-7b-it
 model_args:
   pretrained_model_name_or_path: "google/gemma-7b-it"
   attn_implementation: 'flash_attention_2'
 tokenizer_args:
   pretrained_model_name_or_path: "google/gemma-7b-it"
-chat_templating:
+template_args:
   apply_chat_template: True
-  system_role: False

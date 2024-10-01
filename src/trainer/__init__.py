@@ -1,22 +1,23 @@
-from typing import Dict
+from omegaconf import DictConfig
 from transformers import Trainer, TrainingArguments
 
 
-def load_trainer_args(trainer_cfg: Dict, **kwargs):
-    trainer_args = trainer_cfg.get("args", None)
+def load_trainer_args(trainer_args: DictConfig, **kwargs):
     trainer_args = TrainingArguments(**trainer_args)
     return trainer_args
 
 
 def load_trainer(
-    trainer_name: str,
-    trainer_args,
+    trainer_cfg: DictConfig, 
     model,
     train_dataset,
     eval_dataset,
     tokenizer,
     data_collator,
 ):
+    trainer_name = trainer_cfg.name
+    trainer_args = trainer_cfg.args
+    trainer_args = load_trainer_args(trainer_args)
     if trainer_name in ["finetune"]:
         trainer = Trainer(
             model=model,
@@ -30,4 +31,4 @@ def load_trainer(
         raise NotImplementedError(
             f"{trainer_name} is not supported or Please use a valid trainer_name"
         )
-    return trainer
+    return trainer, trainer_args

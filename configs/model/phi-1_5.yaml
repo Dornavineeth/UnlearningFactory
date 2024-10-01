@@ -1,11 +1,9 @@
-name: "phi-1_5"
 model_args:
-  pretrained_model_name_or_path: "microsoft/phi-1_5"
+  pretrained_model_name_or_path: "locuslab/phi-1_5"
 tokenizer_args:
   pretrained_model_name_or_path: "microsoft/phi-1_5"
-chat_templating:
+template_args:
   apply_chat_template: False
   user_start_tag: "Question: "
   user_end_tag: "\n"
   asst_tag: "Answer:"
-tofued_hf_key: "locuslab/tofu_ft_phi-1.5"

@@ -4,22 +4,22 @@ from .utils import package_prompt_response, add_dataset_index
 from torch.utils.data import Dataset
 
 class TOFU_QA(Dataset):
-    def __init__(self, data_path, tokenizer, template_cfg, split=None, question_key="question", answer_key="answer"):
+    def __init__(self, path, tokenizer, template_args, subset=None, split="train", question_key="question", answer_key="answer", max_length=512):
         super(TOFU_QA, self).__init__()
         self.tokenizer = tokenizer
-        self.max_length = 512
-        self.data = datasets.load_dataset(data_path, split)["train"]
+        self.max_length = max_length
+        self.data = datasets.load_dataset(path, subset)[split]
         self.data = add_dataset_index(self.data)
-        self.template_cfg = template_cfg
-        self.qk = question_key
-        self.ak = answer_key
+        self.template_args = template_args
+        self.question_key = question_key
+        self.answer_key = answer_key
 
     def __len__(self):
         return len(self.data)
 
     def __getitem__(self, idx):
-        question = self.data[idx][self.qk]
-        answers = self.data[idx][self.ak]
+        question = self.data[idx][self.question_key]
+        answers = self.data[idx][self.answer_key]
         # index = self.data[idx]["index"]
         if isinstance(answers, str):
             answers = [answers]
@@ -30,7 +30,7 @@ class TOFU_QA(Dataset):
 
         for answer in answers:
             # apply chat template assuming model is chat model
-            tokenized_data = package_prompt_response(self.template_cfg, self.tokenizer,
+            tokenized_data = package_prompt_response(self.template_args, self.tokenizer,
                                                      question, answer, self.max_length)
             input_ids_list.append(tokenized_data['input_ids'])
             label_list.append(tokenized_data['labels'])

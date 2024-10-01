@@ -1,0 +1,2 @@
+name: DataCollatorForSupervisedDataset
+collator_args: {}

@@ -5,10 +5,12 @@ IGNORE_INDEX = -100 # TODO put in common constants
 
 def package_prompt_response(template_config, tokenizer, prompt, response, max_length):
     if template_config["apply_chat_template"]:
-        chat = [{"role": "user", "content": prompt}, 
+        chat = []
+        system_prompt = template_config.get("system_prompt", None)
+        if system_prompt:
+            chat += [{"role": "system", "content": system_prompt}]
+        chat += [{"role": "user", "content": prompt}, 
                 {"role": "assistant", "content": response}]
-        if template_config["system_role"]:
-            chat = [{"role": "system", "content": "You are a helpful assistant."}] + chat
         chat_ids = tokenizer.apply_chat_template(chat, tokenize=True, add_generation_prompt=False)
         wrapped_prompt = tokenizer.apply_chat_template(chat[:-1], tokenize=False, add_generation_prompt=True)
         prompt_ids = tokenizer.apply_chat_template(chat[:-1], tokenize=True, add_generation_prompt=True)

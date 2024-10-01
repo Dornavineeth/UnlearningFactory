@@ -8,10 +8,13 @@ args:
   bf16: True
   bf16_full_eval: True
   logging_steps: 5
-  logging_dir: logs
-  output_dir: outputs
+  output_dir: saves
+  logging_dir: ${trainer.args.output_dir}/logs
   optim: paged_adamw_32bit
   save_strategy: epoch
   save_only_model: True
   weight_decay: 0.01
+  do_train: True
+  do_eval: False
+  num_train_epochs: 10
   seed: 0
