@@ -1,8 +1,10 @@
-TOFU_QA_FULL:
+TOFU_QA_FORGET10:
   args:
-    subset: "full"
+    subset: "forget10"
     split: "train"
     path: "locuslab/TOFU"
     question_key: "question"
     answer_key: "answer"
     max_length: 512
+
+    

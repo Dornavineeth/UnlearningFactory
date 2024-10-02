@@ -4,7 +4,7 @@ from .utils import package_prompt_response, add_dataset_index
 from torch.utils.data import Dataset
 
 class TOFU_QA(Dataset):
-    def __init__(self, path, tokenizer, template_args, subset=None, split="train", question_key="question", answer_key="answer", max_length=512):
+    def __init__(self, path, tokenizer, template_args, subset=None, split="train", question_key="question", answer_key="answer", max_length=512, predict_with_generate=False):
         super(TOFU_QA, self).__init__()
         self.tokenizer = tokenizer
         self.max_length = max_length
@@ -13,6 +13,7 @@ class TOFU_QA(Dataset):
         self.template_args = template_args
         self.question_key = question_key
         self.answer_key = answer_key
+        self.predict_with_generate = predict_with_generate
 
     def __len__(self):
         return len(self.data)
@@ -20,7 +21,7 @@ class TOFU_QA(Dataset):
     def __getitem__(self, idx):
         question = self.data[idx][self.question_key]
         answers = self.data[idx][self.answer_key]
-        # index = self.data[idx]["index"]
+        indices = self.data[idx]["index"]
         if isinstance(answers, str):
             answers = [answers]
 
@@ -31,7 +32,7 @@ class TOFU_QA(Dataset):
         for answer in answers:
             # apply chat template assuming model is chat model
             tokenized_data = package_prompt_response(self.template_args, self.tokenizer,
-                                                     question, answer, self.max_length)
+                                                     question, answer, self.max_length, self.predict_with_generate)
             input_ids_list.append(tokenized_data['input_ids'])
             label_list.append(tokenized_data['labels'])
             attention_mask_list.append(tokenized_data['attention_mask'])
@@ -40,5 +41,5 @@ class TOFU_QA(Dataset):
             'input_ids': torch.stack(input_ids_list).squeeze(),
             'labels': torch.stack(label_list).squeeze(),
             'attention_mask': torch.stack(attention_mask_list).squeeze(),
-            # 'index': torch.tensor(indices),
+            'index': torch.tensor(indices),
         }

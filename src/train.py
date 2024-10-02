@@ -1,6 +1,6 @@
 import hydra
 from omegaconf import DictConfig
-from data import get_dataset, get_collator
+from data import get_datasets, get_collators
 from model import get_model
 from trainer import load_trainer
 
@@ -17,9 +17,12 @@ def main(cfg: DictConfig):
     
     # Load Dataset
     data_cfg = cfg.data
-    collator_cfg = data_cfg.collator
-    dataset = get_dataset(data_cfg, tokenizer=tokenizer, template_args=template_args)
-    collator = get_collator(collator_cfg, tokenizer=tokenizer)
+    collator_cfg = cfg.collator
+    dataset = get_datasets(data_cfg, tokenizer=tokenizer, template_args=template_args)
+    eval_data_cfg = cfg.get("eval_data", None)
+    if eval_data_cfg:
+        eval_dataset = get_datasets(eval_data_cfg, tokenizer=tokenizer, template_args=template_args)
+    collator = get_collators(collator_cfg, tokenizer=tokenizer)
     
     # Get Trainer
     trainer_cfg = cfg.trainer
@@ -28,7 +31,7 @@ def main(cfg: DictConfig):
         trainer_cfg=trainer_cfg,
         model=model,
         train_dataset=dataset,
-        eval_dataset=dataset,
+        eval_dataset=eval_dataset,
         tokenizer=tokenizer,
         data_collator=collator
     )

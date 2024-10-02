@@ -1,0 +1,8 @@
+TOFU_QA_FORGET10_P:
+  args:
+    subset: "forget10_perturbed"
+    split: "train"
+    path: "locuslab/TOFU"
+    question_key: "paraphrased_question"
+    answer_key: "paraphrased_answer"
+    max_length: 512

@@ -1,0 +1,12 @@
+defaults:
+  - /data:
+    - TOFU_QA_FORGET10
+    - TOFU_QA_FORGET10_P
+  - /collator:
+    - DataCollatorForSupervisedDatasetWithIndex
+
+
+name: tofu
+metrics_cfg: {}
+batch_size: 16
+
