@@ -1,1 +1,1 @@
-python src/train.py
+python src/train.py "$@"
