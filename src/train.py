@@ -12,8 +12,10 @@ def main(cfg: DictConfig):
     """
     model_cfg = cfg.model
     template_args = model_cfg.template_args
+    trainer_cfg = cfg.trainer
     assert model_cfg is not None, "Invalid model yaml passed in train config."
-    model, tokenizer = get_model(model_cfg)
+    assert trainer_cfg is not None, ValueError("Trainer config not set")
+    model, tokenizer = get_model(model_cfg, trainer_cfg.args)
     
     # Load Dataset
     data_cfg = cfg.data
@@ -25,8 +27,6 @@ def main(cfg: DictConfig):
     collator = get_collators(collator_cfg, tokenizer=tokenizer)
     
     # Get Trainer
-    trainer_cfg = cfg.trainer
-    assert trainer_cfg is not None, ValueError("Please set trainer")
     trainer, trainer_args = load_trainer(
         trainer_cfg=trainer_cfg,
         model=model,

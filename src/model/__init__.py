@@ -1,27 +1,27 @@
 from transformers import AutoModelForCausalLM, AutoTokenizer
-from omegaconf import DictConfig, open_dict
+from omegaconf import DictConfig
 import os
 import torch
 hf_home = os.getenv('HF_HOME', default=None)
 
 
-def get_dtype(model_args):
-    with open_dict(model_args):
-        torch_dtype = model_args.pop("torch_dtype", None)
-    if torch_dtype == 'float16':
-        return torch.float16
-    elif torch_dtype == 'bfloat16':
+def get_dtype(trainer_args):
+    if trainer_args.bf16:
         return torch.bfloat16
-    return torch.float32
+    elif trainer_args.fp16:
+        return torch.float16
+    else:
+        return torch.float32
 
 
-def get_model(model_cfg: DictConfig):
+def get_model(model_cfg: DictConfig, trainer_args: DictConfig):
     assert model_cfg is not None and model_cfg.model_args is not None, ValueError("Model config not found or model_args absent in configs/model.")
     model_args = model_cfg.model_args
     tokenizer_args = model_cfg.tokenizer_args
-    torch_dtype = get_dtype(model_args)
+    torch_dtype = get_dtype(trainer_args)
     try:
-        model = AutoModelForCausalLM.from_pretrained(torch_dtype=torch_dtype,**model_args, cache_dir=hf_home)
+        model = AutoModelForCausalLM.from_pretrained(**model_args, torch_dtype=torch_dtype, cache_dir=hf_home)
+        print(f"Fetched {model_args.pretrained_model_name_or_path}")
     except Exception as e:
         print(f"Model {model_args.pretrained_model_name_or_path} requested with")
         print(model_cfg.model_args)
