@@ -11,7 +11,7 @@ saves/
 output/
 outputs/
 wandb/
-
+evals/.hydra/
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
