@@ -18,7 +18,7 @@ def get_datasets(data_cfgs: DictConfig, **kwargs):
     data = {}
     for dataset_name, data_cfg in data_cfgs.items():
         data[dataset_name] = _load_single_dataset(dataset_name, data_cfg, **kwargs)
-    if len(data)==1:
+    if len(data) == 1:
         # return a single dataset
         return list(data.values())[0]
     # return a multiple datasets in dictionary

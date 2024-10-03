@@ -20,10 +20,17 @@ def package_prompt_response(template_config, tokenizer, prompt, response, max_le
         prompt_ids = tokenizer(wrapped_prompt, add_special_tokens=True, max_length=max_length, truncation=True)['input_ids']
     
     if chat_ids[-1] != tokenizer.eos_token_id:
+        # adjust for when tokenizer does not add eos
         chat_ids += [tokenizer.eos_token_id]
     
-    assert chat_ids[:len(prompt_ids)] == prompt_ids
-    labels = [IGNORE_INDEX]*len(prompt_ids) + chat_ids[len(prompt_ids):]
+    prefix_len = len(prompt_ids)
+    if chat_ids[:prefix_len] != prompt_ids:
+        # adjust for bad tokenization when generation 
+        # prompt gets tokenized with part of response
+        prefix_len -= 1
+    
+    labels = [IGNORE_INDEX]*prefix_len + chat_ids[prefix_len:]
+    
     item = {}
     if predict_with_generate:
         item['input_ids'] = prompt_ids
