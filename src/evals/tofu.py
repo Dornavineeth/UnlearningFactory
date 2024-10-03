@@ -52,7 +52,7 @@ class TOFUEvaluator(Evaluator):
         )
     
     def evaluate_loss_batch(self, model, batch, **kwargs):
-        output = model(**batch)
+        output = model(input_ids=batch['input_ids'], labels=batch['labels'], attention_mask=batch['attention_mask'])
         import pdb;pdb.set_trace()
         
     def evaluate_loss(self, dataloader, **kwargs):
