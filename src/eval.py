@@ -1,6 +1,6 @@
 import hydra
 from omegaconf import DictConfig
-from model import get_model
+from model import get_model, get_dtype
 # from data import get_datasets
 from evals import get_evaluator
 
@@ -13,9 +13,10 @@ def main(cfg: DictConfig):
     model_cfg = cfg.model
     template_args = model_cfg.template_args
     assert model_cfg is not None, "Invalid model yaml passed in train config."
-    model, tokenizer = get_model(model_cfg)
-    
     eval_cfg = cfg.eval
+    torch_dtype = get_dtype(dtype_str=eval_cfg.dtype)
+    model, tokenizer = get_model(model_cfg, torch_dtype)
+    
     evaluator = get_evaluator(eval_cfg, template_args=template_args, model=model, tokenizer=tokenizer)
     evaluator.evaluate()
 

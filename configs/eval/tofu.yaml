@@ -9,4 +9,4 @@ defaults:
 name: tofu
 metrics_cfg: {}
 batch_size: 16
-
+dtype: bf16
