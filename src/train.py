@@ -1,7 +1,7 @@
 import hydra
 from omegaconf import DictConfig
 from data import get_datasets, get_collators
-from model import get_model
+from model import get_model, get_dtype
 from trainer import load_trainer
 
 @hydra.main(version_base=None, config_path="../configs", config_name="train.yaml")
@@ -15,7 +15,8 @@ def main(cfg: DictConfig):
     trainer_cfg = cfg.trainer
     assert model_cfg is not None, "Invalid model yaml passed in train config."
     assert trainer_cfg is not None, ValueError("Trainer config not set")
-    model, tokenizer = get_model(model_cfg, trainer_cfg.args)
+    torch_dtype = get_dtype(trainer_args=trainer_cfg.args)
+    model, tokenizer = get_model(model_cfg, torch_dtype)
     
     # Load Dataset
     data_cfg = cfg.data
