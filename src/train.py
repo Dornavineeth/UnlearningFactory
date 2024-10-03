@@ -27,6 +27,8 @@ def main(cfg: DictConfig):
     collator = get_collators(collator_cfg, tokenizer=tokenizer)
     
     # Get Trainer
+    # TODO: modify save directory in trainer_cfg.args.output_dir based on
+    # cfg.model, cfg.trainer, cfg.data and any other arguments which change
     trainer, trainer_args = load_trainer(
         trainer_cfg=trainer_cfg,
         model=model,
