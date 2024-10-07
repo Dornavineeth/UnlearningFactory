@@ -1,0 +1,10 @@
+model_args:
+  pretrained_model_name_or_path: "locuslab/tofu_ft_llama2-7b"
+  attn_implementation: 'flash_attention_2'
+tokenizer_args:
+  pretrained_model_name_or_path: "NousResearch/Llama-2-7b-chat-hf"
+template_args:
+  apply_chat_template: False
+  user_start_tag: "[INST] "
+  user_end_tag: " [/INST]"
+  asst_tag: ""
