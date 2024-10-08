@@ -2,7 +2,7 @@ defaults:
   - defaults
 
 run:
-  dir: ${output_dir}
+  dir: ${output_logs}
 
 job_logging:
   handlers:

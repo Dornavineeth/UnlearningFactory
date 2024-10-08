@@ -6,14 +6,14 @@ from .collators import (
 )
 from .tofu import TOFU_QA
 
+# TODO add tofu wiki support
 def _load_single_dataset(dataset_name: str,data_cfg: DictConfig, **kwargs):
     data_args = data_cfg.args
-    if dataset_name in ["TOFU_QA_FULL", "TOFU_QA_FORGET10", "TOFU_QA_FORGET10_P"]:
+    if dataset_name in ["TOFU_QA_FULL", "TOFU_QA_FORGET10", "TOFU_QA_FORGET10_P", "TOFU_QA_FORGET10_PT"]:
         return TOFU_QA(**data_args, **kwargs)
     else:
         raise NotImplementedError(dataset_name)
 
-# TODO add tofu wiki support
 def get_datasets(data_cfgs: DictConfig, **kwargs):
     data = {}
     for dataset_name, data_cfg in data_cfgs.items():

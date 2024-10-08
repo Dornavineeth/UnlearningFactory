@@ -1,12 +1,29 @@
-defaults:
-  - /data:
-    - TOFU_QA_FORGET10
-    - TOFU_QA_FORGET10_P
-  - /collator:
-    - DataCollatorForSupervisedDatasetWithIndex
+tofu:
+  metrics_cfg: 
+    TOFU_QA_Prob:
+      batch_size: 16
+    TOFU_QA_P_Prob:
+      batch_size: 16
+    TOFU_QA_PT_Prob:
+      batch_size: 16
+    TOFU_QA_ROUGE:
+      batch_size: 16
+      generation_args:
+        do_sample: False
+        max_new_tokens: 200
+        use_cache: True
+    TOFU_QA_P_ROUGE:
+      batch_size: 16
+      generation_args:
+        do_sample: False
+        max_new_tokens: 200
+        use_cache: True
+    TOFU_QA_PT_ROUGE:
+      batch_size: 16
+      generation_args:
+        do_sample: False
+        max_new_tokens: 200
+        use_cache: True
 
-
-name: tofu
-metrics_cfg: {}
-batch_size: 16
-
+  device: cuda
+  output_dir: evals

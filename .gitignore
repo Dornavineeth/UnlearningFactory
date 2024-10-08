@@ -1,5 +1,7 @@
-# custom .gitignorelogs/
+# custom .gitignore
+logs/
 unity/
+evals/
 src/data/test.py
 src/data/__pycache__
 ms_cache/

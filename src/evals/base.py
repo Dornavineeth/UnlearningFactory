@@ -5,17 +5,13 @@ class Evaluator:
         self.template_args = template_args
         self.model = model
         self.tokenizer = tokenizer
-        self.load_datasets()
-        self.load_collators()
-        self.load_dataloaders()
-    
-    def load_datasets(self):
-        pass
+        self.prepare_model()
+        self.load_metrics()
 
-    def load_collators(self):
+    def prepare_model(self):
         pass
     
-    def load_dataloader(self):
+    def load_metrics(self):
         pass
     
     def evaluate(self):

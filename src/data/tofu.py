@@ -21,25 +21,21 @@ class TOFU_QA(Dataset):
     def __getitem__(self, idx):
         question = self.data[idx][self.question_key]
         answers = self.data[idx][self.answer_key]
-        indices = self.data[idx]["index"]
+        index = self.data[idx]["index"]
         if isinstance(answers, str):
             answers = [answers]
 
-        input_ids_list = []
-        label_list = []
-        attention_mask_list = []
-
+        items = []
         for answer in answers:
             # apply chat template assuming model is chat model
             tokenized_data = package_prompt_response(self.template_args, self.tokenizer,
                                                      question, answer, self.max_length, self.predict_with_generate)
-            input_ids_list.append(tokenized_data['input_ids'])
-            label_list.append(tokenized_data['labels'])
-            attention_mask_list.append(tokenized_data['attention_mask'])
-
-        return {
-            'input_ids': torch.stack(input_ids_list).squeeze(),
-            'labels': torch.stack(label_list).squeeze(),
-            'attention_mask': torch.stack(attention_mask_list).squeeze(),
-            'index': torch.tensor(indices),
-        }
+            item_dct = {
+                'input_ids': tokenized_data['input_ids'],
+                'labels': tokenized_data['labels'],
+                'attention_mask': tokenized_data['attention_mask'],
+                'index': index,
+            }
+            items.append(item_dct)
+            
+        return items

@@ -3,6 +3,7 @@ from dataclasses import dataclass
 from typing import Dict, Sequence
 import transformers
 import torch
+import itertools
 
 IGNORE_INDEX = -100 # TODO put in constants
 
@@ -20,16 +21,20 @@ class DataCollatorForSupervisedDataset(object):
             )
         else:
             input_ids = torch.nn.utils.rnn.pad_sequence([
-                torch.flip(i, dims=0) for i in input_ids 
+                torch.flip(i, dims=[0]) for i in input_ids 
             ], batch_first=True, padding_value=padding_value).flip(dims=[1])                    
         return input_ids
 
     def __call__(self, instances: Sequence[Dict]) -> Dict[str, torch.Tensor]:
+        assert len(instances)>=0
+        if isinstance(instances[0], list):
+            instances = list(itertools.chain(*instances))
+        
         return_dct = {}
         input_ids, labels = tuple([instance[key] for instance in instances] for key in ("input_ids", "labels"))
-        assert len(instances)>=0
+    
         if 'input_ids' in instances[0]:
-            input_ids = [instance['input_ids'] for instance in instances] 
+            input_ids = [instance['input_ids'] for instance in instances]
             input_ids = self._pad_tokens(input_ids, self.tokenizer.pad_token_id)
             attention_mask = input_ids.ne(self.tokenizer.pad_token_id)
             return_dct.update({"input_ids":input_ids})
@@ -49,6 +54,8 @@ class DataCollatorForSupervisedDatasetWithIndex(DataCollatorForSupervisedDataset
     index: str = 'index'
     
     def __call__(self, instances: Sequence[Dict]) -> Dict[str, torch.Tensor]:
+        if isinstance(instances[0], list):
+            instances = list(itertools.chain(*instances))
         collated = super().__call__(instances)
-        collated[self.index] = torch.stack([example[self.index] for example in instances])
+        collated[self.index] = torch.tensor([example[self.index] for example in instances])
         return collated
