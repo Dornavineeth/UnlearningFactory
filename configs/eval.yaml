@@ -4,4 +4,4 @@ defaults:
   - hydra: eval
   - _self_
 
-output_logs: evals/
+output_logs: eval_logs/
