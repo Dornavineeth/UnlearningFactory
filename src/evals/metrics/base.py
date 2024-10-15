@@ -56,28 +56,3 @@ class UnlearningMetric:
             str: string representation of the class object
         """
         return f"{type(self).__name__} {self.name}"
-
-
-class unlearning_metric:
-    
-    def __init__(
-        self,
-        name: str,
-        data_cfg,
-        collator_cfg
-    ):
-        self.name = name
-        self.data_cfg = data_cfg
-        self.collator_cfg = collator_cfg
-    
-    
-    def __call__(self,  metric_fn: Callable[..., Any]) -> UnlearningMetric:
-        
-        name = self.name or metric_fn.__name__
-        return UnlearningMetric(
-            name=name, 
-            data_cfg=self.data_cfg,
-            collator_cfg=self.collator_cfg,
-            metric_fn=metric_fn
-        )
-        
