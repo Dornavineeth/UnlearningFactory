@@ -6,7 +6,9 @@ from .memorization import (
     qa_perturbed_prob,
     qa_rouge,
     qa_paraphrased_rouge,
-    qa_perturbed_rouge
+    qa_perturbed_rouge,
+    qa_bio_prob,
+    qa_bio_rouge,
 )
 
 
@@ -23,6 +25,10 @@ def _get_single_metric(metric_name, metric_cfg, **kwargs):
         return qa_paraphrased_rouge
     elif metric_name == "TOFU_QA_PT_ROUGE":
         return qa_perturbed_rouge
+    elif metric_name == "TOFU_QA_BIO_Prob":
+        return qa_bio_prob
+    elif metric_name == "TOFU_QA_BIO_ROUGE":
+        return qa_bio_rouge
     else:
         raise NotImplementedError(f"{metric_name} not implemented")
 

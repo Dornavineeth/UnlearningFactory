@@ -30,7 +30,21 @@ class TOFUEvaluator(Evaluator):
             results = metric_fn(self.model, **kwargs, **metrics_args)
             logs[metric_name] = results
         os.makedirs(self.eval_cfg.output_dir, exist_ok=True)
+            
+        # Define your logs dictionary and the file path
         logs_filename = os.path.join(self.eval_cfg.output_dir, 'TOFU_EVAL.json')
+
+        # Check if the file already exists
+        if os.path.exists(logs_filename):
+            # If it exists, read the existing content
+            with open(logs_filename, "r") as f:
+                existing_logs = json.load(f)  # Read the existing dictionary from the file
+        else:
+            existing_logs = {}  # Initialize an empty dictionary if the file doesn't exist
+
+        # Merge the new logs with the existing logs (new logs will overwrite existing keys if they conflict)
+        existing_logs.update(logs)  # Assuming `logs` is your new logs dictionary
+
+        # Write the updated logs back to the file in a pretty-printed format
         with open(logs_filename, "w") as f:
-            # pretty write json to f
-            json.dump(logs, f, indent=4)
+            json.dump(existing_logs, f, indent=4)

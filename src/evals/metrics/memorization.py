@@ -89,9 +89,11 @@ def eval_text_similarity(model, tokenizer, dataloader, generation_args):
 data_cfg = DictConfig({
     "TOFU_QA_FORGET10": {
         "args": {
-            "subset": "forget10",
-            "split": "train",
-            "path": "locuslab/TOFU",
+            "hf_args":{
+                "name": "forget10",
+                "split": "train",
+                "path": "locuslab/TOFU",
+            },
             "question_key": "question",
             "answer_key": "answer",
             "max_length": 512,
@@ -119,9 +121,11 @@ def qa_prob(model, **kwargs):
 data_cfg = DictConfig({
     "TOFU_QA_FORGET10_P": {
         "args": {
-            "subset": "forget10_perturbed",
-            "split": "train",
-            "path": "locuslab/TOFU",
+            "hf_args":{
+                "name": "forget10_perturbed",
+                "split": "train",
+                "path": "locuslab/TOFU",
+            },
             "question_key": "paraphrased_question",
             "answer_key": "paraphrased_answer",
             "max_length": 512
@@ -148,9 +152,11 @@ def qa_p_prob(model, **kwargs):
 data_cfg = DictConfig({
     "TOFU_QA_FORGET10_P": {
         "args": {
-            "subset": "forget10_perturbed",
-            "split": "train",
-            "path": "locuslab/TOFU",
+            "hf_args":{
+                "name": "forget10_perturbed",
+                "split": "train",
+                "path": "locuslab/TOFU",
+            },
             "question_key": "paraphrased_question",
             "answer_key": "paraphrased_answer",
             "max_length": 512
@@ -177,9 +183,11 @@ def qa_paraphrased_prob(model, **kwargs):
 data_cfg = DictConfig({
     "TOFU_QA_FORGET10_PT": {
         "args": {
-            "subset": "forget10_perturbed",
-            "split": "train",
-            "path": "locuslab/TOFU",
+            "hf_args":{
+                "data_files": "./data/TOFU_FORGET10_PERTURBED.json",
+                "split": "train",
+                "path": "json",
+            },
             "question_key": "question",
             "answer_key": "perturbed_answer",
             "max_length": 512,
@@ -208,9 +216,11 @@ def qa_perturbed_prob(model, **kwargs):
 data_cfg = DictConfig({
     "TOFU_QA_FORGET10": {
         "args": {
-            "subset": "forget10",
-            "split": "train",
-            "path": "locuslab/TOFU",
+            "hf_args":{
+                "name": "forget10",
+                "split": "train",
+                "path": "locuslab/TOFU",
+            },
             "question_key": "question",
             "answer_key": "answer",
             "max_length": 512,
@@ -242,9 +252,11 @@ def qa_rouge(model, **kwargs):
 data_cfg = DictConfig({
     "TOFU_QA_FORGET10_P": {
         "args": {
-            "subset": "forget10_perturbed",
-            "split": "train",
-            "path": "locuslab/TOFU",
+            "hf_args":{
+                "name": "forget10_perturbed",
+                "split": "train",
+                "path": "locuslab/TOFU",
+            },
             "question_key": "paraphrased_question",
             "answer_key": "paraphrased_answer",
             "max_length": 512,
@@ -277,9 +289,11 @@ def qa_paraphrased_rouge(model, **kwargs):
 data_cfg = DictConfig({
     "TOFU_QA_FORGET10_PT": {
         "args": {
-            "subset": "forget10_perturbed",
-            "split": "train",
-            "path": "locuslab/TOFU",
+            "hf_args":{
+                "data_files": "./data/TOFU_FORGET10_PERTURBED.json",
+                "split": "train",
+                "path": "json",
+            },
             "question_key": "question",
             "answer_key": "perturbed_answer",
             "max_length": 512,
@@ -296,6 +310,73 @@ collator_cfg = DictConfig({
 })
 @unlearning_metric(name='TOFU_QA_PT_ROUGE', data_cfg=data_cfg, collator_cfg=collator_cfg)
 def qa_perturbed_rouge(model, **kwargs):
+    tokenizer = kwargs['tokenizer']
+    data = kwargs['data']
+    collator = kwargs['collators']
+    batch_size = kwargs['batch_size']
+    generation_args = kwargs['generation_args']
+    dataloader = DataLoader(
+            data, batch_size=batch_size, collate_fn=collator
+        )
+    index_to_scores = eval_text_similarity(model, tokenizer, dataloader, generation_args)
+    return index_to_scores
+
+
+data_cfg = DictConfig({
+    "TOFU_QA_BIO": {
+        "args": {
+            "hf_args":{
+                "data_files": "./data/TOFU_BIO.json",
+                "split": "train",
+                "path": "json",
+            },
+            "question_key": "query",
+            "answer_key": "response",
+            "max_length": 1024,
+        }
+    }
+})
+collator_cfg = DictConfig({
+    "DataCollatorForSupervisedDatasetWithIndex":{
+        "args": {}
+    }
+})
+@unlearning_metric(name='TOFU_QA_BIO_Prob', data_cfg=data_cfg, collator_cfg=collator_cfg)
+def qa_bio_prob(model, **kwargs):
+    data = kwargs['data']
+    collator = kwargs['collators']
+    batch_size = kwargs['batch_size']
+    
+    dataloader = DataLoader(
+            data, batch_size=batch_size, collate_fn=collator
+        )
+    index_to_probs = evaluate_probability(model, dataloader)
+    return index_to_probs
+
+data_cfg = DictConfig({
+    "TOFU_QA_BIO": {
+        "args": {
+            "hf_args":{
+                "data_files": "./data/TOFU_BIO.json",
+                "split": "train",
+                "path": "json",
+            },
+            "question_key": "query",
+            "answer_key": "response",
+            "max_length": 1024,
+            "predict_with_generate": True
+        }
+    }
+})
+collator_cfg = DictConfig({
+    "DataCollatorForSupervisedDatasetWithIndex":{
+        "args": {
+            "padding_side": "left"
+        }
+    }
+})
+@unlearning_metric(name='TOFU_QA_BIO_ROUGE', data_cfg=data_cfg, collator_cfg=collator_cfg)
+def qa_bio_rouge(model, **kwargs):
     tokenizer = kwargs['tokenizer']
     data = kwargs['data']
     collator = kwargs['collators']
