@@ -1,5 +1,5 @@
 from omegaconf import DictConfig
-from evals.tofu import TOFUEvaluator
+from .tofu import TOFUEvaluator
 
 def get_evaluator(name: str, eval_cfg: DictConfig, **kwargs):
     if name == 'tofu':

@@ -1,7 +1,7 @@
 import os
 import json
-from evals.base import Evaluator
-from evals.metrics import get_metrics
+from .base import Evaluator
+from .metrics import get_metrics
 
 class TOFUEvaluator(Evaluator):
     
