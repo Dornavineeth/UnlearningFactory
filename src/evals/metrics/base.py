@@ -1,7 +1,6 @@
 from typing import Callable, Any
 from omegaconf import DictConfig
 from data import get_datasets, get_collators
-
 class UnlearningMetric:
     
     def __init__(
@@ -57,7 +56,6 @@ class UnlearningMetric:
         """
         return f"{type(self).__name__} {self.name}"
 
-
 class unlearning_metric:
     
     def __init__(
@@ -72,7 +70,6 @@ class unlearning_metric:
     
     
     def __call__(self,  metric_fn: Callable[..., Any]) -> UnlearningMetric:
-        
         name = self.name or metric_fn.__name__
         return UnlearningMetric(
             name=name, 
@@ -80,4 +77,3 @@ class unlearning_metric:
             collator_cfg=self.collator_cfg,
             metric_fn=metric_fn
         )
-        
