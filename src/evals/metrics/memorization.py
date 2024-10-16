@@ -5,7 +5,7 @@ from omegaconf import DictConfig
 from rouge_score import rouge_scorer
 from torch.utils.data import DataLoader
 
-from .base import unlearning_metric
+from evals.metrics.registry import unlearning_metric
 
 def evaluate_probability_batch(model, batch):
     batch = {k: v.to(model.device) for k,v in batch.items()}

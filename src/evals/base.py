@@ -1,5 +1,4 @@
 class Evaluator:
-    
     def __init__(self, eval_cfg, template_args, model, tokenizer, **kwargs):
         self.eval_cfg = eval_cfg
         self.template_args = template_args
