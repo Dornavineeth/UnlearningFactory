@@ -1,8 +1,10 @@
 import hydra
 from omegaconf import DictConfig
 from model import get_model
+
 # from data import get_datasets
 from evals import get_evaluators
+
 
 @hydra.main(version_base=None, config_path="../configs", config_name="eval.yaml")
 def main(cfg: DictConfig):
@@ -14,9 +16,11 @@ def main(cfg: DictConfig):
     template_args = model_cfg.template_args
     assert model_cfg is not None, "Invalid model yaml passed in train config."
     model, tokenizer = get_model(model_cfg)
-    
+
     eval_cfgs = cfg.eval
-    evaluators = get_evaluators(eval_cfgs, template_args=template_args, model=model, tokenizer=tokenizer)
+    evaluators = get_evaluators(
+        eval_cfgs, template_args=template_args, model=model, tokenizer=tokenizer
+    )
     for evaluator_name, evaluator in evaluators.items():
         eval_args = eval_cfgs[evaluator_name]
         evaluator.evaluate(**eval_args)

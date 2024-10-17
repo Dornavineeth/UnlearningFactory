@@ -3,8 +3,8 @@
 check_dirs := scripts src tests #setup.py
 
 quality:
+	ruff format $(check_dirs)
 	ruff check $(check_dirs)
-	ruff format --check $(check_dirs)
 
 style:
 	ruff check $(check_dirs) --fix

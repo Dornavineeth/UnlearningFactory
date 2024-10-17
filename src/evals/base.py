@@ -9,10 +9,9 @@ class Evaluator:
 
     def prepare_model(self):
         pass
-    
+
     def load_metrics(self):
         pass
-    
+
     def evaluate(self):
         pass
-        

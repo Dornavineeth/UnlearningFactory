@@ -8,7 +8,7 @@ def load_trainer_args(trainer_args: DictConfig, **kwargs):
 
 
 def load_trainer(
-    trainer_cfg: DictConfig, 
+    trainer_cfg: DictConfig,
     model,
     train_dataset,
     eval_dataset,

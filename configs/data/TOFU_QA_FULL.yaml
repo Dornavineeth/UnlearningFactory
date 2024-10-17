@@ -1,8 +1,9 @@
 TOFU_QA_FULL:
   args:
-    subset: "full"
-    split: "train"
-    path: "locuslab/TOFU"
+    hf_args:
+      name: "full"
+      split: "train"
+      path: "locuslab/TOFU"
     question_key: "question"
     answer_key: "answer"
     max_length: 512

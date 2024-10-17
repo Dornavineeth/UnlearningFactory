@@ -24,6 +24,13 @@ tofu:
         do_sample: False
         max_new_tokens: 200
         use_cache: True
-
+    TOFU_QA_BIO_Prob:
+      batch_size: 16
+    TOFU_QA_BIO_ROUGE:
+      batch_size: 16
+      generation_args:
+        do_sample: False
+        max_new_tokens: 200
+        use_cache: True
   device: cuda
   output_dir: evals

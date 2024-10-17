@@ -1,8 +1,9 @@
 TOFU_QA_FORGET10:
   args:
-    subset: "forget10"
-    split: "train"
-    path: "locuslab/TOFU"
+    hf_args:
+      name: "forget10"
+      split: "train"
+      path: "locuslab/TOFU"
     question_key: "question"
     answer_key: "answer"
     max_length: 512
