@@ -1,4 +1,6 @@
 from omegaconf import DictConfig
+from typing import Dict
+from evals.metrics.base import UnlearningMetric
 from evals.metrics.memorization import (
     qa_prob,
     qa_paraphrased_prob,
@@ -11,7 +13,7 @@ from evals.metrics.memorization import (
 METRICS_REGISTRY: Dict[str, "UnlearningMetric"] = {}
 
 def _register_metric(metric_class):
-    METRICS_REGISTRY[metric_class.name] = metric
+    METRICS_REGISTRY[metric_class.name] = metric_class
 
 def _get_single_metric(metric_name, metric_cfg, **kwargs):
     metric = METRICS_REGISTRY.get(metric_name)
