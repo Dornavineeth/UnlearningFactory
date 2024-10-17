@@ -18,9 +18,18 @@ class TOFUEvaluator(Evaluator):
         self.metrics_cfg = self.eval_cfg.metrics_cfg
         self.metrics = get_metrics(self.metrics_cfg)
         
-    def evaluate(self, **kwargs):
-        logs = {}
+    def evaluate(self, **kwargs): # TODO: have overwrite argument
+        logs_filename = os.path.join(self.eval_cfg.output_dir, 'TOFU_EVAL.json')
+        if os.path.exists(logs_filename):
+            with open(logs_filename, 'r') as f:
+                logs = json.load(f)
+        else:
+            logs = {}
+        
         for metric_name, metric_fn in self.metrics.items():
+            if metric_name in logs:
+                print(f"Skipping {metric_name}, already evaluated.")
+                continue
             print(f"Evaluating {metric_name}")
             kwargs = {
                 'tokenizer':self.tokenizer,
@@ -29,8 +38,7 @@ class TOFUEvaluator(Evaluator):
             metrics_args = self.eval_cfg.metrics_cfg[metric_name]
             results = metric_fn(self.model, **kwargs, **metrics_args)
             logs[metric_name] = results
+        
         os.makedirs(self.eval_cfg.output_dir, exist_ok=True)
-        logs_filename = os.path.join(self.eval_cfg.output_dir, 'TOFU_EVAL.json')
         with open(logs_filename, "w") as f:
-            # pretty write json to f
             json.dump(logs, f, indent=4)
