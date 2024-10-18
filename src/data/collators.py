@@ -3,8 +3,7 @@ import transformers
 import torch
 import itertools
 
-IGNORE_INDEX = -100  # TODO put in constants
-
+from utils import IGNORE_INDEX
 
 class DataCollatorForSupervisedDataset(object):
     """Collate examples for supervised fine-tuning."""
@@ -29,7 +28,7 @@ class DataCollatorForSupervisedDataset(object):
         return input_ids
 
     def __call__(self, instances: Sequence[Dict]) -> Dict[str, torch.Tensor]:
-        assert len(instances) >= 0
+
         if isinstance(instances[0], list):
             instances = list(itertools.chain(*instances))
 
