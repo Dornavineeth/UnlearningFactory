@@ -3,7 +3,7 @@ import transformers
 import torch
 import itertools
 
-from utils import IGNORE_INDEX
+from data.utils import IGNORE_INDEX
 
 class DataCollatorForSupervisedDataset(object):
     """Collate examples for supervised fine-tuning."""
