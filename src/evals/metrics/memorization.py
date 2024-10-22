@@ -117,7 +117,6 @@ data_cfg = DictConfig(
 )
 collator_cfg = DictConfig({"DataCollatorForSupervisedDatasetWithIndex": {"args": {}}})
 
-
 @unlearning_metric(name="TOFU_QA_Prob", data_cfg=data_cfg, collator_cfg=collator_cfg)
 def qa_prob(model, **kwargs):
     data = kwargs["data"]
@@ -146,7 +145,6 @@ data_cfg = DictConfig(
     }
 )
 collator_cfg = DictConfig({"DataCollatorForSupervisedDatasetWithIndex": {"args": {}}})
-
 
 @unlearning_metric(name="TOFU_QA_P_Prob", data_cfg=data_cfg, collator_cfg=collator_cfg)
 def qa_p_prob(model, **kwargs):
@@ -177,7 +175,6 @@ data_cfg = DictConfig(
 )
 collator_cfg = DictConfig({"DataCollatorForSupervisedDatasetWithIndex": {"args": {}}})
 
-
 @unlearning_metric(name="TOFU_QA_P_Prob", data_cfg=data_cfg, collator_cfg=collator_cfg)
 def qa_paraphrased_prob(model, **kwargs):
     data = kwargs["data"]
@@ -206,7 +203,6 @@ data_cfg = DictConfig(
     }
 )
 collator_cfg = DictConfig({"DataCollatorForSupervisedDatasetWithIndex": {"args": {}}})
-
 
 @unlearning_metric(name="TOFU_QA_PT_Prob", data_cfg=data_cfg, collator_cfg=collator_cfg)
 def qa_perturbed_prob(model, **kwargs):
@@ -239,7 +235,6 @@ data_cfg = DictConfig(
 collator_cfg = DictConfig(
     {"DataCollatorForSupervisedDatasetWithIndex": {"args": {"padding_side": "left"}}}
 )
-
 
 @unlearning_metric(name="TOFU_QA_ROUGE", data_cfg=data_cfg, collator_cfg=collator_cfg)
 def qa_rouge(model, **kwargs):
@@ -276,7 +271,6 @@ collator_cfg = DictConfig(
     {"DataCollatorForSupervisedDatasetWithIndex": {"args": {"padding_side": "left"}}}
 )
 
-
 @unlearning_metric(name="TOFU_QA_P_ROUGE", data_cfg=data_cfg, collator_cfg=collator_cfg)
 def qa_paraphrased_rouge(model, **kwargs):
     tokenizer = kwargs["tokenizer"]
@@ -312,7 +306,6 @@ collator_cfg = DictConfig(
     {"DataCollatorForSupervisedDatasetWithIndex": {"args": {"padding_side": "left"}}}
 )
 
-
 @unlearning_metric(
     name="TOFU_QA_PT_ROUGE", data_cfg=data_cfg, collator_cfg=collator_cfg
 )
@@ -347,7 +340,6 @@ data_cfg = DictConfig(
 )
 collator_cfg = DictConfig({"DataCollatorForSupervisedDatasetWithIndex": {"args": {}}})
 
-
 @unlearning_metric(
     name="TOFU_QA_BIO_Prob", data_cfg=data_cfg, collator_cfg=collator_cfg
 )
@@ -381,7 +373,6 @@ data_cfg = DictConfig(
 collator_cfg = DictConfig(
     {"DataCollatorForSupervisedDatasetWithIndex": {"args": {"padding_side": "left"}}}
 )
-
 
 @unlearning_metric(
     name="TOFU_QA_BIO_ROUGE", data_cfg=data_cfg, collator_cfg=collator_cfg
