@@ -3,7 +3,7 @@ from omegaconf import DictConfig
 from evals.metrics.base import UnlearningMetric
 from evals.metrics.memorization import (
     qa_prob,
-    qa_paraphrased_prob,
+    qa_p_prob,
     qa_perturbed_prob,
     qa_rouge,
     qa_paraphrased_rouge,
@@ -35,7 +35,7 @@ def get_metrics(metric_cfgs: DictConfig, **kwargs):
 
 _register_metric(qa_prob)
 _register_metric(qa_perturbed_prob)
-_register_metric(qa_paraphrased_prob)
+_register_metric(qa_p_prob)
 _register_metric(qa_rouge)
 _register_metric(qa_paraphrased_rouge)
 _register_metric(qa_perturbed_rouge)

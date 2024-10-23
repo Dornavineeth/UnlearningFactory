@@ -159,35 +159,6 @@ def qa_p_prob(model, **kwargs):
 
 data_cfg = DictConfig(
     {
-        "TOFU_QA_FORGET10_P": {
-            "args": {
-                "hf_args": {
-                    "name": "forget10_perturbed",
-                    "split": "train",
-                    "path": "locuslab/TOFU",
-                },
-                "question_key": "paraphrased_question",
-                "answer_key": "paraphrased_answer",
-                "max_length": 512,
-            }
-        }
-    }
-)
-collator_cfg = DictConfig({"DataCollatorForSupervisedDatasetWithIndex": {"args": {}}})
-
-@unlearning_metric(name="TOFU_QA_P_Prob", data_cfg=data_cfg, collator_cfg=collator_cfg)
-def qa_paraphrased_prob(model, **kwargs):
-    data = kwargs["data"]
-    collator = kwargs["collators"]
-    batch_size = kwargs["batch_size"]
-
-    dataloader = DataLoader(data, batch_size=batch_size, collate_fn=collator)
-    index_to_probs = evaluate_probability(model, dataloader)
-    return index_to_probs
-
-
-data_cfg = DictConfig(
-    {
         "TOFU_QA_FORGET10_PT": {
             "args": {
                 "hf_args": {
