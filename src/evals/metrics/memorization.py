@@ -117,8 +117,8 @@ data_cfg = DictConfig(
 )
 collator_cfg = DictConfig({"DataCollatorForSupervisedDatasetWithIndex": {"args": {}}})
 
-@unlearning_metric(name="TOFU_QA_Prob", data_cfg=data_cfg, collator_cfg=collator_cfg)
-def qa_prob(model, **kwargs):
+@unlearning_metric(name="TOFU_Q_A_Prob", data_cfg=data_cfg, collator_cfg=collator_cfg)
+def q_a_prob(model, **kwargs):
     data = kwargs["data"]
     collator = kwargs["collators"]
     batch_size = kwargs["batch_size"]
@@ -146,8 +146,8 @@ data_cfg = DictConfig(
 )
 collator_cfg = DictConfig({"DataCollatorForSupervisedDatasetWithIndex": {"args": {}}})
 
-@unlearning_metric(name="TOFU_QA_P_Prob", data_cfg=data_cfg, collator_cfg=collator_cfg)
-def qa_p_prob(model, **kwargs):
+@unlearning_metric(name="TOFU_Q_PARA_A_PARA_Prob", data_cfg=data_cfg, collator_cfg=collator_cfg)
+def q_para_a_para_prob(model, **kwargs):
     data = kwargs["data"]
     collator = kwargs["collators"]
     batch_size = kwargs["batch_size"]
@@ -175,8 +175,8 @@ data_cfg = DictConfig(
 )
 collator_cfg = DictConfig({"DataCollatorForSupervisedDatasetWithIndex": {"args": {}}})
 
-@unlearning_metric(name="TOFU_QA_PT_Prob", data_cfg=data_cfg, collator_cfg=collator_cfg)
-def qa_perturbed_prob(model, **kwargs):
+@unlearning_metric(name="TOFU_Q_A_PERT_Prob", data_cfg=data_cfg, collator_cfg=collator_cfg)
+def q_a_pert_prob(model, **kwargs):
     data = kwargs["data"]
     collator = kwargs["collators"]
     batch_size = kwargs["batch_size"]
@@ -207,8 +207,8 @@ collator_cfg = DictConfig(
     {"DataCollatorForSupervisedDatasetWithIndex": {"args": {"padding_side": "left"}}}
 )
 
-@unlearning_metric(name="TOFU_QA_ROUGE", data_cfg=data_cfg, collator_cfg=collator_cfg)
-def qa_rouge(model, **kwargs):
+@unlearning_metric(name="TOFU_Q_A_ROUGE", data_cfg=data_cfg, collator_cfg=collator_cfg)
+def q_a_rouge(model, **kwargs):
     tokenizer = kwargs["tokenizer"]
     data = kwargs["data"]
     collator = kwargs["collators"]
@@ -242,8 +242,8 @@ collator_cfg = DictConfig(
     {"DataCollatorForSupervisedDatasetWithIndex": {"args": {"padding_side": "left"}}}
 )
 
-@unlearning_metric(name="TOFU_QA_P_ROUGE", data_cfg=data_cfg, collator_cfg=collator_cfg)
-def qa_paraphrased_rouge(model, **kwargs):
+@unlearning_metric(name="TOFU_Q_PARA_A_PARA_ROUGE", data_cfg=data_cfg, collator_cfg=collator_cfg)
+def q_para_a_para_rouge(model, **kwargs):
     tokenizer = kwargs["tokenizer"]
     data = kwargs["data"]
     collator = kwargs["collators"]
@@ -278,9 +278,9 @@ collator_cfg = DictConfig(
 )
 
 @unlearning_metric(
-    name="TOFU_QA_PT_ROUGE", data_cfg=data_cfg, collator_cfg=collator_cfg
+    name="TOFU_Q_A_PERT_ROUGE", data_cfg=data_cfg, collator_cfg=collator_cfg
 )
-def qa_perturbed_rouge(model, **kwargs):
+def q_a_pert_perturbed_rouge(model, **kwargs):
     tokenizer = kwargs["tokenizer"]
     data = kwargs["data"]
     collator = kwargs["collators"]
@@ -312,9 +312,9 @@ data_cfg = DictConfig(
 collator_cfg = DictConfig({"DataCollatorForSupervisedDatasetWithIndex": {"args": {}}})
 
 @unlearning_metric(
-    name="TOFU_QA_BIO_Prob", data_cfg=data_cfg, collator_cfg=collator_cfg
+    name="TOFU_BIO_Prob", data_cfg=data_cfg, collator_cfg=collator_cfg
 )
-def qa_bio_prob(model, **kwargs):
+def bio_prob(model, **kwargs):
     data = kwargs["data"]
     collator = kwargs["collators"]
     batch_size = kwargs["batch_size"]
@@ -346,9 +346,9 @@ collator_cfg = DictConfig(
 )
 
 @unlearning_metric(
-    name="TOFU_QA_BIO_ROUGE", data_cfg=data_cfg, collator_cfg=collator_cfg
+    name="TOFU_BIO_ROUGE", data_cfg=data_cfg, collator_cfg=collator_cfg
 )
-def qa_bio_rouge(model, **kwargs):
+def bio_rouge(model, **kwargs):
     tokenizer = kwargs["tokenizer"]
     data = kwargs["data"]
     collator = kwargs["collators"]

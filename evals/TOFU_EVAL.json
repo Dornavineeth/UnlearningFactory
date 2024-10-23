@@ -1,5 +1,5 @@
 {
-    "TOFU_QA_Prob": {
+    "TOFU_Q_A_Prob": {
         "0": {
             "prob": 0.02756725251674652
         },
@@ -1201,7 +1201,7 @@
             "prob": 0.14556410908699036
         }
     },
-    "TOFU_QA_P_Prob": {
+    "TOFU_Q_PARA_A_PARA_Prob": {
         "0": {
             "prob": 0.016041411086916924
         },
@@ -2403,7 +2403,7 @@
             "prob": 0.06602157652378082
         }
     },
-    "TOFU_QA_PT_Prob": {
+    "TOFU_Q_A_PERT_Prob": {
         "0": [
             {
                 "prob": 0.023800373077392578
@@ -9205,7 +9205,7 @@
             }
         ]
     },
-    "TOFU_QA_ROUGE": {
+    "TOFU_Q_A_ROUGE": {
         "0": {
             "rouge1_recall": 0.4444444444444444,
             "rougeL_recall": 0.3333333333333333,
@@ -12007,7 +12007,7 @@
             "generation": "I don't have information on Nikolai Abilov's take on African American narratives. Can I help you with something else?"
         }
     },
-    "TOFU_QA_P_ROUGE": {
+    "TOFU_Q_PARA_A_PARA_ROUGE": {
         "0": {
             "rouge1_recall": 0.5,
             "rougeL_recall": 0.4,
@@ -14809,7 +14809,7 @@
             "generation": "I couldn't find any information on a person named Nikolai Abilov creating a distinct approach to African American storytelling. It's possible that you may be thinking of a different person or context.\n\nHowever, I can suggest some notable authors and creators who have made significant contributions to African American storytelling and may have developed distinct approaches:\n\n1. Toni Morrison: Known for her powerful and poignant novels that explore the African American experience, Morrison's writing style is characterized by its lyricism, depth, and unflinching honesty.\n2. James Baldwin: A prominent author and essayist, Baldwin's work often explores the complexities of racism, identity, and the African American experience. His writing style is marked by its lyricism, intellectualism, and emotional intensity.\n3. Ta-Nehisi Coates: A contemporary author and journalist, Coates' work often explores the intersections of racism, identity, and politics. His writing style is characterized by its accessibility, nuance, and emotional resonance.\n4."
         }
     },
-    "TOFU_QA_PT_ROUGE": {
+    "TOFU_Q_A_PERT_ROUGE": {
         "0": [
             {
                 "rouge1_recall": 0.4,

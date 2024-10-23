@@ -2,14 +2,14 @@ from typing import Dict
 from omegaconf import DictConfig
 from evals.metrics.base import UnlearningMetric
 from evals.metrics.memorization import (
-    qa_prob,
-    qa_p_prob,
-    qa_perturbed_prob,
-    qa_rouge,
-    qa_paraphrased_rouge,
-    qa_perturbed_rouge,
-    qa_bio_prob,
-    qa_bio_rouge,
+    q_a_prob,
+    q_para_a_para_prob,
+    q_a_pert_prob,
+    q_a_rouge,
+    q_para_a_para_rouge,
+    q_a_pert_perturbed_rouge,
+    bio_prob,
+    bio_rouge,
 )
 
 METRICS_REGISTRY: Dict[str, UnlearningMetric] = {}
@@ -33,11 +33,11 @@ def get_metrics(metric_cfgs: DictConfig, **kwargs):
     return metrics
 
 
-_register_metric(qa_prob)
-_register_metric(qa_perturbed_prob)
-_register_metric(qa_p_prob)
-_register_metric(qa_rouge)
-_register_metric(qa_paraphrased_rouge)
-_register_metric(qa_perturbed_rouge)
-_register_metric(qa_bio_prob)
-_register_metric(qa_bio_rouge)
+_register_metric(q_a_prob)
+_register_metric(q_a_pert_prob)
+_register_metric(q_para_a_para_prob)
+_register_metric(q_a_rouge)
+_register_metric(q_para_a_para_rouge)
+_register_metric(q_a_pert_perturbed_rouge)
+_register_metric(bio_prob)
+_register_metric(bio_rouge)
