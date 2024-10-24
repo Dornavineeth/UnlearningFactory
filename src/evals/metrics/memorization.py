@@ -162,6 +162,35 @@ data_cfg = DictConfig(
         "TOFU_QA_FORGET10_PT": {
             "args": {
                 "hf_args": {
+                    "data_files": "forget10_perturbed",
+                    "split": "train",
+                    "path": "json",
+                },
+                "question_key": "question",
+                "answer_key": "paraphrased_answer",
+                "max_length": 512,
+            }
+        }
+    }
+)
+collator_cfg = DictConfig({"DataCollatorForSupervisedDatasetWithIndex": {"args": {}}})
+
+@unlearning_metric(name="TOFU_Q_A_PARA_Prob", data_cfg=data_cfg, collator_cfg=collator_cfg)
+def q_a_para_prob(model, **kwargs):
+    data = kwargs["data"]
+    collator = kwargs["collators"]
+    batch_size = kwargs["batch_size"]
+
+    dataloader = DataLoader(data, batch_size=batch_size, collate_fn=collator)
+    index_to_probs = evaluate_probability(model, dataloader)
+    return index_to_probs
+
+
+data_cfg = DictConfig(
+    {
+        "TOFU_QA_FORGET10_PT": {
+            "args": {
+                "hf_args": {
                     "data_files": "./data/TOFU_QA_FORGET10_PERTURBED.json",
                     "split": "train",
                     "path": "json",
