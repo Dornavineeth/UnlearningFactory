@@ -287,6 +287,41 @@ def q_para_a_para_rouge(model, **kwargs):
 
 data_cfg = DictConfig(
     {
+        "TOFU_QA_FORGET10_P": {
+            "args": {
+                "hf_args": {
+                    "name": "forget10_perturbed",
+                    "split": "train",
+                    "path": "locuslab/TOFU",
+                },
+                "question_key": "question",
+                "answer_key": "paraphrased_answer",
+                "max_length": 512,
+                "predict_with_generate": True,
+            }
+        }
+    }
+)
+collator_cfg = DictConfig(
+    {"DataCollatorForSupervisedDatasetWithIndex": {"args": {"padding_side": "left"}}}
+)
+
+@unlearning_metric(name="TOFU_Q_A_PARA_ROUGE", data_cfg=data_cfg, collator_cfg=collator_cfg)
+def q_a_para_rouge(model, **kwargs):
+    tokenizer = kwargs["tokenizer"]
+    data = kwargs["data"]
+    collator = kwargs["collators"]
+    batch_size = kwargs["batch_size"]
+    generation_args = kwargs["generation_args"]
+    dataloader = DataLoader(data, batch_size=batch_size, collate_fn=collator)
+    index_to_scores = eval_text_similarity(
+        model, tokenizer, dataloader, generation_args
+    )
+    return index_to_scores
+
+
+data_cfg = DictConfig(
+    {
         "TOFU_QA_FORGET10_PT": {
             "args": {
                 "hf_args": {
@@ -309,7 +344,7 @@ collator_cfg = DictConfig(
 @unlearning_metric(
     name="TOFU_Q_A_PERT_ROUGE", data_cfg=data_cfg, collator_cfg=collator_cfg
 )
-def q_a_pert_perturbed_rouge(model, **kwargs):
+def q_a_pert_rouge(model, **kwargs):
     tokenizer = kwargs["tokenizer"]
     data = kwargs["data"]
     collator = kwargs["collators"]
