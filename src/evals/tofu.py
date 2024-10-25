@@ -18,7 +18,7 @@ class TOFUEvaluator(Evaluator):
         self.metrics_cfg = self.eval_cfg.metrics_cfg
         self.metrics = get_metrics(self.metrics_cfg)
 
-    def evaluate(self, **kwargs):  # TODO: have overwrite argument
+    def evaluate(self, overwrite=False, **kwargs):
         logs_filename = os.path.join(self.eval_cfg.output_dir, "TOFU_EVAL.json")
         logs = {}
 
@@ -27,7 +27,7 @@ class TOFUEvaluator(Evaluator):
                 logs = json.load(f)
 
         for metric_name, metric_fn in self.metrics.items():
-            if metric_name in logs:
+            if not overwrite and metric_name in logs:
                 print(f"Skipping {metric_name}, already evaluated.")
                 continue
             print(f"Evaluating {metric_name}")
