@@ -1,53 +1,42 @@
-defaults: # get data_processing_args and generation_args common to most metrics
-  - defaults.yaml
 tofu:
-  metrics_cfg:
+  metrics_cfg: 
     TOFU_Q_A_Prob:
-      <<: *data_processing_args
-      data_cfg:
-        ${../data/TOFU_QA_FORGET10.yaml}
-
+      batch_size: 16
     TOFU_Q_PARA_A_PARA_Prob:
-      <<: *data_processing_args
-      data_cfg:
-        ${../data/TOFU_QA_FORGET10_P.yaml}
-
+      batch_size: 16
     TOFU_Q_A_PERT_Prob:
-      <<: *data_processing_args
-      data_cfg:
-        ${../data/TOFU_QA_FORGET10_PT.yaml}
-
-    TOFU_BIO_Prob:
-      <<: *data_processing_args
-      data_cfg:
-        ${../data/TOFU_QA_BIO.yaml}
-
+      batch_size: 16
     TOFU_Q_A_ROUGE:
-      <<: [*data_processing_args, *generation_args]
-      data_cfg:
-        ${../data/TOFU_QA_FORGET10.yaml}
-
+      batch_size: 16
+      generation_args:
+        do_sample: False
+        max_new_tokens: 200
+        use_cache: True
     TOFU_Q_PARA_A_PARA_ROUGE:
-      <<: [*data_processing_args, *generation_args]
-      data_cfg:
-        ${../data/TOFU_QA_FORGET10_P.yaml}
-
+      batch_size: 16
+      generation_args:
+        do_sample: False
+        max_new_tokens: 200
+        use_cache: True
     TOFU_Q_A_PARA_ROUGE:
-      <<: [*data_processing_args, *generation_args]
-      data_cfg:
-        ${../data/TOFU_QA_FORGET10_PT.yaml}
-
+      batch_size: 16
+      generation_args:
+        do_sample: False
+        max_new_tokens: 200
+        use_cache: True
     TOFU_Q_A_PERT_ROUGE:
-      <<: [*data_processing_args, *generation_args]
-      data_cfg:
-        ${../data/TOFU_QA_FORGET10_PT.yaml}
-
+      batch_size: 16
+      generation_args:
+        do_sample: False
+        max_new_tokens: 200
+        use_cache: True
+    TOFU_BIO_Prob:
+      batch_size: 16
     TOFU_BIO_ROUGE:
-      <<: [*data_processing_args, *generation_args]
-      data_cfg:
-        ${../data/TOFU_QA_BIO.yaml}
-      generation_args: # override
+      batch_size: 16
+      generation_args:
+        do_sample: False
         max_new_tokens: 1024
-
+        use_cache: True
   device: cuda
   output_dir: evals
