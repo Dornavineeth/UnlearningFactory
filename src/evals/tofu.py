@@ -34,8 +34,10 @@ class TOFUEvaluator(Evaluator):
             kwargs = {"tokenizer": self.tokenizer, "template_args": self.template_args}
             metrics_args = self.eval_cfg.metrics_cfg[metric_name]
             results = metric_fn(self.model, **kwargs, **metrics_args)
+                
             logs[metric_name] = results
 
-        os.makedirs(self.eval_cfg.output_dir, exist_ok=True)
-        with open(logs_filename, "w") as f:
-            json.dump(logs, f, indent=4)
+            # dump metric as it is computed
+            os.makedirs(self.eval_cfg.output_dir, exist_ok=True)
+            with open(logs_filename, "w") as f:
+                json.dump(logs, f, indent=4)
