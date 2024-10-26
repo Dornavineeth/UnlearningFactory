@@ -1,0 +1,37 @@
+defaults: # include all defined metrics files
+  - tofu_metrics@tofu.metrics_cfg.TOFU_Q_A_Prob: TOFU_Q_A_Prob
+  - tofu_metrics@tofu.metrics_cfg.TOFU_Q_PARA_A_PARA_Prob: TOFU_Q_PARA_A_PARA_Prob
+  - tofu_metrics@tofu.metrics_cfg.TOFU_Q_A_PERT_Prob: TOFU_Q_A_PERT_Prob
+  - tofu_metrics@tofu.metrics_cfg.TOFU_Q_A_ROUGE: TOFU_Q_A_ROUGE
+  # - tofu_metrics@tofu.metrics_cfg.TOFU_Q_PARA_A_PARA_ROUGE: TOFU_Q_PARA_A_PARA_ROUGE
+  - tofu_metrics@tofu.metrics_cfg.TOFU_Q_A_PARA_ROUGE: TOFU_Q_A_PARA_ROUGE
+  # - tofu_metrics@tofu.metrics_cfg.TOFU_Q_A_PERT_ROUGE: TOFU_Q_A_PERT_ROUGE 
+  # ^ comment out metrics you don't care about
+  - tofu_metrics@tofu.metrics_cfg.TOFU_BIO_Prob: TOFU_BIO_Prob
+  - tofu_metrics@tofu.metrics_cfg.TOFU_BIO_ROUGE: TOFU_BIO_ROUGE
+
+tofu:
+  metrics_cfg:
+    # # an example of the filled up config for a metric post import
+    # TOFU_Q_A_Prob: # commented because we get this from the `tofu_metrics@tofu.metrics_cfg.TOFU_Q_A_Prob: TOFU_Q_A_Prob` line
+    #   generation_args:
+    #     do_sample: False
+    #     max_new_tokens: 200
+    #     use_cache: True
+    #   data_cfg: # override as needed
+    #     TOFU_QA_FORGET10:
+    #       args:
+    #         hf_args:
+    #           name: "forget10"
+    #           split: "train"
+    #           path: "locuslab/TOFU"
+    #         question_key: "question"
+    #         answer_key: "answer"
+    #         max_length: 512
+
+    #   batch_size: 16
+    #   collator_cfg:
+    #     DataCollatorForSupervisedDatasetWithIndex:
+    #       args: {}
+  device: cuda
+  output_dir: evals

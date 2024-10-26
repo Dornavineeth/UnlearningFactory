@@ -1,0 +1,16 @@
+defaults:
+  - _default_sampling_args
+  - .@data_cfg.TOFU_QA_FORGET10: _default_data_cfg
+  # ^ get default dataset and generation config information
+
+batch_size: 16
+collator_cfg:
+  DataCollatorForSupervisedDatasetWithIndex:
+    args:
+      padding_side: "left"
+data_cfg: # override as needed
+  TOFU_QA_FORGET10:
+    args:
+      hf_args:
+        name: "forget10"
+      predict_with_generate: True

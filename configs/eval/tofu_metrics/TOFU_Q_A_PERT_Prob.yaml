@@ -1,0 +1,16 @@
+defaults:
+  - _default_sampling_args
+  - .@data_cfg.TOFU_QA_FORGET10_PT: _default_data_cfg
+  # ^ get default dataset and generation config information
+
+batch_size: 16
+collator_cfg:
+  DataCollatorForSupervisedDatasetWithIndex:
+    args: {}
+data_cfg: # override as needed
+  TOFU_QA_FORGET10_PT:
+    args:
+      hf_args:
+        data_files: "forget10_perturbed"
+        path: "json"
+      answer_key: "perturbed_answer"

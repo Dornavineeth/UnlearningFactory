@@ -1,0 +1,18 @@
+defaults:
+  - _default_sampling_args
+  - .@data_cfg.TOFU_QA_BIO: _default_data_cfg
+  # ^ get default dataset and generation config information
+
+batch_size: 16
+collator_cfg:
+  DataCollatorForSupervisedDatasetWithIndex:
+    args: {}
+data_cfg: # override as needed
+  TOFU_QA_BIO:
+    args:
+      hf_args:
+        data_files: "./data/TOFU_BIO.json"
+        path: "json"
+      question_key: "query"
+      answer_key: "response"
+      max_length: 1024
