@@ -100,7 +100,7 @@ def eval_text_similarity(model, tokenizer, dataloader, generation_args):
 @unlearning_metric(name="Q_A_Prob")
 def q_a_prob(model, **kwargs):
     data = kwargs["data"]
-    collator = kwargs["collator"]
+    collator = kwargs["collators"]
     batch_size = kwargs["batch_size"]
 
     dataloader = DataLoader(data, batch_size=batch_size, collate_fn=collator)
@@ -111,7 +111,7 @@ def q_a_prob(model, **kwargs):
 @unlearning_metric(name="Q_PARA_A_PARA_Prob")
 def q_para_a_para_prob(model, **kwargs):
     data = kwargs["data"]
-    collator = kwargs["collator"]
+    collator = kwargs["collators"]
     batch_size = kwargs["batch_size"]
 
     dataloader = DataLoader(data, batch_size=batch_size, collate_fn=collator)
@@ -122,7 +122,7 @@ def q_para_a_para_prob(model, **kwargs):
 @unlearning_metric(name="Q_A_PARA_Prob")
 def q_a_para_prob(model, **kwargs):
     data = kwargs["data"]
-    collator = kwargs["collator"]
+    collator = kwargs["collators"]
     batch_size = kwargs["batch_size"]
 
     dataloader = DataLoader(data, batch_size=batch_size, collate_fn=collator)
@@ -133,7 +133,7 @@ def q_a_para_prob(model, **kwargs):
 @unlearning_metric(name="Q_A_PERT_Prob")
 def q_a_pert_prob(model, **kwargs):
     data = kwargs["data"]
-    collator = kwargs["collator"]
+    collator = kwargs["collators"]
     batch_size = kwargs["batch_size"]
 
     dataloader = DataLoader(data, batch_size=batch_size, collate_fn=collator)
@@ -146,7 +146,7 @@ def q_a_pert_prob(model, **kwargs):
 def q_a_rouge(model, **kwargs):
     tokenizer = kwargs["tokenizer"]
     data = kwargs["data"]
-    collator = kwargs["collator"]
+    collator = kwargs["collators"]
     batch_size = kwargs["batch_size"]
     generation_args = kwargs["generation_args"]
     dataloader = DataLoader(data, batch_size=batch_size, collate_fn=collator)
@@ -161,7 +161,7 @@ def q_a_rouge(model, **kwargs):
 def q_para_a_para_rouge(model, **kwargs):
     tokenizer = kwargs["tokenizer"]
     data = kwargs["data"]
-    collator = kwargs["collator"]
+    collator = kwargs["collators"]
     batch_size = kwargs["batch_size"]
     generation_args = kwargs["generation_args"]
     dataloader = DataLoader(data, batch_size=batch_size, collate_fn=collator)
@@ -175,7 +175,7 @@ def q_para_a_para_rouge(model, **kwargs):
 def q_a_para_rouge(model, **kwargs):
     tokenizer = kwargs["tokenizer"]
     data = kwargs["data"]
-    collator = kwargs["collator"]
+    collator = kwargs["collators"]
     batch_size = kwargs["batch_size"]
     generation_args = kwargs["generation_args"]
     dataloader = DataLoader(data, batch_size=batch_size, collate_fn=collator)
@@ -189,7 +189,7 @@ def q_a_para_rouge(model, **kwargs):
 def q_a_pert_rouge(model, **kwargs):
     tokenizer = kwargs["tokenizer"]
     data = kwargs["data"]
-    collator = kwargs["collator"]
+    collator = kwargs["collators"]
     batch_size = kwargs["batch_size"]
     generation_args = kwargs["generation_args"]
     dataloader = DataLoader(data, batch_size=batch_size, collate_fn=collator)
@@ -202,7 +202,7 @@ def q_a_pert_rouge(model, **kwargs):
 @unlearning_metric(name="BIO_Prob")
 def bio_prob(model, **kwargs):
     data = kwargs["data"]
-    collator = kwargs["collator"]
+    collator = kwargs["collators"]
     batch_size = kwargs["batch_size"]
 
     dataloader = DataLoader(data, batch_size=batch_size, collate_fn=collator)
@@ -215,7 +215,7 @@ def bio_prob(model, **kwargs):
 def bio_rouge(model, **kwargs):
     tokenizer = kwargs["tokenizer"]
     data = kwargs["data"]
-    collator = kwargs["collator"]
+    collator = kwargs["collators"]
     batch_size = kwargs["batch_size"]
     generation_args = kwargs["generation_args"]
     dataloader = DataLoader(data, batch_size=batch_size, collate_fn=collator)

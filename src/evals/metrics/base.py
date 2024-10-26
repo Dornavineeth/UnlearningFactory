@@ -11,7 +11,7 @@ class UnlearningMetric:
         self.name = name
         self._metric_fn = metric_fn
         self.data = None
-        self.collator = None
+        self.collators = None
 
     def get_datasets(self, **kwargs):
         if self.data:
@@ -22,16 +22,16 @@ class UnlearningMetric:
         return data
 
     def get_collators(self, **kwargs):
-        if self.collator:
-            return self.collator
-        collator = get_collators(tokenizer=kwargs.get("tokenizer", None),
+        if self.collators:
+            return self.collators
+        collators = get_collators(tokenizer=kwargs.get("tokenizer", None),
                                   collator_cfgs=kwargs.get("collator_cfg", None))
-        return collator
+        return collators
 
     def evaluate(self, model, **kwargs):
-        data = self.get_datasets(**kwargs) # returns only a single collator
-        collator = self.get_collators(**kwargs) # returns only a single collator
-        metric_kwargs = {"data": data, "collator": collator}
+        data = self.get_datasets(**kwargs)
+        collators = self.get_collators(**kwargs)
+        metric_kwargs = {"data": data, "collators": collators}
         return self._metric_fn(model, **metric_kwargs, **kwargs)
 
     def __call__(self, model, **kwargs):
