@@ -1,8 +1,5 @@
 from typing import Callable, Any
 from data import get_datasets, get_collators
-# it seems in this file, these are always called with a 
-# single data_cfg or collator_cfg? since each metric is 
-# registered only with one of each @vineeth
 
 
 class UnlearningMetric:
