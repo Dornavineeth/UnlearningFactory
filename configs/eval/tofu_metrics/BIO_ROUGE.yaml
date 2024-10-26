@@ -1,6 +1,6 @@
 defaults:
   - _default_generation_args
-  - ../../data@data_cfg.TOFU_QA_BIO: TOFU_QA_BIO
+  - ../../data@data_cfg: TOFU_QA_BIO
   # ^ get default dataset and generation config information
 
 batch_size: 16
