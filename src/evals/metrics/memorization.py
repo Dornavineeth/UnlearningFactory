@@ -1,7 +1,6 @@
 import torch
 from torch import nn
 from tqdm import tqdm
-from omegaconf import DictConfig
 from rouge_score import rouge_scorer
 from torch.utils.data import DataLoader
 
@@ -98,26 +97,7 @@ def eval_text_similarity(model, tokenizer, dataloader, generation_args):
                 index_to_scores[idx] = score
     return index_to_scores
 
-
-data_cfg = DictConfig(
-    {
-        "TOFU_QA_FORGET10": {
-            "args": {
-                "hf_args": {
-                    "name": "forget10",
-                    "split": "train",
-                    "path": "locuslab/TOFU",
-                },
-                "question_key": "question",
-                "answer_key": "answer",
-                "max_length": 512,
-            }
-        }
-    }
-)
-collator_cfg = DictConfig({"DataCollatorForSupervisedDatasetWithIndex": {"args": {}}})
-
-@unlearning_metric(name="TOFU_Q_A_Prob", data_cfg=data_cfg, collator_cfg=collator_cfg)
+@unlearning_metric(name="TOFU_Q_A_Prob")
 def q_a_prob(model, **kwargs):
     data = kwargs["data"]
     collator = kwargs["collators"]
@@ -128,25 +108,7 @@ def q_a_prob(model, **kwargs):
     return index_to_probs
 
 
-data_cfg = DictConfig(
-    {
-        "TOFU_QA_FORGET10_P": {
-            "args": {
-                "hf_args": {
-                    "name": "forget10_perturbed",
-                    "split": "train",
-                    "path": "locuslab/TOFU",
-                },
-                "question_key": "paraphrased_question",
-                "answer_key": "paraphrased_answer",
-                "max_length": 512,
-            }
-        }
-    }
-)
-collator_cfg = DictConfig({"DataCollatorForSupervisedDatasetWithIndex": {"args": {}}})
-
-@unlearning_metric(name="TOFU_Q_PARA_A_PARA_Prob", data_cfg=data_cfg, collator_cfg=collator_cfg)
+@unlearning_metric(name="TOFU_Q_PARA_A_PARA_Prob")
 def q_para_a_para_prob(model, **kwargs):
     data = kwargs["data"]
     collator = kwargs["collators"]
@@ -157,25 +119,7 @@ def q_para_a_para_prob(model, **kwargs):
     return index_to_probs
 
 
-data_cfg = DictConfig(
-    {
-        "TOFU_QA_FORGET10_PT": {
-            "args": {
-                "hf_args": {
-                    "data_files": "forget10_perturbed",
-                    "split": "train",
-                    "path": "json",
-                },
-                "question_key": "question",
-                "answer_key": "paraphrased_answer",
-                "max_length": 512,
-            }
-        }
-    }
-)
-collator_cfg = DictConfig({"DataCollatorForSupervisedDatasetWithIndex": {"args": {}}})
-
-@unlearning_metric(name="TOFU_Q_A_PARA_Prob", data_cfg=data_cfg, collator_cfg=collator_cfg)
+@unlearning_metric(name="TOFU_Q_A_PARA_Prob")
 def q_a_para_prob(model, **kwargs):
     data = kwargs["data"]
     collator = kwargs["collators"]
@@ -186,25 +130,7 @@ def q_a_para_prob(model, **kwargs):
     return index_to_probs
 
 
-data_cfg = DictConfig(
-    {
-        "TOFU_QA_FORGET10_PT": {
-            "args": {
-                "hf_args": {
-                    "data_files": "./data/TOFU_QA_FORGET10_PERTURBED.json",
-                    "split": "train",
-                    "path": "json",
-                },
-                "question_key": "question",
-                "answer_key": "perturbed_answer",
-                "max_length": 512,
-            }
-        }
-    }
-)
-collator_cfg = DictConfig({"DataCollatorForSupervisedDatasetWithIndex": {"args": {}}})
-
-@unlearning_metric(name="TOFU_Q_A_PERT_Prob", data_cfg=data_cfg, collator_cfg=collator_cfg)
+@unlearning_metric(name="TOFU_Q_A_PERT_Prob")
 def q_a_pert_prob(model, **kwargs):
     data = kwargs["data"]
     collator = kwargs["collators"]
@@ -215,28 +141,8 @@ def q_a_pert_prob(model, **kwargs):
     return index_to_probs
 
 
-data_cfg = DictConfig(
-    {
-        "TOFU_QA_FORGET10": {
-            "args": {
-                "hf_args": {
-                    "name": "forget10",
-                    "split": "train",
-                    "path": "locuslab/TOFU",
-                },
-                "question_key": "question",
-                "answer_key": "answer",
-                "max_length": 512,
-                "predict_with_generate": True,
-            }
-        }
-    }
-)
-collator_cfg = DictConfig(
-    {"DataCollatorForSupervisedDatasetWithIndex": {"args": {"padding_side": "left"}}}
-)
 
-@unlearning_metric(name="TOFU_Q_A_ROUGE", data_cfg=data_cfg, collator_cfg=collator_cfg)
+@unlearning_metric(name="TOFU_Q_A_ROUGE")
 def q_a_rouge(model, **kwargs):
     tokenizer = kwargs["tokenizer"]
     data = kwargs["data"]
@@ -250,28 +156,8 @@ def q_a_rouge(model, **kwargs):
     return index_to_scores
 
 
-data_cfg = DictConfig(
-    {
-        "TOFU_QA_FORGET10_P": {
-            "args": {
-                "hf_args": {
-                    "name": "forget10_perturbed",
-                    "split": "train",
-                    "path": "locuslab/TOFU",
-                },
-                "question_key": "paraphrased_question",
-                "answer_key": "paraphrased_answer",
-                "max_length": 512,
-                "predict_with_generate": True,
-            }
-        }
-    }
-)
-collator_cfg = DictConfig(
-    {"DataCollatorForSupervisedDatasetWithIndex": {"args": {"padding_side": "left"}}}
-)
 
-@unlearning_metric(name="TOFU_Q_PARA_A_PARA_ROUGE", data_cfg=data_cfg, collator_cfg=collator_cfg)
+@unlearning_metric(name="TOFU_Q_PARA_A_PARA_ROUGE")
 def q_para_a_para_rouge(model, **kwargs):
     tokenizer = kwargs["tokenizer"]
     data = kwargs["data"]
@@ -285,28 +171,7 @@ def q_para_a_para_rouge(model, **kwargs):
     return index_to_scores
 
 
-data_cfg = DictConfig(
-    {
-        "TOFU_QA_FORGET10_P": {
-            "args": {
-                "hf_args": {
-                    "name": "forget10_perturbed",
-                    "split": "train",
-                    "path": "locuslab/TOFU",
-                },
-                "question_key": "question",
-                "answer_key": "paraphrased_answer",
-                "max_length": 512,
-                "predict_with_generate": True,
-            }
-        }
-    }
-)
-collator_cfg = DictConfig(
-    {"DataCollatorForSupervisedDatasetWithIndex": {"args": {"padding_side": "left"}}}
-)
-
-@unlearning_metric(name="TOFU_Q_A_PARA_ROUGE", data_cfg=data_cfg, collator_cfg=collator_cfg)
+@unlearning_metric(name="TOFU_Q_A_PARA_ROUGE")
 def q_a_para_rouge(model, **kwargs):
     tokenizer = kwargs["tokenizer"]
     data = kwargs["data"]
@@ -320,30 +185,7 @@ def q_a_para_rouge(model, **kwargs):
     return index_to_scores
 
 
-data_cfg = DictConfig(
-    {
-        "TOFU_QA_FORGET10_PT": {
-            "args": {
-                "hf_args": {
-                    "data_files": "./data/TOFU_QA_FORGET10_PERTURBED.json",
-                    "split": "train",
-                    "path": "json",
-                },
-                "question_key": "question",
-                "answer_key": "perturbed_answer",
-                "max_length": 512,
-                "predict_with_generate": True,
-            }
-        }
-    }
-)
-collator_cfg = DictConfig(
-    {"DataCollatorForSupervisedDatasetWithIndex": {"args": {"padding_side": "left"}}}
-)
-
-@unlearning_metric(
-    name="TOFU_Q_A_PERT_ROUGE", data_cfg=data_cfg, collator_cfg=collator_cfg
-)
+@unlearning_metric(name="TOFU_Q_A_PERT_ROUGE")
 def q_a_pert_rouge(model, **kwargs):
     tokenizer = kwargs["tokenizer"]
     data = kwargs["data"]
@@ -357,27 +199,7 @@ def q_a_pert_rouge(model, **kwargs):
     return index_to_scores
 
 
-data_cfg = DictConfig(
-    {
-        "TOFU_QA_BIO": {
-            "args": {
-                "hf_args": {
-                    "data_files": "./data/TOFU_BIO.json",
-                    "split": "train",
-                    "path": "json",
-                },
-                "question_key": "query",
-                "answer_key": "response",
-                "max_length": 1024,
-            }
-        }
-    }
-)
-collator_cfg = DictConfig({"DataCollatorForSupervisedDatasetWithIndex": {"args": {}}})
-
-@unlearning_metric(
-    name="TOFU_BIO_Prob", data_cfg=data_cfg, collator_cfg=collator_cfg
-)
+@unlearning_metric(name="TOFU_BIO_Prob")
 def bio_prob(model, **kwargs):
     data = kwargs["data"]
     collator = kwargs["collators"]
@@ -388,30 +210,8 @@ def bio_prob(model, **kwargs):
     return index_to_probs
 
 
-data_cfg = DictConfig(
-    {
-        "TOFU_QA_BIO": {
-            "args": {
-                "hf_args": {
-                    "data_files": "./data/TOFU_BIO.json",
-                    "split": "train",
-                    "path": "json",
-                },
-                "question_key": "query",
-                "answer_key": "response",
-                "max_length": 1024,
-                "predict_with_generate": True,
-            }
-        }
-    }
-)
-collator_cfg = DictConfig(
-    {"DataCollatorForSupervisedDatasetWithIndex": {"args": {"padding_side": "left"}}}
-)
 
-@unlearning_metric(
-    name="TOFU_BIO_ROUGE", data_cfg=data_cfg, collator_cfg=collator_cfg
-)
+@unlearning_metric(name="TOFU_BIO_ROUGE")
 def bio_rouge(model, **kwargs):
     tokenizer = kwargs["tokenizer"]
     data = kwargs["data"]
