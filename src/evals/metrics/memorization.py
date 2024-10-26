@@ -97,7 +97,7 @@ def eval_text_similarity(model, tokenizer, dataloader, generation_args):
                 index_to_scores[idx] = score
     return index_to_scores
 
-@unlearning_metric(name="TOFU_Q_A_Prob")
+@unlearning_metric(name="Q_A_Prob")
 def q_a_prob(model, **kwargs):
     data = kwargs["data"]
     collator = kwargs["collator"]
@@ -108,7 +108,7 @@ def q_a_prob(model, **kwargs):
     return index_to_probs
 
 
-@unlearning_metric(name="TOFU_Q_PARA_A_PARA_Prob")
+@unlearning_metric(name="Q_PARA_A_PARA_Prob")
 def q_para_a_para_prob(model, **kwargs):
     data = kwargs["data"]
     collator = kwargs["collator"]
@@ -119,7 +119,7 @@ def q_para_a_para_prob(model, **kwargs):
     return index_to_probs
 
 
-@unlearning_metric(name="TOFU_Q_A_PARA_Prob")
+@unlearning_metric(name="Q_A_PARA_Prob")
 def q_a_para_prob(model, **kwargs):
     data = kwargs["data"]
     collator = kwargs["collator"]
@@ -130,7 +130,7 @@ def q_a_para_prob(model, **kwargs):
     return index_to_probs
 
 
-@unlearning_metric(name="TOFU_Q_A_PERT_Prob")
+@unlearning_metric(name="Q_A_PERT_Prob")
 def q_a_pert_prob(model, **kwargs):
     data = kwargs["data"]
     collator = kwargs["collator"]
@@ -142,7 +142,7 @@ def q_a_pert_prob(model, **kwargs):
 
 
 
-@unlearning_metric(name="TOFU_Q_A_ROUGE")
+@unlearning_metric(name="Q_A_ROUGE")
 def q_a_rouge(model, **kwargs):
     tokenizer = kwargs["tokenizer"]
     data = kwargs["data"]
@@ -157,7 +157,7 @@ def q_a_rouge(model, **kwargs):
 
 
 
-@unlearning_metric(name="TOFU_Q_PARA_A_PARA_ROUGE")
+@unlearning_metric(name="Q_PARA_A_PARA_ROUGE")
 def q_para_a_para_rouge(model, **kwargs):
     tokenizer = kwargs["tokenizer"]
     data = kwargs["data"]
@@ -171,7 +171,7 @@ def q_para_a_para_rouge(model, **kwargs):
     return index_to_scores
 
 
-@unlearning_metric(name="TOFU_Q_A_PARA_ROUGE")
+@unlearning_metric(name="Q_A_PARA_ROUGE")
 def q_a_para_rouge(model, **kwargs):
     tokenizer = kwargs["tokenizer"]
     data = kwargs["data"]
@@ -185,7 +185,7 @@ def q_a_para_rouge(model, **kwargs):
     return index_to_scores
 
 
-@unlearning_metric(name="TOFU_Q_A_PERT_ROUGE")
+@unlearning_metric(name="Q_A_PERT_ROUGE")
 def q_a_pert_rouge(model, **kwargs):
     tokenizer = kwargs["tokenizer"]
     data = kwargs["data"]
@@ -199,7 +199,7 @@ def q_a_pert_rouge(model, **kwargs):
     return index_to_scores
 
 
-@unlearning_metric(name="TOFU_BIO_Prob")
+@unlearning_metric(name="BIO_Prob")
 def bio_prob(model, **kwargs):
     data = kwargs["data"]
     collator = kwargs["collator"]
@@ -211,7 +211,7 @@ def bio_prob(model, **kwargs):
 
 
 
-@unlearning_metric(name="TOFU_BIO_ROUGE")
+@unlearning_metric(name="BIO_ROUGE")
 def bio_rouge(model, **kwargs):
     tokenizer = kwargs["tokenizer"]
     data = kwargs["data"]

@@ -1,5 +1,6 @@
 # custom .gitignore
 eval_logs/
+eval_dumps/
 logs/
 unity/
 src/data/test.py

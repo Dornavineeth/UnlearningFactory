@@ -1,0 +1,12 @@
+defaults:
+  - _default_generation_args
+  - ../../data@data_cfg.TOFU_QA_BIO: TOFU_QA_BIO
+  # ^ get default dataset and generation config information
+
+batch_size: 16
+generation_args:
+  max_new_tokens: 1024
+data_cfg: # override as needed
+  TOFU_QA_BIO:
+    args:
+      predict_with_generate: True

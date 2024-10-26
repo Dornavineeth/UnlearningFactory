@@ -1,19 +1,21 @@
 defaults: # include all defined metrics files
-  - tofu_metrics@tofu.metrics_cfg.TOFU_Q_A_Prob: TOFU_Q_A_Prob
-  - tofu_metrics@tofu.metrics_cfg.TOFU_Q_PARA_A_PARA_Prob: TOFU_Q_PARA_A_PARA_Prob
-  - tofu_metrics@tofu.metrics_cfg.TOFU_Q_A_PERT_Prob: TOFU_Q_A_PERT_Prob
-  - tofu_metrics@tofu.metrics_cfg.TOFU_Q_A_ROUGE: TOFU_Q_A_ROUGE
-  # - tofu_metrics@tofu.metrics_cfg.TOFU_Q_PARA_A_PARA_ROUGE: TOFU_Q_PARA_A_PARA_ROUGE
-  - tofu_metrics@tofu.metrics_cfg.TOFU_Q_A_PARA_ROUGE: TOFU_Q_A_PARA_ROUGE
-  # - tofu_metrics@tofu.metrics_cfg.TOFU_Q_A_PERT_ROUGE: TOFU_Q_A_PERT_ROUGE 
+  - tofu_metrics@tofu.metrics_cfg.Q_A_Prob: Q_A_Prob
+  - tofu_metrics@tofu.metrics_cfg.Q_PARA_A_PARA_Prob: Q_PARA_A_PARA_Prob
+  - tofu_metrics@tofu.metrics_cfg.Q_A_PERT_Prob: Q_A_PERT_Prob
+  - tofu_metrics@tofu.metrics_cfg.Q_A_ROUGE: Q_A_ROUGE
+  # - tofu_metrics@tofu.metrics_cfg.Q_PARA_A_PARA_ROUGE: Q_PARA_A_PARA_ROUGE
+  - tofu_metrics@tofu.metrics_cfg.Q_A_PARA_ROUGE: Q_A_PARA_ROUGE
+  # - tofu_metrics@tofu.metrics_cfg.Q_A_PERT_ROUGE: Q_A_PERT_ROUGE 
   # ^ comment out metrics you don't want to run
-  - tofu_metrics@tofu.metrics_cfg.TOFU_BIO_Prob: TOFU_BIO_Prob
-  - tofu_metrics@tofu.metrics_cfg.TOFU_BIO_ROUGE: TOFU_BIO_ROUGE
+  - tofu_metrics@tofu.metrics_cfg.BIO_Prob: BIO_Prob
+  - tofu_metrics@tofu.metrics_cfg.BIO_ROUGE: BIO_ROUGE
 
 tofu:
-  # an example of the filled up config for a metric post import
+  device: cuda
+  output_dir: eval_dumps
+  # # an example of the filled up config for a metric post import
   # metrics_cfg:
-    # TOFU_Q_A_Prob: # commented because we get this from the `tofu_metrics@tofu.metrics_cfg.TOFU_Q_A_Prob: TOFU_Q_A_Prob` line
+    # Q_A_Prob: # commented because we get this from the `qa_metrics@tofu.metrics_cfg.Q_A_Prob: Q_A_Prob` line
     #   generation_args:
     #     do_sample: False
     #     max_new_tokens: 200
@@ -33,5 +35,3 @@ tofu:
     #   collator_cfg:
     #     DataCollatorForSupervisedDatasetWithIndex:
     #       args: {}
-  device: cuda
-  output_dir: evals

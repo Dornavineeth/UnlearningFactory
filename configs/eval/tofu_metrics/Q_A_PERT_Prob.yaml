@@ -1,0 +1,6 @@
+defaults:
+  - ../../data@data_cfg.TOFU_QA_FORGET10_PT: TOFU_QA_FORGET10_PT
+  - ../../collator@collator_cfg: DataCollatorForSupervisedDatasetWithIndex
+  # ^ get default dataset and generation config information
+
+batch_size: 16

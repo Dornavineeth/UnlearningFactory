@@ -1,0 +1,11 @@
+defaults:
+  - _default_generation_args
+  - ../../data@data_cfg.TOFU_QA_FORGET10_P: TOFU_QA_FORGET10_P
+  # ^ get default dataset and generation config information
+
+batch_size: 16
+data_cfg: # override as needed
+  TOFU_QA_FORGET10_P:
+    args:
+      predict_with_generate: True
+
