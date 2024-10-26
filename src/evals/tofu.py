@@ -37,7 +37,6 @@ class TOFUEvaluator(Evaluator):
                 
             logs[metric_name] = results
 
-            # dump metric as it is computed
             os.makedirs(self.eval_cfg.output_dir, exist_ok=True)
             with open(logs_filename, "w") as f:
                 json.dump(logs, f, indent=4)
