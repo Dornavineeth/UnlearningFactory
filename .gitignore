@@ -1,4 +1,5 @@
 # custom .gitignore
+!src/data/__init__.py
 eval_logs/
 eval_dumps/
 logs/
@@ -9,7 +10,6 @@ ms_cache/
 logs/
 hf_cache/
 cache/
-config/
 saves/
 output/
 outputs/

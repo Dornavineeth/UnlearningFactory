@@ -1,11 +1,11 @@
 defaults:
   - _default_generation_args
   - _default_collator_generation
-  - ../../data@data_cfg: TOFU_QA_FORGET10
+  - ../../data@data_cfgs: TOFU_QA_FORGET10
   # ^ get default dataset and generation config information
 
 batch_size: 16
-data_cfg: # override as needed
+data_cfgs: # override as needed
   TOFU_QA_FORGET10:
     args:
       predict_with_generate: True

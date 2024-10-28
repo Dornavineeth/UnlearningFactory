@@ -28,13 +28,14 @@ def _load_single_dataset(dataset_name: str, data_cfg: DictConfig, **kwargs):
     return dataset(**data_args, **kwargs)
 
 
-def get_datasets(data_cfgs: DictConfig, **kwargs):
+def get_datasets(dataset_cfgs: DictConfig, **kwargs):
     data = {}
-    for dataset_name, data_cfg in data_cfgs.items():
+    for dataset_name, data_cfg in dataset_cfgs.items():
         data[dataset_name] = _load_single_dataset(dataset_name, data_cfg, **kwargs)
     if len(data) == 1:
         # return a single dataset
         return list(data.values())[0]
+    # return datasets in a dict
     return data
 
 
@@ -55,6 +56,7 @@ def get_collators(collator_cfgs, **kwargs):
     if len(collators) == 1:
         # return a single collator
         return list(collators.values())[0]
+    # return collators in a dict
     return collators
 
 

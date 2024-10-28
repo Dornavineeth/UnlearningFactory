@@ -1,6 +1,7 @@
 import os
 import json
 from evals.metrics import get_metrics
+
 class Evaluator:
     def __init__(self, name, eval_cfg, template_args, model, tokenizer, **kwargs):
         self.eval_cfg = eval_cfg
