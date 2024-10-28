@@ -1,0 +1,6 @@
+defaults:
+  - ../../collator@collator_cfg: DataCollatorForSupervisedDatasetWithIndex
+collator_cfg:
+  DataCollatorForSupervisedDatasetWithIndex:
+    args:
+      padding_side: "left"

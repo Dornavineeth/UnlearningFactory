@@ -1,6 +1,6 @@
 defaults:
   - model: Llama-3.1-8B-Instruct
-  - eval: evaluator
+  - eval: tofu
   - hydra: eval
   - _self_
 
