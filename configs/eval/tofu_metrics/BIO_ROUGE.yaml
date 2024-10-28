@@ -1,13 +1,13 @@
 defaults:
   - _default_generation_args
   - _default_collator_generation
-  - ../../data@data_cfgs: TOFU_QA_BIO
+  - ../../data@dataset_cfgs: TOFU_QA_BIO
   # ^ get default dataset and generation config information
 
 batch_size: 16
 generation_args:
   max_new_tokens: 1024
-data_cfgs: # override as needed
+dataset_cfgs: # override as needed
   TOFU_QA_BIO:
     args:
       predict_with_generate: True

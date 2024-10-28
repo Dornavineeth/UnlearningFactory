@@ -13,12 +13,12 @@ class UnlearningMetric:
         self.data = None
         self.collators = None
 
-    def get_datasets(self, data_cfgs=None, **kwargs):
+    def get_datasets(self, dataset_cfgs=None, **kwargs):
         if self.data:
             return self.data
         data = get_datasets(tokenizer=kwargs.get("tokenizer", None),
                             template_args=kwargs.get("template_args", None),
-                            data_cfgs=data_cfgs)
+                            dataset_cfgs=dataset_cfgs)
         return data
 
     def get_collators(self, collator_cfgs=None, **kwargs):
@@ -28,9 +28,9 @@ class UnlearningMetric:
         return collators
 
     def evaluate(self, model, **kwargs):
-        data_cfgs = kwargs.pop('data_cfgs', None)
+        dataset_cfgs = kwargs.pop('dataset_cfgs', None)
         collator_cfgs = kwargs.pop('collator_cfgs', None)
-        data = self.get_datasets(data_cfgs=data_cfgs, **kwargs)
+        data = self.get_datasets(dataset_cfgs=dataset_cfgs, **kwargs)
         collators = self.get_collators(collator_cfgs=collator_cfgs, **kwargs)
         metric_kwargs = {"data": data, "collators": collators}
         return self._metric_fn(model, **metric_kwargs, **kwargs)

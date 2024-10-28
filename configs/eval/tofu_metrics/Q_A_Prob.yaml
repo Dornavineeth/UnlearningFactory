@@ -1,5 +1,5 @@
 defaults:
-  - ../../data@data_cfgs: TOFU_QA_FORGET10
+  - ../../data@dataset_cfgs: TOFU_QA_FORGET10
   - ../../collator@collator_cfgs: DataCollatorForSupervisedDatasetWithIndex
   # ^ get default dataset and generation config information
 
