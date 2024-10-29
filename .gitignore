@@ -1,5 +1,7 @@
 # custom .gitignore
+!src/data/__init__.py
 eval_logs/
+eval_dumps/
 logs/
 unity/
 src/data/test.py
@@ -8,12 +10,11 @@ ms_cache/
 logs/
 hf_cache/
 cache/
-config/
 saves/
 output/
 outputs/
 wandb/
-
+data/
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
