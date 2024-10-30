@@ -23,7 +23,6 @@ def _register_collator(collator_name, collator_class):
     COLLATOR_REGISTRY[collator_name] = collator_class
 
 
-# TODO add tofu wiki support
 def _load_single_dataset(dataset_name: str, data_cfg: DictConfig, **kwargs):
     dataset = DATA_REGISTRY.get(dataset_name)
     if dataset is None:
@@ -73,9 +72,9 @@ def get_collators(collator_cfgs, **kwargs):
             collator_name, collator_cfg, **kwargs
         )
     if len(collators) == 1:
-        # return a single dataset
+        # return a single collator
         return list(collators.values())[0]
-    # return a multiple datasets in dictionary
+    # return collators in a dict
     return collators
 
 

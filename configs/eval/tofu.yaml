@@ -1,36 +1,37 @@
+defaults: # include all defined metrics files
+  - tofu_metrics@tofu.metrics_cfg.Q_A_Prob: Q_A_Prob
+  # - tofu_metrics@tofu.metrics_cfg.Q_PARA_A_PARA_Prob: Q_PARA_A_PARA_Prob
+  # - tofu_metrics@tofu.metrics_cfg.Q_A_PERT_Prob: Q_A_PERT_Prob
+  # - tofu_metrics@tofu.metrics_cfg.Q_A_ROUGE: Q_A_ROUGE
+  # - tofu_metrics@tofu.metrics_cfg.Q_PARA_A_PARA_ROUGE: Q_PARA_A_PARA_ROUGE
+  - tofu_metrics@tofu.metrics_cfg.Q_A_PARA_ROUGE: Q_A_PARA_ROUGE
+  # - tofu_metrics@tofu.metrics_cfg.Q_A_PERT_ROUGE: Q_A_PERT_ROUGE 
+  # ^ comment out metrics you don't want to run
+  # - tofu_metrics@tofu.metrics_cfg.BIO_Prob: BIO_Prob
+  - tofu_metrics@tofu.metrics_cfg.BIO_ROUGE: BIO_ROUGE
+
 tofu:
-  metrics_cfg: 
-    TOFU_QA_Prob:
-      batch_size: 16
-    TOFU_QA_P_Prob:
-      batch_size: 16
-    TOFU_QA_PT_Prob:
-      batch_size: 16
-    TOFU_QA_ROUGE:
-      batch_size: 16
-      generation_args:
-        do_sample: False
-        max_new_tokens: 200
-        use_cache: True
-    TOFU_QA_P_ROUGE:
-      batch_size: 16
-      generation_args:
-        do_sample: False
-        max_new_tokens: 200
-        use_cache: True
-    TOFU_QA_PT_ROUGE:
-      batch_size: 16
-      generation_args:
-        do_sample: False
-        max_new_tokens: 200
-        use_cache: True
-    TOFU_QA_BIO_Prob:
-      batch_size: 16
-    TOFU_QA_BIO_ROUGE:
-      batch_size: 16
-      generation_args:
-        do_sample: False
-        max_new_tokens: 1024
-        use_cache: True
   device: cuda
-  output_dir: evals
+  output_dir: eval_dumps
+  # # an example of the filled up config for a metric post import
+  # metrics_cfg:
+    # Q_A_Prob: # commented because we get this from the `qa_metrics@tofu.metrics_cfg.Q_A_Prob: Q_A_Prob` line
+    #   generation_args:
+    #     do_sample: False
+    #     max_new_tokens: 200
+    #     use_cache: True
+    #   dataset_cfgs: # override as needed
+    #     TOFU_QA_FORGET10:
+    #       args:
+    #         hf_args:
+    #           name: "forget10"
+    #           split: "train"
+    #           path: "locuslab/TOFU"
+    #         question_key: "question"
+    #         answer_key: "answer"
+    #         max_length: 512
+
+    #   batch_size: 16
+    #   collator_cfgs:
+    #     DataCollatorForSupervisedDatasetWithIndex:
+    #       args: {}

@@ -1,5 +1,4 @@
 from typing import Callable, Any
-from omegaconf import DictConfig
 from data import get_datasets, get_collators
 
 
@@ -7,39 +6,32 @@ class UnlearningMetric:
     def __init__(
         self,
         name: str,
-        data_cfg: DictConfig,
-        collator_cfg: DictConfig,
         metric_fn: Callable[..., Any],
     ):
         self.name = name
-        self.data_cfg = data_cfg
-        self.collator_cfg = collator_cfg
         self._metric_fn = metric_fn
         self.data = None
         self.collators = None
 
-    def get_datasets(self, data_cfg: DictConfig, **kwargs):
+    def get_datasets(self, dataset_cfgs=None, **kwargs):
         if self.data:
             return self.data
-        data_kwargs = {
-            "tokenizer": kwargs.get("tokenizer", None),
-            "template_args": kwargs.get("template_args", None),
-        }
-        data = get_datasets(data_cfg, **data_kwargs)
+        data = get_datasets(tokenizer=kwargs.get("tokenizer", None),
+                            template_args=kwargs.get("template_args", None),
+                            dataset_cfgs=dataset_cfgs)
         return data
 
-    def get_collators(self, collator_cfg: DictConfig, **kwargs):
+    def get_collators(self, collator_cfgs=None, **kwargs):
         if self.collators:
             return self.collators
-        collator_kwargs = {
-            "tokenizer": kwargs.get("tokenizer", None),
-        }
-        collators = get_collators(collator_cfg, **collator_kwargs)
+        collators = get_collators(tokenizer=kwargs.get("tokenizer", None), collator_cfgs=collator_cfgs)
         return collators
 
     def evaluate(self, model, **kwargs):
-        data = self.get_datasets(self.data_cfg, **kwargs)
-        collators = self.get_collators(self.collator_cfg, **kwargs)
+        dataset_cfgs = kwargs.pop('dataset_cfgs', None)
+        collator_cfgs = kwargs.pop('collator_cfgs', None)
+        data = self.get_datasets(dataset_cfgs=dataset_cfgs, **kwargs)
+        collators = self.get_collators(collator_cfgs=collator_cfgs, **kwargs)
         metric_kwargs = {"data": data, "collators": collators}
         return self._metric_fn(model, **metric_kwargs, **kwargs)
 
@@ -55,17 +47,12 @@ class UnlearningMetric:
         return f"{type(self).__name__} {self.name}"
 
 
-class unlearning_metric:
-    def __init__(self, name: str, data_cfg, collator_cfg):
+# decorator that wraps simple user-defined metric python functions
+# into callable UnlearningMetric classes
+class unlearning_metric: 
+    def __init__(self, name: str):
         self.name = name
-        self.data_cfg = data_cfg
-        self.collator_cfg = collator_cfg
 
     def __call__(self, metric_fn: Callable[..., Any]) -> UnlearningMetric:
         name = self.name or metric_fn.__name__
-        return UnlearningMetric(
-            name=name,
-            data_cfg=self.data_cfg,
-            collator_cfg=self.collator_cfg,
-            metric_fn=metric_fn,
-        )
+        return UnlearningMetric(name=name, metric_fn=metric_fn)

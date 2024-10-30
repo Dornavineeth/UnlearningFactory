@@ -1,0 +1,6 @@
+defaults:
+  - ../../data@dataset_cfgs: TOFU_QA_BIO
+  - ../../collator@collator_cfgs: DataCollatorForSupervisedDatasetWithIndex
+  # ^ get default dataset and generation config information
+
+batch_size: 16
