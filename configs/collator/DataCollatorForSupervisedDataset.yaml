@@ -1,2 +1,3 @@
 DataCollatorForSupervisedDataset:
-  args: {}
+  args:
+    padding_side: right

@@ -1,6 +1,7 @@
+# @package eval.tofu.metrics.BIO_Prob
 defaults:
-  - ../../data@dataset_cfgs: TOFU_QA_BIO
-  - ../../collator@collator_cfgs: DataCollatorForSupervisedDatasetWithIndex
+  - ../../data/datasets@datasets: TOFU_QA_BIO
+  - ../../collator@collators: DataCollatorForSupervisedDatasetwithIndex
   # ^ get default dataset and generation config information
 
 batch_size: 16

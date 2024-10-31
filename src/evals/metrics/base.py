@@ -28,8 +28,8 @@ class UnlearningMetric:
         return collators
 
     def evaluate(self, model, **kwargs):
-        dataset_cfgs = kwargs.pop('dataset_cfgs', None)
-        collator_cfgs = kwargs.pop('collator_cfgs', None)
+        dataset_cfgs = kwargs.pop('datasets', None)
+        collator_cfgs = kwargs.pop('collators', None)
         data = self.get_datasets(dataset_cfgs=dataset_cfgs, **kwargs)
         collators = self.get_collators(collator_cfgs=collator_cfgs, **kwargs)
         metric_kwargs = {"data": data, "collators": collators}

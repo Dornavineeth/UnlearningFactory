@@ -1,0 +1,7 @@
+defaults:
+  - finetune
+
+name: GradDiff
+method_args:
+  alpha: 1.0
+  retain_loss_type: NLL

@@ -1,0 +1,8 @@
+defaults:
+  - finetune
+
+name: NPO
+method_args:
+  beta: 0.05
+  alpha: 1.0
+  retain_loss_type: NLL

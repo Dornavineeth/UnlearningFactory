@@ -9,10 +9,15 @@ class DataCollatorForSupervisedDataset(object):
     """Collate examples for supervised fine-tuning."""
 
     def __init__(
-        self, tokenizer: transformers.PreTrainedTokenizer, padding_side: str = "right"
+        self, tokenizer: transformers.PreTrainedTokenizer, padding_side: str = "right", index: str= None
     ):
         self.tokenizer = tokenizer
         self.padding_side = padding_side
+        self.index = index
+
+    def get_instances_from_key(self, instances: Sequence[Dict], key: str):
+        ret_instances = [instance[key] for instance in instances]
+        return ret_instances
 
     def _pad_tokens(self, input_ids, padding_value):
         if self.padding_side == "right":
@@ -28,41 +33,29 @@ class DataCollatorForSupervisedDataset(object):
         return input_ids
 
     def __call__(self, instances: Sequence[Dict]) -> Dict[str, torch.Tensor]:
-
-        if isinstance(instances[0], list):
-            instances = list(itertools.chain(*instances))
-
+        assert isinstance(instances[0], dict)
         return_dct = {}
-        input_ids, labels = tuple(
-            [instance[key] for instance in instances] for key in ("input_ids", "labels")
-        )
-
-        if "input_ids" in instances[0]:
+        if "input_ids" not in instances[0]:
+            for key in instances[0].keys():
+                key_instances = self.get_instances_from_key(instances=instances, key=key)
+                return_dct[key] = self(key_instances)
+        else:
             input_ids = [instance["input_ids"] for instance in instances]
             input_ids = self._pad_tokens(input_ids, self.tokenizer.pad_token_id)
             attention_mask = input_ids.ne(self.tokenizer.pad_token_id)
             return_dct.update({"input_ids": input_ids})
             return_dct.update({"attention_mask": attention_mask})
-        if "labels" in instances[0]:
-            labels = [instance["labels"] for instance in instances]
-            labels = self._pad_tokens(labels, IGNORE_INDEX)
-            return_dct.update({"labels": labels})
-
+            if "labels" in instances[0]:
+                labels = [instance["labels"] for instance in instances]
+                labels = self._pad_tokens(labels, IGNORE_INDEX)
+                return_dct.update({"labels": labels})
+            if self.index:
+                if self.index in instances[0]:
+                    return_dct.update(
+                        {
+                            self.index: torch.tensor([example[self.index] for example in instances])
+                        }
+                    )
+                else:
+                    raise Warning(f"{self.index} not found in dataset")
         return return_dct
-
-
-class DataCollatorForSupervisedDatasetWithIndex(DataCollatorForSupervisedDataset):
-    """Collate examples for supervised fine-tuning and handle example indices."""
-
-    tokenizer: transformers.PreTrainedTokenizer
-    padding_side: str = "left"
-    index: str = "index"
-
-    def __call__(self, instances: Sequence[Dict]) -> Dict[str, torch.Tensor]:
-        if isinstance(instances[0], list):
-            instances = list(itertools.chain(*instances))
-        collated = super().__call__(instances)
-        collated[self.index] = torch.tensor(
-            [example[self.index] for example in instances]
-        )
-        return collated

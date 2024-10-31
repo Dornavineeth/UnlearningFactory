@@ -1,6 +1,6 @@
 import hydra
 from omegaconf import DictConfig
-from data import get_datasets, get_collators
+from data import get_data, get_collators
 from model import get_model
 from trainer import load_trainer
 
@@ -11,6 +11,7 @@ def main(cfg: DictConfig):
     Args:
         cfg (DictConfig): Config to train
     """
+    mode = cfg.get("mode", "train")
     model_cfg = cfg.model
     template_args = model_cfg.template_args
     assert model_cfg is not None, "Invalid model yaml passed in train config."
@@ -18,23 +19,23 @@ def main(cfg: DictConfig):
 
     # Load Dataset
     data_cfg = cfg.data
-    collator_cfg = cfg.collator
-    dataset = get_datasets(data_cfg, tokenizer=tokenizer, template_args=template_args)
-    eval_data_cfg = cfg.get("eval_data", None)
-    if eval_data_cfg:
-        eval_dataset = get_datasets(
-            eval_data_cfg, tokenizer=tokenizer, template_args=template_args
-        )
-    collator = get_collators(collator_cfg, tokenizer=tokenizer)
+    data = get_data(
+        data_cfg, mode=mode, tokenizer=tokenizer, template_args=template_args
+    )
 
+    # Load collator
+    collator_cfg = cfg.collator
+    collator = get_collators(collator_cfg, tokenizer=tokenizer)
+    
     # Get Trainer
     trainer_cfg = cfg.trainer
     assert trainer_cfg is not None, ValueError("Please set trainer")
+
     trainer, trainer_args = load_trainer(
         trainer_cfg=trainer_cfg,
         model=model,
-        train_dataset=dataset,
-        eval_dataset=eval_dataset,
+        train_dataset=data.get("train", None),
+        eval_dataset=data.get("eval", None),
         tokenizer=tokenizer,
         data_collator=collator,
     )

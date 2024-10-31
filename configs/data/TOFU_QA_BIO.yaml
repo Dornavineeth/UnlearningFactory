@@ -1,9 +1,0 @@
-TOFU_QA_BIO:
-  args:
-    hf_args:
-      data_files: ./data/TOFU_BIO.json
-      split: "train"
-      path: "json"
-    question_key: "query"
-    answer_key: "response"
-    max_length: 1024
