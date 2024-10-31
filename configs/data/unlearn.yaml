@@ -1,0 +1,4 @@
+defaults:
+  - datasets@forget: TOFU_QA_FORGET10
+  - datasets@retain: TOFU_QA_RETAIN90
+  - datasets@eval: TOFU_QA_FORGET10_P

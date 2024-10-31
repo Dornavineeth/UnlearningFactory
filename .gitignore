@@ -13,6 +13,7 @@ saves*/
 output*/
 wandb/
 data/
+!*/data/  
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -64,7 +65,7 @@ coverage.xml
 *.py,cover
 .hypothesis/
 .pytest_cache/
-.ruff_cache
+.ruff_cache/
 cover/
 
 # Translations
