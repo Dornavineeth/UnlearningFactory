@@ -14,5 +14,5 @@ defaults: # include all defined metrics files
     # - BIO_ROUGE
 
 device: cuda
-output_dir: ${paths.output_dir}
+output_dir: ${output_dir} # set to default eval directory
 metrics: {}

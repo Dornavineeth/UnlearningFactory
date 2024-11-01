@@ -5,4 +5,4 @@ defaults:
   - paths: default
   - _self_
 
-output_logs: eval_logs/
+output_dir: ${paths.eval_output_dir}

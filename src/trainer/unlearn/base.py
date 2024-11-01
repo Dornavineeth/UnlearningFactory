@@ -1,3 +1,5 @@
+# Modified from https://github.com/huggingface/transformers/blob/v4.45.1/src/transformers/trainer.py
+
 from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Tuple, Union
 
 import torch

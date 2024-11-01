@@ -4,6 +4,7 @@ defaults:
   - data: unlearn
   - collator: DataCollatorForSupervisedDataset
   - hydra: default
+  - paths: default
 
   - _self_
 

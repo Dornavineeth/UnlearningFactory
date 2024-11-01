@@ -1,5 +1,5 @@
 defaults:
-  - finetune
+  - GradDiff
 
 name: DPO
 method_args:
