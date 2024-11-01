@@ -1,24 +1,23 @@
+import copy
 from trainer.utils import compute_dpo_loss
-from trainer.unlearn.grad_diff import GradDiffTrainer
+from trainer.unlearn.dpo import GradDiffTrainer
 
 
 class NPOTrainer(GradDiffTrainer):
     def __init__(self, beta=1.0, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.beta = beta
+        if hasattr(self, 'target_model'):
+            self.target_model = copy.deepcopy(self.model).to("cuda")
 
     def compute_loss(self, model, inputs, return_outputs=False):
         forget_inputs = inputs["forget"]
-        forget_labels = forget_inputs["labels"]
-        forget_inputs = {
-            "input_ids": forget_inputs["input_ids"],
-            "attention_mask": forget_inputs["attention_mask"],
-        }
+        
         forget_loss, forget_outputs = compute_dpo_loss(
             model=model,
             ref_model=self.target_model,
-            inputs=forget_inputs,
-            lose_labels=forget_labels,
+            win_inputs=None,
+            lose_inputs=forget_inputs,
             beta=self.beta,
         )
 

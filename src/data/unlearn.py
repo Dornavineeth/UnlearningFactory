@@ -2,6 +2,7 @@ from torch.utils.data import Dataset
 
 
 class ForgetRetainDataset(Dataset):
+    # https://github.com/OPTML-Group/SOUL/blob/main/src/dataset/Base.py
     def __init__(self, forget, retain):
         self.forget = forget
         self.retain = retain
