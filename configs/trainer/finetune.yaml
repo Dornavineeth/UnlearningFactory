@@ -1,6 +1,6 @@
 name: finetune
 args:
-  per_device_train_batch_size: 16
+  per_device_train_batch_size: 2
   per_device_eval_batch_size: 16
   gradient_accumulation_steps: 4
   warmup_steps: 5
@@ -8,7 +8,7 @@ args:
   bf16: True
   bf16_full_eval: True
   logging_steps: 5
-  output_dir: saves
+  output_dir: ${paths.train_output_dir}
   logging_dir: ${trainer.args.output_dir}/logs
   optim: paged_adamw_32bit
   save_strategy: epoch

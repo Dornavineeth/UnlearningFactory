@@ -1,0 +1,3 @@
+defaults:
+  - datasets@train: TOFU_QA_FULL
+  - datasets@eval: TOFU_QA_FORGET10_P

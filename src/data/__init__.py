@@ -1,11 +1,14 @@
 from typing import Dict, Any
 from omegaconf import DictConfig
 
-from data.tofu import QADataset
+from data.tofu import (
+    QADataset,
+    QAwithIdkDataset,
+)
 from data.collators import (
     DataCollatorForSupervisedDataset,
-    DataCollatorForSupervisedDatasetWithIndex,
 )
+from data.unlearn import ForgetRetainDataset
 
 
 DATA_REGISTRY: Dict[str, Any] = {}
@@ -29,13 +32,28 @@ def _load_single_dataset(dataset_name: str, data_cfg: DictConfig, **kwargs):
 
 
 def get_datasets(dataset_cfgs: DictConfig, **kwargs):
-    data = {}
+    dataset = {}
     for dataset_name, data_cfg in dataset_cfgs.items():
-        data[dataset_name] = _load_single_dataset(dataset_name, data_cfg, **kwargs)
-    if len(data) == 1:
+        dataset[dataset_name] = _load_single_dataset(dataset_name, data_cfg, **kwargs)
+    if len(dataset) == 1:
         # return a single dataset
-        return list(data.values())[0]
-    # return datasets in a dict
+        return list(dataset.values())[0]
+    # return a multiple datasets in dictionary
+    return dataset
+
+
+def get_data(data_cfg: DictConfig, mode="train", **kwargs):
+    data = {}
+    for split, dataset_cfgs in data_cfg.items():
+        data[split] = get_datasets(dataset_cfgs, **kwargs)
+    if mode == "train":
+        return data
+    elif mode == "unlearn":
+        unlearn_splits = {k: v for k, v in data.items() if k not in ("eval", "test")}
+        unlearn_dataset = ForgetRetainDataset(**unlearn_splits)
+        data["train"] = unlearn_dataset
+        for split in unlearn_splits:
+            data.pop(split)
     return data
 
 
@@ -67,10 +85,12 @@ _register_data("TOFU_QA_FORGET10_P", QADataset)
 _register_data("TOFU_QA_FORGET10_PT", QADataset)
 _register_data("TOFU_QA_FULL_PARAPHRASED10", QADataset)
 _register_data("TOFU_QA_BIO", QADataset)
+_register_data("TOFU_QA_RETAIN90", QADataset)
+_register_data("TOFU_QAwithIdk_FORGET10", QAwithIdkDataset)
+
+# Register Composite Datasets
+# groups : unlearn
+_register_data("TOFU_QA_FORGET10_RETAIN90", ForgetRetainDataset)
 
 # Register Collators
 _register_collator("DataCollatorForSupervisedDataset", DataCollatorForSupervisedDataset)
-_register_collator(
-    "DataCollatorForSupervisedDatasetWithIndex",
-    DataCollatorForSupervisedDatasetWithIndex,
-)

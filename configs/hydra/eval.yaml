@@ -1,8 +1,8 @@
 defaults:
-  - defaults
+  - default
 
 run:
-  dir: ${output_logs}
+  dir: ${output_dir}
 
 job_logging:
   handlers:

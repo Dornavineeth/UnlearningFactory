@@ -20,24 +20,26 @@ def evaluate_probability_batch(model, batch):
     loss = loss_function(logits.transpose(-1, -2), shifted_labels).sum(dim=-1)
     num_token_gt = (batch["labels"] != -100).sum(-1)
     avg_loss = loss / num_token_gt
-    prob = torch.exp(-avg_loss)
-    return prob.cpu().numpy().tolist()
-
+    probs = torch.exp(-avg_loss).cpu().numpy().tolist()
+    return probs
 
 def evaluate_probability(model, dataloader):
     index_to_prob = {}
     for batch in tqdm(dataloader, desc="Calculating loss", total=len(dataloader)):
-        index = batch.pop("index").cpu().numpy().tolist()
-        probs = evaluate_probability_batch(model, batch)
-        assert len(index) == len(probs)
-        for idx, prob in zip(index, probs):
-            if idx in index_to_prob:
-                if isinstance(index_to_prob[idx], list):
-                    index_to_prob[idx].append({"prob": prob})
+        if "input_ids" in batch:
+            batch = {0: batch}
+        assert isinstance(next(iter(batch.values())), dict) and "input_ids" in next(iter(batch.values()))
+        for _, mini_batch in batch.items():
+            index = mini_batch.pop("index").cpu().numpy().tolist()
+            probs = evaluate_probability_batch(model, mini_batch)
+            for idx, prob in zip(index, probs):
+                if idx in index_to_prob:
+                    if isinstance(index_to_prob[idx], list):
+                        index_to_prob[idx].append({"prob": prob})
+                    else:
+                        index_to_prob[idx] = [index_to_prob[idx]] + [{"prob": prob}]
                 else:
-                    index_to_prob[idx] = [index_to_prob[idx]] + [{"prob": prob}]
-            else:
-                index_to_prob[idx] = {"prob": prob}
+                    index_to_prob[idx] = {"prob": prob}
     return index_to_prob
 
 
@@ -84,17 +86,21 @@ def eval_text_similarity(model, tokenizer, dataloader, generation_args):
     for batch in tqdm(
         dataloader, desc="Calculating Text Similarity", total=len(dataloader)
     ):
-        index = batch.pop("index").numpy().tolist()
-        scores = eval_text_similarity_batch(model, tokenizer, batch, generation_args)
-        assert len(index) == len(scores)
-        for idx, score in zip(index, scores):
-            if idx in index_to_scores:
-                if isinstance(index_to_scores[idx], list):
-                    index_to_scores[idx].append(score)
+        if "input_ids" in batch:
+            batch = {0: batch}
+        assert isinstance(next(iter(batch.values())), dict) and "input_ids" in next(iter(batch.values()))
+        for _, mini_batch in batch.items():
+            index = mini_batch.pop("index").numpy().tolist()
+            scores = eval_text_similarity_batch(model, tokenizer, mini_batch, generation_args)
+            assert len(index) == len(scores)
+            for idx, score in zip(index, scores):
+                if idx in index_to_scores:
+                    if isinstance(index_to_scores[idx], list):
+                        index_to_scores[idx].append(score)
+                    else:
+                        index_to_scores[idx] = [index_to_scores[idx]] + [score]
                 else:
-                    index_to_scores[idx] = [index_to_scores[idx]] + [score]
-            else:
-                index_to_scores[idx] = score
+                    index_to_scores[idx] = score
     return index_to_scores
 
 @unlearning_metric(name="Q_A_Prob")

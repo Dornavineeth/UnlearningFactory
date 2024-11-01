@@ -1,6 +1,7 @@
+# @package eval.tofu.metrics.Q_A_Prob
 defaults:
-  - ../../data@dataset_cfgs: TOFU_QA_FORGET10
-  - ../../collator@collator_cfgs: DataCollatorForSupervisedDatasetWithIndex
+  - ../../data/datasets@datasets: TOFU_QA_FORGET10
+  - ../../collator@collators: DataCollatorForSupervisedDatasetwithIndex
   # ^ get default dataset and generation config information
 
 batch_size: 16

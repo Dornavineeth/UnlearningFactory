@@ -19,7 +19,7 @@ class Evaluator:
         self.model.eval()
 
     def load_metrics(self):
-        self.metrics_cfg = self.eval_cfg.metrics_cfg
+        self.metrics_cfg = self.eval_cfg.metrics
         self.metrics = get_metrics(self.metrics_cfg)
 
     def evaluate(self, overwrite=False, **kwargs):
@@ -36,7 +36,7 @@ class Evaluator:
                 continue
             print(f"Evaluating {metric_name}")
             kwargs = {"tokenizer": self.tokenizer, "template_args": self.template_args}
-            metrics_args = self.eval_cfg.metrics_cfg[metric_name]
+            metrics_args = self.eval_cfg.metrics[metric_name]
             results = metric_fn(self.model, **kwargs, **metrics_args)
                 
             logs[metric_name] = results

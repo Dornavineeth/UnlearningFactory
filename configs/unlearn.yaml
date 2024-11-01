@@ -1,9 +1,15 @@
 defaults:
   - model: Llama-3.1-8B-Instruct
-  - trainer: finetune
-  - data: finetune
+  - trainer: GradAscent
+  - data: unlearn
   - collator: DataCollatorForSupervisedDataset
   - hydra: default
   - paths: default
 
-mode: train
+  - _self_
+
+trainer:
+  args: 
+    remove_unused_columns: False
+
+mode: unlearn

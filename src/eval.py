@@ -1,10 +1,12 @@
 import hydra
+import logging
 from omegaconf import DictConfig
 from model import get_model
 
 # from data import get_datasets
 from evals import get_evaluators
 
+logging.getLogger('absl').setLevel(logging.WARNING)
 
 @hydra.main(version_base=None, config_path="../configs", config_name="eval.yaml")
 def main(cfg: DictConfig):

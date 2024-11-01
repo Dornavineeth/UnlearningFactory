@@ -1,0 +1,17 @@
+# path to root directory
+root_dir: .
+
+# path to data directory
+data_dir: ${paths.root_dir}/data/
+
+# path to dataset configs
+datasets: ${paths.root_dir}/configs/data/datasets
+
+# path to output directory, created dynamically by hydra
+# path generation pattern is specified in `configs/hydra/default.yaml`
+# use it to store all files generated during the run, like ckpts and metrics
+train_output_dir: ${paths.root_dir}/saves
+eval_output_dir: ${paths.root_dir}/evals
+
+# path to working directory
+work_dir: ${hydra:runtime.cwd}

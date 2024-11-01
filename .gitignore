@@ -1,7 +1,5 @@
 # custom .gitignore
 !src/data/__init__.py
-eval_logs/
-eval_dumps/
 logs/
 unity/
 src/data/test.py
@@ -9,12 +7,14 @@ src/data/__pycache__
 ms_cache/
 logs/
 hf_cache/
-cache/
-saves/
-output/
-outputs/
+cache*/
+saves*/
+output*/
 wandb/
 data/
+!*/data/ 
+evals/
+!*/evals/  
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -66,6 +66,7 @@ coverage.xml
 *.py,cover
 .hypothesis/
 .pytest_cache/
+.ruff_cache/
 cover/
 
 # Translations
