@@ -53,7 +53,7 @@ Adding new `Dataset` invloves implementing
 - **Register**: Both configurations and handlers should be registered in the [DATASET_REGISTRY](../src/data/__init__.py).
 
 
-## Dataset Handler
+### Dataset Handler
 
 Implement your own class extending `torch.utils.data.Dataset` in any file of [src/data](../configs/src/data/)
 
@@ -80,7 +80,7 @@ class QADataset(Dataset):
 __NOTE__: `template_args` and `tokenizer` are additionally piplelined for any dataset for packaging and tokenizing. See [here](../src/train.py). 
 
 
-## Dataset Config
+### Dataset Config
 
 Specify the dataset handler arguments in the `.yaml` configuration file located in [configs/data/datasets](../configs/src/data/datasets).
 
