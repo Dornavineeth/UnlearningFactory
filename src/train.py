@@ -26,7 +26,7 @@ def main(cfg: DictConfig):
     # Load collator
     collator_cfg = cfg.collator
     collator = get_collators(collator_cfg, tokenizer=tokenizer)
-    
+
     # Get Trainer
     trainer_cfg = cfg.trainer
     assert trainer_cfg is not None, ValueError("Please set trainer")

@@ -7,9 +7,9 @@ class DPOTrainer(GradDiffTrainer):
     def __init__(self, beta=1.0, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.beta = beta
-        if hasattr(self, 'target_model'):
+        if hasattr(self, "target_model"):
             self.target_model = copy.deepcopy(self.model).to("cuda")
-        
+
     def compute_loss(self, model, inputs, return_outputs=False):
         forget_inputs = inputs["forget"]["original"]
         alternate_inputs = inputs["forget"]["alternate"]

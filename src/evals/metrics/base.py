@@ -16,20 +16,24 @@ class UnlearningMetric:
     def get_datasets(self, dataset_cfgs=None, **kwargs):
         if self.data:
             return self.data
-        data = get_datasets(tokenizer=kwargs.get("tokenizer", None),
-                            template_args=kwargs.get("template_args", None),
-                            dataset_cfgs=dataset_cfgs)
+        data = get_datasets(
+            tokenizer=kwargs.get("tokenizer", None),
+            template_args=kwargs.get("template_args", None),
+            dataset_cfgs=dataset_cfgs,
+        )
         return data
 
     def get_collators(self, collator_cfgs=None, **kwargs):
         if self.collators:
             return self.collators
-        collators = get_collators(tokenizer=kwargs.get("tokenizer", None), collator_cfgs=collator_cfgs)
+        collators = get_collators(
+            tokenizer=kwargs.get("tokenizer", None), collator_cfgs=collator_cfgs
+        )
         return collators
 
     def evaluate(self, model, **kwargs):
-        dataset_cfgs = kwargs.pop('datasets', None)
-        collator_cfgs = kwargs.pop('collators', None)
+        dataset_cfgs = kwargs.pop("datasets", None)
+        collator_cfgs = kwargs.pop("collators", None)
         data = self.get_datasets(dataset_cfgs=dataset_cfgs, **kwargs)
         collators = self.get_collators(collator_cfgs=collator_cfgs, **kwargs)
         metric_kwargs = {"data": data, "collators": collators}
@@ -49,7 +53,7 @@ class UnlearningMetric:
 
 # decorator that wraps simple user-defined metric python functions
 # into callable UnlearningMetric classes
-class unlearning_metric: 
+class unlearning_metric:
     def __init__(self, name: str):
         self.name = name
 

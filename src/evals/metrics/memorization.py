@@ -23,12 +23,15 @@ def evaluate_probability_batch(model, batch):
     probs = torch.exp(-avg_loss).cpu().numpy().tolist()
     return probs
 
+
 def evaluate_probability(model, dataloader):
     index_to_prob = {}
     for batch in tqdm(dataloader, desc="Calculating loss", total=len(dataloader)):
         if "input_ids" in batch:
             batch = {0: batch}
-        assert isinstance(next(iter(batch.values())), dict) and "input_ids" in next(iter(batch.values()))
+        assert isinstance(next(iter(batch.values())), dict) and "input_ids" in next(
+            iter(batch.values())
+        )
         for _, mini_batch in batch.items():
             index = mini_batch.pop("index").cpu().numpy().tolist()
             probs = evaluate_probability_batch(model, mini_batch)
@@ -88,10 +91,14 @@ def eval_text_similarity(model, tokenizer, dataloader, generation_args):
     ):
         if "input_ids" in batch:
             batch = {0: batch}
-        assert isinstance(next(iter(batch.values())), dict) and "input_ids" in next(iter(batch.values()))
+        assert isinstance(next(iter(batch.values())), dict) and "input_ids" in next(
+            iter(batch.values())
+        )
         for _, mini_batch in batch.items():
             index = mini_batch.pop("index").numpy().tolist()
-            scores = eval_text_similarity_batch(model, tokenizer, mini_batch, generation_args)
+            scores = eval_text_similarity_batch(
+                model, tokenizer, mini_batch, generation_args
+            )
             assert len(index) == len(scores)
             for idx, score in zip(index, scores):
                 if idx in index_to_scores:
@@ -102,6 +109,7 @@ def eval_text_similarity(model, tokenizer, dataloader, generation_args):
                 else:
                     index_to_scores[idx] = score
     return index_to_scores
+
 
 @unlearning_metric(name="Q_A_Prob")
 def q_a_prob(model, **kwargs):
@@ -147,7 +155,6 @@ def q_a_pert_prob(model, **kwargs):
     return index_to_probs
 
 
-
 @unlearning_metric(name="Q_A_ROUGE")
 def q_a_rouge(model, **kwargs):
     tokenizer = kwargs["tokenizer"]
@@ -160,7 +167,6 @@ def q_a_rouge(model, **kwargs):
         model, tokenizer, dataloader, generation_args
     )
     return index_to_scores
-
 
 
 @unlearning_metric(name="Q_PARA_A_PARA_ROUGE")
@@ -214,7 +220,6 @@ def bio_prob(model, **kwargs):
     dataloader = DataLoader(data, batch_size=batch_size, collate_fn=collator)
     index_to_probs = evaluate_probability(model, dataloader)
     return index_to_probs
-
 
 
 @unlearning_metric(name="BIO_ROUGE")

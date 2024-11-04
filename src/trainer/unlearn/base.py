@@ -1,6 +1,6 @@
 # Modified from https://github.com/huggingface/transformers/blob/v4.45.1/src/transformers/trainer.py
 
-from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Tuple, Union
+from typing import Any, Dict, List, Optional, Tuple, Union
 
 import torch
 from torch import nn
@@ -10,81 +10,22 @@ from torch.utils.data import Dataset
 
 
 from transformers.trainer_pt_utils import (
-    DistributedTensorGatherer,
-    EvalLoopContainer,
-    IterableDatasetShard,
-    LabelSmoother,
-    LayerWiseDummyOptimizer,
-    LengthGroupedSampler,
-    SequentialDistributedSampler,
-    distributed_broadcast_scalars,
-    distributed_concat,
-    find_batch_size,
-    get_model_param_count,
-    get_module_class_from_name,
-    get_parameter_names,
-    nested_concat,
     nested_detach,
-    nested_numpify,
-    nested_xla_mesh_reduce,
-    reissue_pt_warnings,
-    remove_dummy_checkpoint,
 )
 
 
 from transformers.utils import (
-    ADAPTER_CONFIG_NAME,
-    ADAPTER_SAFE_WEIGHTS_NAME,
-    ADAPTER_WEIGHTS_NAME,
-    CONFIG_NAME,
-    SAFE_WEIGHTS_INDEX_NAME,
-    SAFE_WEIGHTS_NAME,
-    WEIGHTS_INDEX_NAME,
-    WEIGHTS_NAME,
-    XLA_FSDPV2_MIN_VERSION,
-    PushInProgress,
-    PushToHubMixin,
-    can_return_loss,
-    find_labels,
-    is_accelerate_available,
-    is_apex_available,
-    is_bitsandbytes_available,
-    is_datasets_available,
-    is_galore_torch_available,
-    is_grokadamw_available,
-    is_in_notebook,
-    is_ipex_available,
-    is_liger_kernel_available,
-    is_lomo_available,
-    is_peft_available,
-    is_safetensors_available,
-    is_sagemaker_dp_enabled,
     is_sagemaker_mp_enabled,
-    is_schedulefree_available,
-    is_torch_compile_available,
-    is_torch_mlu_available,
-    is_torch_mps_available,
-    is_torch_musa_available,
-    is_torch_neuroncore_available,
-    is_torch_npu_available,
-    is_torch_xla_available,
-    is_torch_xpu_available,
-    is_torchao_available,
-    logging,
-    strtobool,
 )
 
 
 if is_sagemaker_mp_enabled():
-    import smdistributed.modelparallel.torch as smp
     from smdistributed.modelparallel import __version__ as SMP_VERSION
 
     IS_SAGEMAKER_MP_POST_1_10 = version.parse(SMP_VERSION) >= version.parse("1.10")
 
     from transformers.trainer_pt_utils import (
-        smp_forward_backward,
         smp_forward_only,
-        smp_gather,
         smp_nested_concat,
     )
 else:
