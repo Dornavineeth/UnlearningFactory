@@ -1,15 +1,17 @@
-from typing import Dict, Sequence
-import transformers
 import torch
-import itertools
-
+import transformers
+from typing import Dict, Sequence
 from data.utils import IGNORE_INDEX
+
 
 class DataCollatorForSupervisedDataset(object):
     """Collate examples for supervised fine-tuning."""
 
     def __init__(
-        self, tokenizer: transformers.PreTrainedTokenizer, padding_side: str = "right", index: str= None
+        self,
+        tokenizer: transformers.PreTrainedTokenizer,
+        padding_side: str = "right",
+        index: str = None,
     ):
         self.tokenizer = tokenizer
         self.padding_side = padding_side
@@ -37,7 +39,9 @@ class DataCollatorForSupervisedDataset(object):
         return_dct = {}
         if "input_ids" not in instances[0]:
             for key in instances[0].keys():
-                key_instances = self.get_instances_from_key(instances=instances, key=key)
+                key_instances = self.get_instances_from_key(
+                    instances=instances, key=key
+                )
                 return_dct[key] = self(key_instances)
         else:
             input_ids = [instance["input_ids"] for instance in instances]
@@ -53,7 +57,9 @@ class DataCollatorForSupervisedDataset(object):
                 if self.index in instances[0]:
                     return_dct.update(
                         {
-                            self.index: torch.tensor([example[self.index] for example in instances])
+                            self.index: torch.tensor(
+                                [example[self.index] for example in instances]
+                            )
                         }
                     )
                 else:

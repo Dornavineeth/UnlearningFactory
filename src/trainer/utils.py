@@ -26,7 +26,7 @@ def compute_batch_nll(model, inputs):
     # NOTE: not same as model(**inputs).loss but has sum loss for each seq in a batch
     outputs = model(**inputs)
     logits = outputs.logits
-    labels = inputs['labels']
+    labels = inputs["labels"]
     shifted_labels = labels[..., 1:].contiguous()
     logits = logits[..., :-1, :].contiguous()
     loss_function = nn.CrossEntropyLoss(ignore_index=-100, reduction="none")

@@ -11,12 +11,12 @@ from data.collators import (
 from data.unlearn import ForgetRetainDataset
 
 
-DATA_REGISTRY: Dict[str, Any] = {}
+DATASET_REGISTRY: Dict[str, Any] = {}
 COLLATOR_REGISTRY: Dict[str, Any] = {}
 
 
 def _register_data(data_name, data_class):
-    DATA_REGISTRY[data_name] = data_class
+    DATASET_REGISTRY[data_name] = data_class
 
 
 def _register_collator(collator_name, collator_class):
@@ -24,7 +24,7 @@ def _register_collator(collator_name, collator_class):
 
 
 def _load_single_dataset(dataset_name: str, data_cfg: DictConfig, **kwargs):
-    dataset = DATA_REGISTRY.get(dataset_name)
+    dataset = DATASET_REGISTRY.get(dataset_name)
     if dataset is None:
         raise NotImplementedError(f"{dataset_name} not implemented or not registered")
     data_args = data_cfg.args

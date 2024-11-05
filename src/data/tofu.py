@@ -30,13 +30,13 @@ class QADataset(Dataset):
 
     def _process_sample(self, question, answer, index=-1):
         tokenized_data = package_prompt_response(
-                self.template_args,
-                self.tokenizer,
-                question,
-                answer,
-                self.max_length,
-                self.predict_with_generate,
-            )
+            self.template_args,
+            self.tokenizer,
+            question,
+            answer,
+            self.max_length,
+            self.predict_with_generate,
+        )
         item_dct = {
             "input_ids": tokenized_data["input_ids"],
             "labels": tokenized_data["labels"],
@@ -44,7 +44,7 @@ class QADataset(Dataset):
             "index": index,
         }
         return item_dct
-    
+
     def __getitem__(self, idx):
         question = self.data[idx][self.question_key]
         answer = self.data[idx][self.answer_key]
@@ -54,30 +54,27 @@ class QADataset(Dataset):
         elif isinstance(answer, list):
             item = {}
             for i, ans in enumerate(answer):
-                sample_item = self._process_sample(question=question, answer=ans, index=index)
+                sample_item = self._process_sample(
+                    question=question, answer=ans, index=index
+                )
                 item[i] = sample_item
         else:
             raise NotImplementedError("answer format not found")
         return item
-    
+
 
 class QAwithIdkDataset(QADataset):
-    def __init__(
-        self,
-        idk_path,
-        *args,
-        **kwargs
-    ):
+    def __init__(self, idk_path, *args, **kwargs):
         self.idk_path = idk_path
         self.idk_responses = open(self.idk_path, "r").readlines()
         super().__init__(*args, **kwargs)
-    
+
     def item_with_idk(self, question):
         rand_pos = torch.randint(0, len(self.idk_responses), (1,)).item()
         idk_response = self.idk_responses[rand_pos].strip()
         idk_item = self._process_sample(question=question, answer=idk_response)
-        return idk_item  
-    
+        return idk_item
+
     def __getitem__(self, idx):
         item = super().__getitem__(idx)
         question = self.data[idx][self.question_key]
@@ -94,4 +91,3 @@ class QAwithIdkDataset(QADataset):
                 return_item["alternate"] = idk_item
                 # return_item.append([sample_item, idk_item])
         return return_item
-        

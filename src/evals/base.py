@@ -2,6 +2,7 @@ import os
 import json
 from evals.metrics import get_metrics
 
+
 class Evaluator:
     def __init__(self, name, eval_cfg, template_args, model, tokenizer, **kwargs):
         self.eval_cfg = eval_cfg
@@ -38,7 +39,7 @@ class Evaluator:
             kwargs = {"tokenizer": self.tokenizer, "template_args": self.template_args}
             metrics_args = self.eval_cfg.metrics[metric_name]
             results = metric_fn(self.model, **kwargs, **metrics_args)
-                
+
             logs[metric_name] = results
 
             os.makedirs(self.eval_cfg.output_dir, exist_ok=True)
