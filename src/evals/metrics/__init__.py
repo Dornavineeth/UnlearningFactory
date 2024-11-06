@@ -12,6 +12,7 @@ from evals.metrics.memorization import (
     q_a_pert_rouge,
     bio_prob,
     bio_rouge,
+    truth_ratio
 )
 
 METRICS_REGISTRY: Dict[str, UnlearningMetric] = {}
@@ -25,6 +26,9 @@ def _get_single_metric(metric_name, metric_cfg, **kwargs):
     metric = METRICS_REGISTRY.get(metric_name)
     if metric is None:
         raise NotImplementedError(f"{metric_name} not implemented")
+    pre_compute =  metric_cfg.get("pre_compute", {})
+    pre_compute = get_metrics(pre_compute, **kwargs)
+    metric.pre_compute.update(pre_compute)
     return metric
 
 
@@ -45,3 +49,4 @@ _register_metric(q_a_para_rouge)
 _register_metric(q_a_pert_rouge)
 _register_metric(bio_prob)
 _register_metric(bio_rouge)
+_register_metric(truth_ratio)

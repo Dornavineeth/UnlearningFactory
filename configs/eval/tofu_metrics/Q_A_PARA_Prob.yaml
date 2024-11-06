@@ -1,13 +1,7 @@
-# @package eval.tofu.metrics.Q_PARA_A_PARA_Prob
+# @package eval.tofu.metrics.Q_A_PARA_Prob
 defaults:
   - ../../data/datasets@datasets: TOFU_QA_FORGET10_P
   - ../../collator@collators: DataCollatorForSupervisedDatasetwithIndex
   # ^ get default dataset and generation config information
-
-datasets:
-  TOFU_QA_FORGET10_P:
-    args:
-      question_key: paraphrased_question
-
 
 batch_size: 16

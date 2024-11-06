@@ -9,6 +9,7 @@ batch_size: 16
 datasets: # override as needed
   TOFU_QA_FORGET10_P:
     args:
+      question_key: paraphrased_question
       predict_with_generate: True
 collators:
   DataCollatorForSupervisedDataset: 

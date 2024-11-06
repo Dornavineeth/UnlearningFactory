@@ -20,8 +20,9 @@ def evaluate_probability_batch(model, batch):
     loss = loss_function(logits.transpose(-1, -2), shifted_labels).sum(dim=-1)
     num_token_gt = (batch["labels"] != -100).sum(-1)
     avg_loss = loss / num_token_gt
-    probs = torch.exp(-avg_loss).cpu().numpy().tolist()
-    return probs
+    probs = torch.exp(-avg_loss)
+    normalized_probs = probs**(1/num_token_gt)
+    return normalized_probs.cpu().numpy().tolist()
 
 
 def evaluate_probability(model, dataloader):
@@ -233,4 +234,19 @@ def bio_rouge(model, **kwargs):
     index_to_scores = eval_text_similarity(
         model, tokenizer, dataloader, generation_args
     )
+    return index_to_scores
+
+
+@unlearning_metric(name="Truth_Ratio")
+def truth_ratio(model, **kwargs):
+    para_results = kwargs["pre_compute"]["Q_A_PARA_Prob"]
+    pert_results = kwargs["pre_compute"]["Q_A_PERT_Prob"]
+    index_to_scores = {}
+    for k, para_result in para_results.items():
+        para_prob = para_result["prob"]
+        pert_result = pert_results[k]
+        pert_prob = sum([r["prob"] for r in pert_result])/len(pert_result)
+        index_to_scores[k] = {
+            "truth_ratio": pert_prob/para_prob
+        }
     return index_to_scores

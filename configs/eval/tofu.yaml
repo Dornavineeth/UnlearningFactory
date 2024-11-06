@@ -12,6 +12,8 @@ defaults: # include all defined metrics files
     - Q_A_PERT_ROUGE
     - BIO_Prob
     # - BIO_ROUGE
+    - Q_A_PARA_Prob
+    - Truth_Ratio
 
 device: cuda
 output_dir: ${output_dir} # set to default eval directory

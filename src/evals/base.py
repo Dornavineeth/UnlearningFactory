@@ -13,6 +13,10 @@ class Evaluator:
         self.load_metrics()
         self.name = name
         self.logs = {}
+        self.logs_filename = os.path.join(self.eval_cfg.output_dir, f"{self.name}_EVAL.json")
+        if os.path.exists(self.logs_filename):
+            with open(self.logs_filename, "r") as f:
+                self.logs = json.load(f)
 
     def prepare_model(self):
         self.device = self.eval_cfg.device
@@ -24,24 +28,16 @@ class Evaluator:
         self.metrics = get_metrics(self.metrics_cfg)
 
     def evaluate(self, overwrite=False, **kwargs):
-        logs_filename = os.path.join(self.eval_cfg.output_dir, f"{self.name}_EVAL.json")
-        logs = {}
-
-        if os.path.exists(logs_filename):
-            with open(logs_filename, "r") as f:
-                logs = json.load(f)
-
         for metric_name, metric_fn in self.metrics.items():
-            if not overwrite and metric_name in logs:
+            if not overwrite and metric_name in self.logs:
                 print(f"Skipping {metric_name}, already evaluated.")
                 continue
-            print(f"Evaluating {metric_name}")
             kwargs = {"tokenizer": self.tokenizer, "template_args": self.template_args}
             metrics_args = self.eval_cfg.metrics[metric_name]
-            results = metric_fn(self.model, **kwargs, **metrics_args)
-
-            logs[metric_name] = results
-
+            _ = metric_fn(self.model, cache=self.logs, **kwargs, **metrics_args)
+            # for p_metric_name, p_results in pre_compute_results.items():
+            #     self.logs[p_metric_name] = p_results
+            # self.logs[metric_name] = results
             os.makedirs(self.eval_cfg.output_dir, exist_ok=True)
-            with open(logs_filename, "w") as f:
-                json.dump(logs, f, indent=4)
+            with open(self.logs_filename, "w") as f:
+                json.dump(self.logs, f, indent=4)
