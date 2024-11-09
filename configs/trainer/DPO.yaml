@@ -1,7 +1,7 @@
 defaults:
   - GradDiff
 
-name: DPO
+handler: DPO
 method_args:
   beta: 0.05
   alpha: 1.0

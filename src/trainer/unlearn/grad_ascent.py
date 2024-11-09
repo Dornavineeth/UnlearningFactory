@@ -1,7 +1,7 @@
 from trainer.unlearn.base import UnlearnTrainer
 
 
-class GradAscentTrainer(UnlearnTrainer):
+class GradAscent(UnlearnTrainer):
     def compute_loss(self, model, inputs, return_outputs=False):
         forget_inputs = inputs["forget"]
         forget_inputs = {

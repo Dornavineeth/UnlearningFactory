@@ -5,15 +5,19 @@ from evals.tofu import TOFUEvaluator
 EVALUATOR_REGISTRY: Dict[str, Any] = {}
 
 
-def _register_evaluator(evaluator_name, evaluator_class):
-    EVALUATOR_REGISTRY[evaluator_name] = evaluator_class
+def _register_evaluator(evaluator_class):
+    EVALUATOR_REGISTRY[evaluator_class.__name__] = evaluator_class
 
 
 def get_evaluator(name: str, eval_cfg: DictConfig, **kwargs):
-    evaluator = EVALUATOR_REGISTRY.get(name)
-    if evaluator is None:
-        raise NotImplementedError(f"{name} not implemented or not registered")
-    return evaluator(eval_cfg, **kwargs)
+    evaluator_handler_name = eval_cfg.get("handler")
+    assert evaluator_handler_name is not None, ValueError(f"{name} handler not set")
+    eval_handler = EVALUATOR_REGISTRY.get(evaluator_handler_name)
+    if eval_handler is None:
+        raise NotImplementedError(
+            f"{evaluator_handler_name} not implemented or not registered"
+        )
+    return eval_handler(eval_cfg, **kwargs)
 
 
 def get_evaluators(eval_cfgs: DictConfig, **kwargs):
@@ -23,4 +27,5 @@ def get_evaluators(eval_cfgs: DictConfig, **kwargs):
     return evaluators
 
 
-_register_evaluator("tofu", TOFUEvaluator)
+# Register Your benchmark evaluators
+_register_evaluator(TOFUEvaluator)

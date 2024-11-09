@@ -2,16 +2,16 @@ from typing import Dict, Any
 from omegaconf import DictConfig
 from transformers import Trainer, TrainingArguments
 
-from trainer.unlearn.grad_ascent import GradAscentTrainer
-from trainer.unlearn.grad_diff import GradDiffTrainer
-from trainer.unlearn.npo import NPOTrainer
-from trainer.unlearn.dpo import DPOTrainer
+from trainer.unlearn.grad_ascent import GradAscent
+from trainer.unlearn.grad_diff import GradDiff
+from trainer.unlearn.npo import NPO
+from trainer.unlearn.dpo import DPO
 
 TRAINER_REGISTRY: Dict[str, Any] = {}
 
 
-def _register_trainer(trainer_name, trainer_class):
-    TRAINER_REGISTRY[trainer_name] = trainer_class
+def _register_trainer(trainer_class):
+    TRAINER_REGISTRY[trainer_class.__name__] = trainer_class
 
 
 def load_trainer_args(trainer_args: DictConfig):
@@ -28,13 +28,16 @@ def load_trainer(
     tokenizer=None,
     data_collator=None,
 ):
-    trainer_name = trainer_cfg.name
     trainer_args = trainer_cfg.args
     method_args = trainer_cfg.get("method_args", {})
     trainer_args = load_trainer_args(trainer_args)
-    trainer_cls = TRAINER_REGISTRY.get(trainer_name, None)
+    trainer_handler_name = trainer_cfg.get("handler")
+    assert trainer_handler_name is not None, ValueError(
+        f"{trainer_handler_name} handler not set"
+    )
+    trainer_cls = TRAINER_REGISTRY.get(trainer_handler_name, None)
     assert trainer_cls is not None, NotImplementedError(
-        f"{trainer_name} is not supported or Please use a valid trainer_name"
+        f"{trainer_handler_name} not implemented or not registered"
     )
     trainer = trainer_cls(
         model=model,
@@ -49,10 +52,10 @@ def load_trainer(
 
 
 # Register Finetuning Trainer
-_register_trainer("finetune", Trainer)
+_register_trainer(Trainer)
 
 # Register Unlearning Trainer
-_register_trainer("GradAscent", GradAscentTrainer)
-_register_trainer("GradDiff", GradDiffTrainer)
-_register_trainer("NPO", NPOTrainer)
-_register_trainer("DPO", DPOTrainer)
+_register_trainer(GradAscent)
+_register_trainer(GradDiff)
+_register_trainer(NPO)
+_register_trainer(DPO)

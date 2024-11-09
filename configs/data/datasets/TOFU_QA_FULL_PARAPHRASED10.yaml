@@ -1,4 +1,5 @@
 TOFU_QA_FULL_PARAPHRASED10:
+  handler: QADataset
   args:
     hf_args:
       data_files: "./data/TOFU_QA_FULL_PARAPHRASED10.json"

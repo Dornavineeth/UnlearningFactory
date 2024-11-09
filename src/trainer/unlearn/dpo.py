@@ -1,9 +1,9 @@
 import copy
 from trainer.utils import compute_dpo_loss
-from trainer.unlearn.grad_diff import GradDiffTrainer
+from trainer.unlearn.grad_diff import GradDiff
 
 
-class DPOTrainer(GradDiffTrainer):
+class DPO(GradDiff):
     def __init__(self, beta=1.0, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.beta = beta

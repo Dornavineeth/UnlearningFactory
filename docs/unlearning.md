@@ -9,7 +9,7 @@
 Refer to the [Components Guide](/docs/components.md) for instructions on adding individual components such as datasets, models, and trainers.
 
 
-## Script
+## Quick Start
 
 Example script for launching an unlearning process:
 
@@ -48,7 +48,7 @@ To add a new unlearning method, implement new trainer handler extending [Unlearn
 
 from trainer.unlearn.base import UnlearningTrainer
 
-class CustomMethodTrainer(UnlearningTrainer):
+class CustomMethod(UnlearningTrainer):
     def __init__(*args, **kwargs):
         super().__init__(*args, **kwargs)
         ...
@@ -63,11 +63,11 @@ class CustomMethodTrainer(UnlearningTrainer):
 
 Define the config for the `Trainer` in [configs/trainer](../configs/trainer/).
 
-Example comfig for above `CustomMethodTrainer` :
+Example comfig for above `CustomMethod` :
 
 ```yaml
-name: CustomMethod 
-args: # CustomMethodTrainer
+handler: CustomMethod 
+args: # CustomMethod
   per_device_train_batch_size: 2
   per_device_eval_batch_size: 16
   gradient_accumulation_steps: 4
@@ -92,7 +92,7 @@ args: # CustomMethodTrainer
 
 ### Register Trainer
 
-To make a custom unlearning Trainer accessible within the system, register its name `CustomMethod` with trainer `CustomMethodTrainer` handler in the [TRAINER_REGISTRY](../src/trainer/__init__.py).
+To make a custom unlearning Trainer accessible within the system,  `CustomMethod` trainer handler in the [TRAINER_REGISTRY](../src/trainer/__init__.py).
 
 
 ```python
@@ -100,6 +100,5 @@ To make a custom unlearning Trainer accessible within the system, register its n
 
 from trainer/unlearn/custom_method import CustomMethodTrainer
 
-_register_trainer("CustomMethod", CustomMethodTrainer)
-
+_register_trainer(CustomMethod)
 ```

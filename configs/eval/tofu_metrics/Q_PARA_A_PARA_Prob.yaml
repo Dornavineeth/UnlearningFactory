@@ -4,6 +4,8 @@ defaults:
   - ../../collator@collators: DataCollatorForSupervisedDatasetwithIndex
   # ^ get default dataset and generation config information
 
+handler: probability
+
 datasets:
   TOFU_QA_FORGET10_P:
     args:
