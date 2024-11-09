@@ -81,7 +81,7 @@ collator=DataCollatorForSupervisedDataset # collator for datasets
 - **data.eval=TOFU_QA_FORGET10_P**: Sets the evaluation dataset for [QADataset](../src/data/tofu.py) with config [TOFU_QA_FORGET10_P.yaml](../configs/data/datasets/TOFU_QA_FORGET10_P.yaml) for unlearning.
 
 
-## Evaluate and implement new metrics for unlearning
+### Evaluate and implement new metrics for unlearning
 
 To run TOFU benchmark
 ```bash
@@ -97,7 +97,7 @@ output_dir=evals # set the output directory to store results
 - **output_dir=evals**: Specifies the output directory for storing results.
 
 
-## Train models for developing new benchmark
+### Train models for developing new benchmark
 
 Quickly launch finetuning job with the following script
 

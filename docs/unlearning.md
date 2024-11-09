@@ -57,13 +57,25 @@ class CustomMethod(UnlearningTrainer):
         ...
         return (loss, forget_outputs) if return_outputs else loss
 ```
+### Register Trainer
+
+To make a custom `CustomMethod` Trainer handler accessible within the system, resgister it in the [TRAINER_REGISTRY](../src/trainer/__init__.py).
+
+
+```python
+# src/traianer/__init__.py
+
+from trainer/unlearn/custom_method import CustomMethodTrainer
+
+_register_trainer(CustomMethod)
+```
 
 
 ### Unlearning Trainer Config
 
-Define the config for the `Trainer` in [configs/trainer](../configs/trainer/).
+Define the config/arguments for the `CustomMethod` trainer in [configs/trainer](../configs/trainer/).
 
-Example comfig for above `CustomMethod` :
+Example config for above `CustomMethod` :
 
 ```yaml
 handler: CustomMethod 
@@ -87,18 +99,4 @@ args: # CustomMethod
   eval_strategy: epoch
   num_train_epochs: 10
   seed: 0
-```
-
-
-### Register Trainer
-
-To make a custom unlearning Trainer accessible within the system,  `CustomMethod` trainer handler in the [TRAINER_REGISTRY](../src/trainer/__init__.py).
-
-
-```python
-# src/traianer/__init__.py
-
-from trainer/unlearn/custom_method import CustomMethodTrainer
-
-_register_trainer(CustomMethod)
 ```

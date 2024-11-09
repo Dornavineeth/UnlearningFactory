@@ -78,7 +78,7 @@ __NOTE__:
 ## Metric Handler Implementation
 
 
-A metric is implemented as a function decorated with `@unlearning_metric`. This decorator wraps the function, automatically loading and processing the datasets and collators specified in the configuration, so they are readily available for use in the function.
+A metric handler is implemented as a function decorated with `@unlearning_metric`. This decorator wraps the function, automatically loading and processing the datasets and collators specified in the configuration, so they are readily available for use in the function.
 
 Implementation of `probability` Metric
 
