@@ -88,7 +88,7 @@ To run TOFU benchmark
 ```bash
 python src/eval.py \
 model=Llama-3.1-8B-Instruct \ # Model to evaluate
-eval=tofu # evaluation config to run (e.g. tofu benchmark)
+eval=tofu \ # evaluation config to run (e.g. tofu benchmark)
 output_dir=evals # set the output directory to store results
 ```
 
@@ -103,7 +103,7 @@ output_dir=evals # set the output directory to store results
 Quick start: run finetuning with the following script
 
 ```bash
-python src/train.py
+python src/train.py \
 model=Llama-3.1-8B-Instruct \
 trainer=finetune \
 data.train=TOFU_QA_FULL \
