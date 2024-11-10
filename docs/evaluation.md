@@ -4,12 +4,12 @@
 
 </div>
 
-Our framework supports the evaluation of multiple benchmarks specifically for unlearning tasks.
+UnlearningFactory supports the evaluation of multiple unlearning benchmarks.
 
 
 
 ## Quick Start
-To run TOFU benchmark
+Run the TOFU benchmark evaluations:
 ```bash
 python src/eval.py \
 model=Llama-3.1-8B-Instruct \ # Model to evaluate
@@ -78,7 +78,9 @@ __NOTE__:
 ## Metric Handler Implementation
 
 
-A metric handler is implemented as a function decorated with `@unlearning_metric`. This decorator wraps the function, automatically loading and processing the datasets and collators specified in the configuration, so they are readily available for use in the function.
+
+
+A metric handler is implemented as a function decorated with `@unlearning_metric`. This decorator wraps the function into an UnlearningMetric object. This helps to automatically load and prepare datasets and collators for `probability` as specified in the eval config ([example](../configs/eval/tofu_metrics/Q_A_Prob.yaml)), so they are readily available for use in the function.
 
 Implementation of `probability` Metric
 
@@ -112,11 +114,11 @@ from evals.metrics.memorization import probability
 _register_metric(probability)
 ```
 
-## Advance Features
+## Advanced Features
 
 ### Pre-Compute
 
-In TOFU, we support the creation of aggregated metrics that depend on pre-existing metrics. For example, the `truth_ratio` metric relies on both *perturbed* and *paraphrased* probabilities for questions and answers, which are metrics already implemented in the repository. To avoid redundant computation, we provide a pre-compute option, allowing metrics to be calculated in advance and referenced in other metrics.
+In TOFU, we support the creation of aggregated metrics that depend on other metrics computed previously. For example, the `truth_ratio` metric relies on both *perturbed* and *paraphrased* probabilities for questions and answers, so its implementation could utilize existing metric and their evaluations. To avoid redundant computation, we provide a pre-compute option, allowing metrics to be calculated in advance and referenced in other metrics. Then while, implementing the dependent metric, the evals for the others can be accessed and used directly.
 
 ```yaml
 # @package eval.tofu.metrics.truth_ratio

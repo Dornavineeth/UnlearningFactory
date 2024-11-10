@@ -92,14 +92,14 @@ def get_collators(collator_cfgs, **kwargs):
     return collators
 
 
-# Register Datasets
+# Register datasets
 _register_data(QADataset)
 _register_data(QAwithIdkDataset)
 
 
-# Register Composite Datasets
-# groups : unlearn
+# Register composite datasets used in unlearning
+# groups: unlearn
 _register_data(ForgetRetainDataset)
 
-# Register Collators
+# Register collators
 _register_collator(DataCollatorForSupervisedDataset)

@@ -49,23 +49,24 @@ pip install -r requirements.txt
 For detailed documentation please find the links below.
 | Tasks | Link                                            |
 |-----------|------------------------------------------------|
-| Unlearn and implement new unlearning methods       | [here](docs/unlearning.md)     |
-| Evaluate and implement new metrics for unlearning  | [here](docs/evaluation.md)     |
-| Train models for developing new benchmark.              | [here](docs/finetune.md)       |
+| Implement methods and run unlearning       | [here](docs/unlearning.md)     |
+| Implement and run evaluations for unlearning  | [here](docs/evaluation.md)     |
+| Finetune models to learn datasets             | [here](docs/finetune.md)       |
 
 
 ## Quick Start
 
-### Unlearn and implement new unlearning methods 
+### Implement methods and run unlearning 
 
 Example script for launching an unlearning process with `GradDiff`.
 
 ```bash
+# you can set configs in the yaml files directly or override them as below
 python src/train.py --config-name=unlearn.yaml \
 model=Llama-3.1-8B-Instruct \ # model to unlearn
-model.model_args.pretrained_model_name_or_path=<LOCAL PATH> \ # Override path to load model
+model.model_args.pretrained_model_name_or_path=<LOCAL PATH> \ # override and provide path to pre-unlearning finetuned model
 trainer=GradDiff \ # unlearning method
-trainer.method_args.alpha=0.5 \ # Override alpha 
+trainer.method_args.alpha=0.5 \ # override
 data.forget=TOFU_QA_FORGET10 \ # forget dataset
 data.retain=TOFU_QA_RETAIN90 \ # retain dataset
 data.eval=TOFU_QA_FORGET10_P \ # evaluation dataset for trainer
@@ -73,7 +74,7 @@ collator=DataCollatorForSupervisedDataset # collator for datasets
 ```
 - **--config-name=unlearn.yaml**: Specifies the top-level config [unlearn.yaml](../configs/unlearn.yaml) file that loads configurations for each component used in unlearning.
 - **model=Llama-3.1-8B-Instruct**: Loads the model configuration from [Llama-3.1-8B-Instruct.yaml](../configs/model/Llama-3.1-8B-Instruct.yaml)
-- **model.model_args.pretrained_model_name_or_path=LOCAL PATH**: Overrides the model path defined in [Llama-3.1-8B-Instruct.yaml](../configs/model/Llama-3.1-8B-Instruct.yaml).
+- **model.model_args.pretrained_model_name_or_path=LOCAL PATH**: Overrides the model path defined in [Llama-3.1-8B-Instruct.yaml](../configs/model/Llama-3.1-8B-Instruct.yaml) to provide path to pre-unlearning finetuned model.
 - **trainer=GradDiff**: Loads the unlearning trainer [GradDiffTrainer](../src/trainer/unlearn/grad_diff.py) with the configuration defined in [GradDiff.yaml](../configs/trainer/GradDiff.yaml).
 - **trainer.method_args.alpha=0.5**: Overrides the alpha parameter [GradDiff.yaml](../configs/trainer/GradDiff.yaml).
 - **data.forget=TOFU_QA_FORGET10**: Sets the forget dataset to load [QADataset](../src/data/tofu.py) with config [TOFU_QA_FORGET10.yaml](../configs/data/datasets/TOFU_QA_FORGET10.yaml) for unlearning.
@@ -87,7 +88,7 @@ To run TOFU benchmark
 ```bash
 python src/eval.py \
 model=Llama-3.1-8B-Instruct \ # Model to evaluate
-eval=tofu # evaluation benchmark to run
+eval=tofu # evaluation config to run (e.g. tofu benchmark)
 output_dir=evals # set the output directory to store results
 ```
 
@@ -99,7 +100,7 @@ output_dir=evals # set the output directory to store results
 
 ### Train models for developing new benchmark
 
-Quickly launch finetuning job with the following script
+Quick start: run finetuning with the following script
 
 ```bash
 python src/train.py

@@ -19,7 +19,8 @@ evals/
 __pycache__/
 *.py[cod]
 *$py.class
-
+eval_logs/
+eval_dumps/
 # C extensions
 *.so
 

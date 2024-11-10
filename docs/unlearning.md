@@ -63,7 +63,7 @@ To make a custom `CustomMethod` Trainer handler accessible within the system, re
 
 
 ```python
-# src/traianer/__init__.py
+# src/trainer/__init__.py
 
 from trainer/unlearn/custom_method import CustomMethodTrainer
 
