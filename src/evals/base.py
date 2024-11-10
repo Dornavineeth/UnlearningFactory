@@ -44,7 +44,7 @@ class Evaluator:
             if not overwrite and metric_name in self.logs:
                 print(f"Skipping {metric_name}, already evaluated.")
                 continue
-            _ = self.logs.pop(metric_name)  # overwriting existing evals if present
+            _ = self.logs.pop(metric_name, None)  # overwriting existing evals if present
             kwargs = {"tokenizer": self.tokenizer, "template_args": self.template_args}
             metrics_args = self.eval_cfg.metrics[metric_name]
             _ = metric_fn(
