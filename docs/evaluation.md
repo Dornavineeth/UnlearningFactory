@@ -13,7 +13,7 @@ Run the TOFU benchmark evaluations:
 ```bash
 python src/eval.py \
 model=Llama-3.1-8B-Instruct \ # Model to evaluate
-eval=tofu # evaluation benchmark to run
+eval=tofu \ # evaluation benchmark to run
 output_dir=evals # set the output directory to store results
 ```
 
