@@ -26,7 +26,7 @@ def main(cfg: DictConfig):
     )
     for evaluator_name, evaluator in evaluators.items():
         eval_args = eval_cfgs[evaluator_name]
-        evaluator.evaluate(**eval_args)
+        _ = evaluator.evaluate(**eval_args)
 
 
 if __name__ == "__main__":

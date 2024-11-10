@@ -12,9 +12,9 @@ class Evaluator:
         self.tokenizer = tokenizer
         self.prepare_model()
         self.load_metrics()
-        self.load_logs()
+        self.load_logs_from_file()
 
-    def load_logs(self):
+    def load_logs_from_file(self):
         self.logs = {}
         self.logs_filename = os.path.join(
             self.eval_cfg.output_dir, f"{self.name}_EVAL.json"
@@ -23,7 +23,12 @@ class Evaluator:
             print(f"Loading existing evaluations from {self.logs_filename}")
             with open(self.logs_filename, "r") as f:
                 self.logs = json.load(f)
-
+    
+    def save_logs(self):
+        os.makedirs(self.eval_cfg.output_dir, exist_ok=True)
+        with open(self.logs_filename, "w") as f:
+            json.dump(self.logs, f, indent=4)    
+    
     def prepare_model(self):
         self.device = self.eval_cfg.device
         self.model.to(self.device)
@@ -49,6 +54,5 @@ class Evaluator:
                 **kwargs,
                 **metrics_args,
             )
-            os.makedirs(self.eval_cfg.output_dir, exist_ok=True)
-            with open(self.logs_filename, "w") as f:
-                json.dump(self.logs, f, indent=4)
+            self.save_logs()
+        return self.logs
