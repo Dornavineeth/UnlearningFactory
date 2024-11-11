@@ -12,9 +12,12 @@ UnlearningFactory supports the evaluation of multiple unlearning benchmarks.
 Run the TOFU benchmark evaluations:
 ```bash
 python src/eval.py \
-model=Llama-3.1-8B-Instruct \ # Model to evaluate
-eval=tofu \ # evaluation benchmark to run
-output_dir=evals # set the output directory to store results
+# Model to evaluate
+model=Llama-3.1-8B-Instruct \ 
+# Evaluation benchmark to run
+eval=tofu \ 
+# Set the output directory to store results
+output_dir=evals 
 ```
 
 - **model=Llama-3.1-8B-Instruct**: Loads the model configuration from [Llama-3.1-8B-Instruct.yaml](../configs/model/Llama-3.1-8B-Instruct.yaml)
@@ -57,6 +60,7 @@ Each metric has its own configuration, which specifies the datasets, collators, 
 Sample Config [Q_A_Prob.yaml](../configs/eval/tofu_metrics/Q_A_Prob.yaml) for a metric with name `Q_A_Prob` which calculates probability of Question Answer pairs.
 ```yaml
 # @package eval.tofu.metrics.Q_A_Prob
+
 defaults:
   - ../../data/datasets@datasets: TOFU_QA_FORGET10
   - ../../collator@collators: DataCollatorForSupervisedDatasetwithIndex
@@ -122,6 +126,7 @@ In TOFU, we support the creation of aggregated metrics that depend on other metr
 
 ```yaml
 # @package eval.tofu.metrics.truth_ratio
+
 defaults:
   - .@pre_compute.Q_A_PARA_Prob: Q_A_PARA_Prob
   - .@pre_compute.Q_A_PERT_Prob: Q_A_PERT_Prob

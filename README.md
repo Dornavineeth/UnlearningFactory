@@ -63,14 +63,23 @@ Example script for launching an unlearning process with `GradDiff`.
 ```bash
 # you can set configs in the yaml files directly or override them as below
 python src/train.py --config-name=unlearn.yaml \
-model=Llama-3.1-8B-Instruct \ # model to unlearn
-model.model_args.pretrained_model_name_or_path=<LOCAL PATH> \ # override and provide path to pre-unlearning finetuned model
-trainer=GradDiff \ # unlearning method
-trainer.method_args.alpha=0.5 \ # override
-data.forget=TOFU_QA_FORGET10 \ # forget dataset
-data.retain=TOFU_QA_RETAIN90 \ # retain dataset
-data.eval=TOFU_QA_FORGET10_P \ # evaluation dataset for trainer
-collator=DataCollatorForSupervisedDataset # collator for datasets
+# model to unlearn
+model=Llama-3.1-8B-Instruct \
+# Override and provide path to pre-unlearning finetuned model
+model.model_args.pretrained_model_name_or_path=<LOCAL PATH> \
+# Unlearning method
+trainer=GradDiff \    
+# Override alpha parameter
+trainer.method_args.alpha=0.5 \
+# Forget dataset
+data.forget=TOFU_QA_FORGET10 \
+# Retain dataset
+data.retain=TOFU_QA_RETAIN90 \
+# Evaluation dataset for trainer
+data.eval=TOFU_QA_FORGET10_P \
+# Collator for datasets
+collator=DataCollatorForSupervisedDataset
+
 ```
 - **--config-name=unlearn.yaml**: Specifies the top-level config [unlearn.yaml](../configs/unlearn.yaml) file that loads configurations for each component used in unlearning.
 - **model=Llama-3.1-8B-Instruct**: Loads the model configuration from [Llama-3.1-8B-Instruct.yaml](../configs/model/Llama-3.1-8B-Instruct.yaml)
@@ -87,9 +96,12 @@ collator=DataCollatorForSupervisedDataset # collator for datasets
 To run TOFU benchmark
 ```bash
 python src/eval.py \
-model=Llama-3.1-8B-Instruct \ # Model to evaluate
-eval=tofu \ # evaluation config to run (e.g. tofu benchmark)
-output_dir=evals # set the output directory to store results
+# Model to evaluate
+model=Llama-3.1-8B-Instruct \ 
+# Evaluation config to run (e.g. tofu benchmark)
+eval=tofu \ 
+# Set the output directory to store results
+output_dir=evals 
 ```
 
 - **model=Llama-3.1-8B-Instruct**: Loads the model configuration from [Llama-3.1-8B-Instruct.yaml](../configs/model/Llama-3.1-8B-Instruct.yaml)
