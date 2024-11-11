@@ -15,26 +15,34 @@ DATASET_REGISTRY: Dict[str, Any] = {}
 COLLATOR_REGISTRY: Dict[str, Any] = {}
 
 
-def _register_data(data_name, data_class):
-    DATASET_REGISTRY[data_name] = data_class
+def _register_data(data_class):
+    DATASET_REGISTRY[data_class.__name__] = data_class
 
 
-def _register_collator(collator_name, collator_class):
-    COLLATOR_REGISTRY[collator_name] = collator_class
+def _register_collator(collator_class):
+    COLLATOR_REGISTRY[collator_class.__name__] = collator_class
 
 
-def _load_single_dataset(dataset_name: str, data_cfg: DictConfig, **kwargs):
-    dataset = DATASET_REGISTRY.get(dataset_name)
-    if dataset is None:
-        raise NotImplementedError(f"{dataset_name} not implemented or not registered")
-    data_args = data_cfg.args
-    return dataset(**data_args, **kwargs)
+def _load_single_dataset(dataset_name, dataset_cfg: DictConfig, **kwargs):
+    dataset_handler_name = dataset_cfg.get("handler")
+    assert dataset_handler_name is not None, ValueError(
+        f"{dataset_name} handler not set"
+    )
+    dataset_handler = DATASET_REGISTRY.get(dataset_handler_name)
+    if dataset_handler is None:
+        raise NotImplementedError(
+            f"{dataset_handler_name} not implemented or not registered"
+        )
+    dataset_args = dataset_cfg.args
+    return dataset_handler(**dataset_args, **kwargs)
 
 
 def get_datasets(dataset_cfgs: DictConfig, **kwargs):
     dataset = {}
-    for dataset_name, data_cfg in dataset_cfgs.items():
-        dataset[dataset_name] = _load_single_dataset(dataset_name, data_cfg, **kwargs)
+    for dataset_name, dataset_cfg in dataset_cfgs.items():
+        dataset[dataset_name] = _load_single_dataset(
+            dataset_name, dataset_cfg, **kwargs
+        )
     if len(dataset) == 1:
         # return a single dataset
         return list(dataset.values())[0]
@@ -58,11 +66,17 @@ def get_data(data_cfg: DictConfig, mode="train", **kwargs):
 
 
 def _get_single_collator(collator_name: str, collator_cfg: DictConfig, **kwargs):
-    collator = COLLATOR_REGISTRY.get(collator_name)
-    if collator is None:
-        raise NotImplementedError(f"{collator_name} not implemented or not registered")
+    collator_handler_name = collator_cfg.get("handler")
+    assert collator_handler_name is not None, ValueError(
+        f"{collator_name} handler not set"
+    )
+    collator_handler = COLLATOR_REGISTRY.get(collator_handler_name)
+    if collator_handler is None:
+        raise NotImplementedError(
+            f"{collator_handler_name} not implemented or not registered"
+        )
     collator_args = collator_cfg.args
-    return collator(**collator_args, **kwargs)
+    return collator_handler(**collator_args, **kwargs)
 
 
 def get_collators(collator_cfgs, **kwargs):
@@ -78,19 +92,14 @@ def get_collators(collator_cfgs, **kwargs):
     return collators
 
 
-# Register Datasets
-_register_data("TOFU_QA_FULL", QADataset)
-_register_data("TOFU_QA_FORGET10", QADataset)
-_register_data("TOFU_QA_FORGET10_P", QADataset)
-_register_data("TOFU_QA_FORGET10_PT", QADataset)
-_register_data("TOFU_QA_FULL_PARAPHRASED10", QADataset)
-_register_data("TOFU_QA_BIO", QADataset)
-_register_data("TOFU_QA_RETAIN90", QADataset)
-_register_data("TOFU_QAwithIdk_FORGET10", QAwithIdkDataset)
+# Register datasets
+_register_data(QADataset)
+_register_data(QAwithIdkDataset)
 
-# Register Composite Datasets
-# groups : unlearn
-_register_data("TOFU_QA_FORGET10_RETAIN90", ForgetRetainDataset)
 
-# Register Collators
-_register_collator("DataCollatorForSupervisedDataset", DataCollatorForSupervisedDataset)
+# Register composite datasets used in unlearning
+# groups: unlearn
+_register_data(ForgetRetainDataset)
+
+# Register collators
+_register_collator(DataCollatorForSupervisedDataset)

@@ -1,4 +1,4 @@
 defaults:
   - finetune
 
-name: GradAscent
+handler: GradAscent

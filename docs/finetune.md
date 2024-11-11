@@ -13,11 +13,11 @@ Refer to the [Components Guide](/docs/components.md) for instructions on adding 
 
 ## Finetune
 
-Quickly launch finetuning job with the following script
+Quickly run finetuning with the following script
 
 
 ```bash
-python src/train.py
+python src/train.py \
 model=Llama-3.1-8B-Instruct \
 trainer=finetune \
 data.train=TOFU_QA_FULL \

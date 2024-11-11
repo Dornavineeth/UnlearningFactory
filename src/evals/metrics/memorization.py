@@ -20,8 +20,9 @@ def evaluate_probability_batch(model, batch):
     loss = loss_function(logits.transpose(-1, -2), shifted_labels).sum(dim=-1)
     num_token_gt = (batch["labels"] != -100).sum(-1)
     avg_loss = loss / num_token_gt
-    probs = torch.exp(-avg_loss).cpu().numpy().tolist()
-    return probs
+    probs = torch.exp(-avg_loss)
+    normalized_probs = probs ** (1 / num_token_gt)
+    return normalized_probs.cpu().numpy().tolist()
 
 
 def evaluate_probability(model, dataloader):
@@ -111,8 +112,8 @@ def eval_text_similarity(model, tokenizer, dataloader, generation_args):
     return index_to_scores
 
 
-@unlearning_metric(name="Q_A_Prob")
-def q_a_prob(model, **kwargs):
+@unlearning_metric(name="probability")
+def probability(model, **kwargs):
     data = kwargs["data"]
     collator = kwargs["collators"]
     batch_size = kwargs["batch_size"]
@@ -122,41 +123,8 @@ def q_a_prob(model, **kwargs):
     return index_to_probs
 
 
-@unlearning_metric(name="Q_PARA_A_PARA_Prob")
-def q_para_a_para_prob(model, **kwargs):
-    data = kwargs["data"]
-    collator = kwargs["collators"]
-    batch_size = kwargs["batch_size"]
-
-    dataloader = DataLoader(data, batch_size=batch_size, collate_fn=collator)
-    index_to_probs = evaluate_probability(model, dataloader)
-    return index_to_probs
-
-
-@unlearning_metric(name="Q_A_PARA_Prob")
-def q_a_para_prob(model, **kwargs):
-    data = kwargs["data"]
-    collator = kwargs["collators"]
-    batch_size = kwargs["batch_size"]
-
-    dataloader = DataLoader(data, batch_size=batch_size, collate_fn=collator)
-    index_to_probs = evaluate_probability(model, dataloader)
-    return index_to_probs
-
-
-@unlearning_metric(name="Q_A_PERT_Prob")
-def q_a_pert_prob(model, **kwargs):
-    data = kwargs["data"]
-    collator = kwargs["collators"]
-    batch_size = kwargs["batch_size"]
-
-    dataloader = DataLoader(data, batch_size=batch_size, collate_fn=collator)
-    index_to_probs = evaluate_probability(model, dataloader)
-    return index_to_probs
-
-
-@unlearning_metric(name="Q_A_ROUGE")
-def q_a_rouge(model, **kwargs):
+@unlearning_metric(name="rouge")
+def rouge(model, **kwargs):
     tokenizer = kwargs["tokenizer"]
     data = kwargs["data"]
     collator = kwargs["collators"]
@@ -169,68 +137,14 @@ def q_a_rouge(model, **kwargs):
     return index_to_scores
 
 
-@unlearning_metric(name="Q_PARA_A_PARA_ROUGE")
-def q_para_a_para_rouge(model, **kwargs):
-    tokenizer = kwargs["tokenizer"]
-    data = kwargs["data"]
-    collator = kwargs["collators"]
-    batch_size = kwargs["batch_size"]
-    generation_args = kwargs["generation_args"]
-    dataloader = DataLoader(data, batch_size=batch_size, collate_fn=collator)
-    index_to_scores = eval_text_similarity(
-        model, tokenizer, dataloader, generation_args
-    )
-    return index_to_scores
-
-
-@unlearning_metric(name="Q_A_PARA_ROUGE")
-def q_a_para_rouge(model, **kwargs):
-    tokenizer = kwargs["tokenizer"]
-    data = kwargs["data"]
-    collator = kwargs["collators"]
-    batch_size = kwargs["batch_size"]
-    generation_args = kwargs["generation_args"]
-    dataloader = DataLoader(data, batch_size=batch_size, collate_fn=collator)
-    index_to_scores = eval_text_similarity(
-        model, tokenizer, dataloader, generation_args
-    )
-    return index_to_scores
-
-
-@unlearning_metric(name="Q_A_PERT_ROUGE")
-def q_a_pert_rouge(model, **kwargs):
-    tokenizer = kwargs["tokenizer"]
-    data = kwargs["data"]
-    collator = kwargs["collators"]
-    batch_size = kwargs["batch_size"]
-    generation_args = kwargs["generation_args"]
-    dataloader = DataLoader(data, batch_size=batch_size, collate_fn=collator)
-    index_to_scores = eval_text_similarity(
-        model, tokenizer, dataloader, generation_args
-    )
-    return index_to_scores
-
-
-@unlearning_metric(name="BIO_Prob")
-def bio_prob(model, **kwargs):
-    data = kwargs["data"]
-    collator = kwargs["collators"]
-    batch_size = kwargs["batch_size"]
-
-    dataloader = DataLoader(data, batch_size=batch_size, collate_fn=collator)
-    index_to_probs = evaluate_probability(model, dataloader)
-    return index_to_probs
-
-
-@unlearning_metric(name="BIO_ROUGE")
-def bio_rouge(model, **kwargs):
-    tokenizer = kwargs["tokenizer"]
-    data = kwargs["data"]
-    collator = kwargs["collators"]
-    batch_size = kwargs["batch_size"]
-    generation_args = kwargs["generation_args"]
-    dataloader = DataLoader(data, batch_size=batch_size, collate_fn=collator)
-    index_to_scores = eval_text_similarity(
-        model, tokenizer, dataloader, generation_args
-    )
+@unlearning_metric(name="truth_ratio")
+def truth_ratio(model, **kwargs):
+    para_results = kwargs["pre_compute"]["paraphrase"]
+    pert_results = kwargs["pre_compute"]["perturb"]
+    index_to_scores = {}
+    for k, para_result in para_results.items():
+        para_prob = para_result["prob"]
+        pert_result = pert_results[k]
+        pert_prob = sum([r["prob"] for r in pert_result]) / len(pert_result)
+        index_to_scores[k] = {"truth_ratio": pert_prob / para_prob}
     return index_to_scores

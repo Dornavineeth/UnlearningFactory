@@ -6,6 +6,7 @@ defaults:
   
   # ^ get default dataset and generation config information
 
+handler: rouge
 batch_size: 16
 datasets: # override as needed
   TOFU_QA_FORGET10:

@@ -1,4 +1,5 @@
 TOFU_QA_FORGET10:
+  handler: QADataset
   args:
     hf_args:
       name: "forget10"
