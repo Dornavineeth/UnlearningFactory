@@ -20,8 +20,7 @@ def evaluate_probability_batch(model, batch):
     loss = loss_function(logits.transpose(-1, -2), shifted_labels).sum(dim=-1)
     num_token_gt = (batch["labels"] != -100).sum(-1)
     avg_loss = loss / num_token_gt
-    probs = torch.exp(-avg_loss)
-    normalized_probs = probs ** (1 / num_token_gt)
+    normalized_probs = torch.exp(-avg_loss)
     return normalized_probs.cpu().numpy().tolist()
 
 
@@ -30,9 +29,7 @@ def evaluate_probability(model, dataloader):
     for batch in tqdm(dataloader, desc="Calculating loss", total=len(dataloader)):
         if "input_ids" in batch:
             batch = {0: batch}
-        assert isinstance(next(iter(batch.values())), dict) and "input_ids" in next(
-            iter(batch.values())
-        )
+        assert isinstance(next(iter(batch.values())), dict) and "input_ids" in next(iter(batch.values()))
         for _, mini_batch in batch.items():
             index = mini_batch.pop("index").cpu().numpy().tolist()
             probs = evaluate_probability_batch(model, mini_batch)

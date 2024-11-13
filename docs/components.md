@@ -3,16 +3,17 @@
 Our pipeline architecture is designed with modularity and flexibility in mind, allowing you to easily add and customize core components for training and fine-tuning. The major components in any pipeline we support include:
 
 - **Datasets**
-- **Model**
 - **Trainer**
 - **Collator**
+- **Model**
 
-Each component follows a consistent setup process:
+For each component, the setup involves three steps: (except for setting models up, for which writing a config file is enough)
 1. **Implement a handler**: Define the main functionality for each component in a `.py` file.
 2. **Register a handler**: Register a handler to access the functionality within training, unlearning, and evaluation pipelines.
 3. **Define a configuration**: Define a `.yaml` configuration file specifying the parameters required to run the implemented handler.
 
 We use Hydra for config management to enable flexible, hierarchical, and dynamic [configuration management](/configs/).
+
 
 ## Dataset
 
@@ -92,36 +93,6 @@ In this example:
 
 
 
-## Model
-We provide support for loading models from [Hugging Face](https://huggingface.co/models). All model configurations are defined in the [configs/models](../configs/model/) directory. Here the default model and tokenizer handlers are assumed to be `AutoModelForCausalLM` and `AutoTokenizer` of [Hugging Face](https://huggingface.co/models).
-
-Example config file for LLama3.1 Instruct model:
-```yaml
-model_args: # AutoModelForCausalLM
-  pretrained_model_name_or_path: "meta-llama/Llama-3.1-8B-Instruct" # replace to load local models
-  attn_implementation: 'flash_attention_2'
-  torch_dtype: bfloat16
-
-tokenizer_args: # AutoTokenizer
-  pretrained_model_name_or_path: "meta-llama/Llama-3.1-8B-Instruct"
-
-template_args:
-  apply_chat_template: False
-  user_start_tag: "<|start_header_id|>system<|end_header_id|>\n\nYou are a helpful assistant.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\n"
-  user_end_tag: "<|eot_id|>"
-  asst_tag: "<|start_header_id|>assistant<|end_header_id|>\n\n"
-```
-
-- `model_args` include arguments for the [AutoModelForCausalLM](https://huggingface.co/docs/transformers/en/model_doc/auto#transformers.AutoModelForCausalLM).
-
-- `tokenizer_args` include arguments for [AutoTokenizer](https://huggingface.co/docs/transformers/en/model_doc/auto#transformers.AutoTokenizer).
-
-- `template_args` can include any arguments which can be used to process the datasets before passing to model. For example, see [package_prompt_response](../src/data/utils.py)
-
-__NOTE__ 
-1. `model_args` and `tokenizer_args` should only involve arguments which `AutoModelForCausalLM` and `AutoTokenizer` accept.
-2. Before you attempt to use a HuggingFace model, ensure you have access to it. Models, especially from the Llama family are usually gated and require one to submit an access request. In such cases, go to the model page and [follow these instructions](https://huggingface.co/docs/hub/en/models-gated#access-gated-models-as-a-user).
-
 ## Trainer
 
 Adding a new `Trainer` involves: 
@@ -181,3 +152,36 @@ args: # transformers.Trainer
 ```
 - **name**: Specifies the type of trainer (e.g., finetune).
 - **args**: Contains the configuration parameters for `transformers.Trainer`, such as batch sizes, gradient accumulation, learning rate, and logging preferences.
+
+
+
+## Model
+
+We provide support for loading models from [Hugging Face](https://huggingface.co/models). All model configurations are defined in the [configs/models](../configs/model/) directory. Here the default model and tokenizer handlers are assumed to be `AutoModelForCausalLM` and `AutoTokenizer` of [Hugging Face](https://huggingface.co/models). These config files are accessed via their names in main experiment config files (e.g.[here](../configs/train.yaml)).
+
+Example config file for LLama3.1 Instruct model:
+```yaml
+model_args: # AutoModelForCausalLM
+  pretrained_model_name_or_path: "meta-llama/Llama-3.1-8B-Instruct" # replace to load local models
+  attn_implementation: 'flash_attention_2'
+  torch_dtype: bfloat16
+
+tokenizer_args: # AutoTokenizer
+  pretrained_model_name_or_path: "meta-llama/Llama-3.1-8B-Instruct"
+
+template_args:
+  apply_chat_template: False
+  user_start_tag: "<|start_header_id|>system<|end_header_id|>\n\nYou are a helpful assistant.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\n"
+  user_end_tag: "<|eot_id|>"
+  asst_tag: "<|start_header_id|>assistant<|end_header_id|>\n\n"
+```
+
+- `model_args` include arguments for the [AutoModelForCausalLM](https://huggingface.co/docs/transformers/en/model_doc/auto#transformers.AutoModelForCausalLM).
+
+- `tokenizer_args` include arguments for [AutoTokenizer](https://huggingface.co/docs/transformers/en/model_doc/auto#transformers.AutoTokenizer).
+
+- `template_args` can include any arguments which can be used to process the datasets before passing to model. For example, see [package_prompt_response](../src/data/utils.py)
+
+__NOTE__ 
+1. `model_args` and `tokenizer_args` should only involve arguments which `AutoModelForCausalLM` and `AutoTokenizer` accept.
+2. Before you attempt to use a HuggingFace model, ensure you have access to it. Models, especially from the Llama family are usually gated and require one to submit an access request. In such cases, go to the model page and [follow these instructions](https://huggingface.co/docs/hub/en/models-gated#access-gated-models-as-a-user).
