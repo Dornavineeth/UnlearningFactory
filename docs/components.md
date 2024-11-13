@@ -118,7 +118,9 @@ template_args:
 
 - `template_args` can include any arguments which can be used to process the datasets before passing to model. For example, see [package_prompt_response](../src/data/utils.py)
 
-__NOTE__ `model_args` and `tokenizer_args` shouldn't take any other arguments which `AutoModelForCausalLM` and `AutoTokenizer` doesnt accept respectively.
+__NOTE__ 
+1. `model_args` and `tokenizer_args` should only involve arguments which `AutoModelForCausalLM` and `AutoTokenizer` accept.
+2. Before you attempt to use a HuggingFace model, ensure you have access to it. Models, especially from the Llama family are usually gated and require one to submit an access request. In such cases, go to the model page and [follow these instructions](https://huggingface.co/docs/hub/en/models-gated#access-gated-models-as-a-user).
 
 ## Trainer
 
