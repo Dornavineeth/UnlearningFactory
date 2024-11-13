@@ -55,12 +55,14 @@ def get_tokenizer(tokenizer_cfg: DictConfig):
     try:
         tokenizer = AutoTokenizer.from_pretrained(**tokenizer_cfg, cache_dir=hf_home)
     except Exception as e:
-        print('--'*40)
-        print(f"Error {e} fetching tokenizer using AutoTokenizer.")
-        print(f"Tokenizer requested from path {tokenizer_cfg.pretrained_model_name_or_path}")
-        print("Full tokenizer config:", tokenizer_cfg)
-        print('--'*40)
-        raise
+        error_message = (
+            f"{'--'*40}\n"
+            f"Error {e} fetching tokenizer using AutoTokenizer.\n"
+            f"Tokenizer requested from path: {tokenizer_cfg.get('pretrained_model_name_or_path', None)}\n"
+            f"Full tokenizer config: {tokenizer_cfg}\n"
+            f"{'--'*40}"
+        )
+        raise RuntimeError(error_message)
 
     if tokenizer.eos_token_id is None:
         _add_or_replace_eos_token(tokenizer, eos_token="<|endoftext|>")
