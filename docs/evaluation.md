@@ -62,7 +62,7 @@ Sample Config [forget_Q_A_Prob.yaml](../configs/eval/tofu_metrics/forget_Q_A_Pro
 # @package eval.tofu.metrics.forget_Q_A_Prob
 
 defaults:
-  - ../../data/datasets@datasets: TOFU_QA_FORGET10
+  - ../../data/datasets@datasets: TOFU_QA_forget
   - ../../collator@collators: DataCollatorForSupervisedDatasetwithIndex
   # ^ get default dataset and generation config information
 
@@ -70,7 +70,7 @@ handler: probability
 batch_size: 16
 ```
 
-- **../../data/datasets@datasets: TOFU_QA_FORGET10**: Loads the datasets configs [TOFU_QA_FORGET10](../configs/data/datasets/TOFU_QA_FORGET10.yaml) for the calculating probability. 
+- **../../data/datasets@datasets: TOFU_QA_forget**: Loads the datasets configs [TOFU_QA_forget](../configs/data/datasets/TOFU_QA_forget.yaml) for the calculating probability. 
 - **../../collator@collators**: Loads collator config [DataCollatorForSupervisedDatasetwithIndex](../configs/collator/DataCollatorForSupervisedDatasetwithIndex.yaml) for the calculating probability.
 - **handler: probability**: Specifies the core implemented unlearning metric handler to use for evaluation.
 

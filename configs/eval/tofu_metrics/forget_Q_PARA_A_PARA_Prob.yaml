@@ -1,13 +1,13 @@
 # @package eval.tofu.metrics.forget_Q_PARA_A_PARA_Prob
 defaults:
-  - ../../data/datasets@datasets: TOFU_QA_FORGET10_P
+  - ../../data/datasets@datasets: TOFU_QA_forget_para
   - ../../collator@collators: DataCollatorForSupervisedDatasetwithIndex
   # ^ get default dataset and generation config information
 
 handler: probability
 
 datasets:
-  TOFU_QA_FORGET10_P:
+  TOFU_QA_forget_para:
     args:
       question_key: paraphrased_question
 

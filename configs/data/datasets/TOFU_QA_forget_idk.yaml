@@ -1,4 +1,4 @@
-TOFU_QAwithIdk_FORGET10:
+TOFU_QA_forget_idk:
   handler: QAwithIdkDataset
   args:
     hf_args:

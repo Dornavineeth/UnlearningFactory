@@ -1,6 +1,6 @@
 # @package eval.tofu.metrics.forget_Q_A_PERT_ROUGE
 defaults:
-  - ../../data/datasets@datasets: TOFU_QA_FORGET10_PT
+  - ../../data/datasets@datasets: TOFU_QA_forget_pert
   - ../../collator@collators: DataCollatorForSupervisedDatasetwithIndex
   - ../../generation@generation_args: default
   # ^ get default dataset and generation config information
@@ -8,7 +8,7 @@ defaults:
 handler: rouge
 batch_size: 16
 datasets: # override as needed
-  TOFU_QA_FORGET10_PT:
+  TOFU_QA_forget_pert:
     args:
       predict_with_generate: True
 collators:
