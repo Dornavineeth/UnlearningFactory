@@ -58,10 +58,10 @@ __NOTE__: `template_args` and `tokenizer` are additionally pipelined for the dat
 Specify the dataset handler arguments in the `.yaml` configuration file located in [configs/data/datasets](../configs/src/data/datasets).
 
 
-Here’s an example configuration for a dataset named `TOFU_QA_FULL`:
+Here’s an example configuration for a dataset named `TOFU_QA_full`:
 
 ```yaml
-TOFU_QA_FULL: # data.tofu.QADataset
+TOFU_QA_full: # data.tofu.QADataset
   handler: QADataset
   args:
     hf_args: # load_dataset

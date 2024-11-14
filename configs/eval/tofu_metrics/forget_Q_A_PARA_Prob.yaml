@@ -1,7 +1,7 @@
 # @package eval.tofu.metrics.forget_Q_A_PARA_Prob
 
 defaults:
-  - ../../data/datasets@datasets: TOFU_QA_FORGET10_P
+  - ../../data/datasets@datasets: TOFU_QA_forget_para
   - ../../collator@collators: DataCollatorForSupervisedDatasetwithIndex
   # ^ get default dataset and generation config information
 

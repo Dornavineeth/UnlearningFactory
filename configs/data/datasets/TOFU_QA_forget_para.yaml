@@ -1,10 +1,10 @@
-TOFU_QA_RETAIN90:
+TOFU_QA_forget_para:
   handler: QADataset
   args:
     hf_args:
-      name: "retain90"
+      name: "forget10_perturbed"
       split: "train"
       path: "locuslab/TOFU"
     question_key: "question"
-    answer_key: "answer"
+    answer_key: "paraphrased_answer"
     max_length: 512

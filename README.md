@@ -72,11 +72,11 @@ trainer=GradDiff \
 # Override alpha parameter
 trainer.method_args.alpha=0.5 \
 # Forget dataset
-data.forget=TOFU_QA_FORGET10 \
+data.forget=TOFU_QA_forget \
 # Retain dataset
-data.retain=TOFU_QA_RETAIN90 \
+data.retain=TOFU_QA_retain \
 # Evaluation dataset for trainer
-data.eval=TOFU_QA_FORGET10_P \
+data.eval=TOFU_QA_forget_para \
 # Collator for datasets
 collator=DataCollatorForSupervisedDataset
 
@@ -86,9 +86,9 @@ collator=DataCollatorForSupervisedDataset
 - **model.model_args.pretrained_model_name_or_path=LOCAL PATH**: Overrides the model path defined in [Llama-3.1-8B-Instruct.yaml](../configs/model/Llama-3.1-8B-Instruct.yaml) to provide path to pre-unlearning finetuned model.
 - **trainer=GradDiff**: Loads the unlearning trainer [GradDiffTrainer](../src/trainer/unlearn/grad_diff.py) with the configuration defined in [GradDiff.yaml](../configs/trainer/GradDiff.yaml).
 - **trainer.method_args.alpha=0.5**: Overrides the alpha parameter [GradDiff.yaml](../configs/trainer/GradDiff.yaml).
-- **data.forget=TOFU_QA_FORGET10**: Sets the forget dataset to load [QADataset](../src/data/tofu.py) with config [TOFU_QA_FORGET10.yaml](../configs/data/datasets/TOFU_QA_FORGET10.yaml) for unlearning.
-- **data.retain=TOFU_QA_RETAIN90**: Sets the retain dataset for [QADataset](../src/data/tofu.py) with config [TOFU_QA_RETAIN90.yaml](../configs/data/datasets/TOFU_QA_RETAIN90.yaml) for unlearning.
-- **data.eval=TOFU_QA_FORGET10_P**: Sets the evaluation dataset for [QADataset](../src/data/tofu.py) with config [TOFU_QA_FORGET10_P.yaml](../configs/data/datasets/TOFU_QA_FORGET10_P.yaml) for unlearning.
+- **data.forget=TOFU_QA_forget**: Sets the forget dataset to load [QADataset](../src/data/tofu.py) with config [TOFU_QA_forget.yaml](../configs/data/datasets/TOFU_QA_forget.yaml) for unlearning.
+- **data.retain=TOFU_QA_retain**: Sets the retain dataset for [QADataset](../src/data/tofu.py) with config [TOFU_QA_retain.yaml](../configs/data/datasets/TOFU_QA_retain.yaml) for unlearning.
+- **data.eval=TOFU_QA_forget_para**: Sets the evaluation dataset for [QADataset](../src/data/tofu.py) with config [TOFU_QA_forget_para.yaml](../configs/data/datasets/TOFU_QA_forget_para.yaml) for unlearning.
 
 
 ### Evaluate and implement new metrics for unlearning
@@ -118,16 +118,16 @@ Quick start: run finetuning with the following script
 python src/train.py \
 model=Llama-3.1-8B-Instruct \
 trainer=finetune \
-data.train=TOFU_QA_FULL \
-data.eval=TOFU_QA_FORGET10_P \
+data.train=TOFU_QA_full \
+data.eval=TOFU_QA_forget_para \
 collator=DataCollatorForSupervisedDataset
 ```
 
 - **model=Llama-3.1-8B-Instruct**: Loads the model configuration from [Llama-3.1-8B-Instruct.yaml](../configs/model/Llama-3.1-8B-Instruct.yaml)
 - **trainer=finetune**: Loads the [Hugging Face's](https://github.com/huggingface/transformers/blob/v4.45.1/src/transformers/trainer.py) `Trainer` with the configuration defined in [finetune.yaml](../configs/trainer/finetune.yaml).
 - **trainer.method_args.alpha=0.5**: Overrides the alpha parameter [GradDiff.yaml](../configs/trainer/GradDiff.yaml).
-- **data.train=TOFU_QA_FULL**: Sets the train dataset to load [QADataset](../src/data/tofu.py) with config [TOFU_QA_FULL.yaml](../configs/data/datasets/TOFU_QA_FULL.yaml).
-- **data.eval=TOFU_QA_FORGET10_P**: Sets the evaluation dataset for [QADataset](../src/data/tofu.py) with config [TOFU_QA_FORGET10_P.yaml](../configs/data/datasets/TOFU_QA_FORGET10_P.yaml).
+- **data.train=TOFU_QA_full**: Sets the train dataset to load [QADataset](../src/data/tofu.py) with config [TOFU_QA_full.yaml](../configs/data/datasets/TOFU_QA_full.yaml).
+- **data.eval=TOFU_QA_forget_para**: Sets the evaluation dataset for [QADataset](../src/data/tofu.py) with config [TOFU_QA_forget_para.yaml](../configs/data/datasets/TOFU_QA_forget_para.yaml).
 
 
 <!-- ##

@@ -1,4 +1,4 @@
-TOFU_QA_FORGET10_PT:
+TOFU_QA_forget_pert:
   handler: QADataset
   args:
     hf_args:
