@@ -116,8 +116,8 @@ def probability(model, **kwargs):
     batch_size = kwargs["batch_size"]
 
     dataloader = DataLoader(data, batch_size=batch_size, collate_fn=collator)
-    index_to_probs = evaluate_probability(model, dataloader)
-    return index_to_probs
+    scores_by_index = evaluate_probability(model, dataloader)
+    return scores_by_index
 
 
 @unlearning_metric(name="rouge")
@@ -128,20 +128,20 @@ def rouge(model, **kwargs):
     batch_size = kwargs["batch_size"]
     generation_args = kwargs["generation_args"]
     dataloader = DataLoader(data, batch_size=batch_size, collate_fn=collator)
-    index_to_scores = eval_text_similarity(
+    scores_by_index = eval_text_similarity(
         model, tokenizer, dataloader, generation_args
     )
-    return index_to_scores
+    return scores_by_index
 
 
 @unlearning_metric(name="forget_truth_ratio")
 def forget_truth_ratio(model, **kwargs):
     para_results = kwargs["pre_compute"]["paraphrase"]
     pert_results = kwargs["pre_compute"]["perturb"]
-    index_to_scores = {}
+    scores_by_index = {}
     for k, para_result in para_results.items():
         para_prob = para_result["prob"]
         pert_result = pert_results[k]
         pert_prob = sum([r["prob"] for r in pert_result]) / len(pert_result)
-        index_to_scores[k] = {"forget_truth_ratio": pert_prob / para_prob}
-    return index_to_scores
+        scores_by_index[k] = {"forget_truth_ratio": pert_prob / para_prob}
+    return scores_by_index
