@@ -1,16 +1,17 @@
-# @package eval.tofu.metrics.Q_PARA_A_PARA_ROUGE
+# @package eval.tofu.metrics.full_BIO_ROUGE
 defaults:
-  - ../../data/datasets@datasets: TOFU_QA_FORGET10_P
+  - ../../data/datasets@datasets: TOFU_QA_BIO
   - ../../collator@collators: DataCollatorForSupervisedDatasetwithIndex
   - ../../generation@generation_args: default
   # ^ get default dataset and generation config information
 
 handler: rouge
 batch_size: 16
+generation_args:
+  max_new_tokens: 1024
 datasets: # override as needed
-  TOFU_QA_FORGET10_P:
+  TOFU_QA_BIO:
     args:
-      question_key: paraphrased_question
       predict_with_generate: True
 collators:
   DataCollatorForSupervisedDataset: 

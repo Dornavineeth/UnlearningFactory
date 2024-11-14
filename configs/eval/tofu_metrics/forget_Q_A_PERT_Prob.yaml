@@ -1,4 +1,4 @@
-# @package eval.tofu.metrics.Q_A_PERT_Prob
+# @package eval.tofu.metrics.forget_Q_A_PERT_Prob
 defaults:
   - ../../data/datasets@datasets: TOFU_QA_FORGET10_PT
   - ../../collator@collators: DataCollatorForSupervisedDatasetwithIndex

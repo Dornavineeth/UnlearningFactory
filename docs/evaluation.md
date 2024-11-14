@@ -36,10 +36,10 @@ Sample config [tofu.yaml](../configs/eval/tofu.yaml) of [TOFU](https://arxiv.org
 
 defaults: # include all defined metrics files
   - tofu_metrics: 
-    - Q_A_Prob # Probability on QA
-    - Q_PARA_A_PARA_Prob # Probability on paraphrased question and paraphrased anser
-    - Q_A_ROUGE # ROUGE on QA
-    - Q_A_PARA_ROUGE # ROUGE on question and paraphrased answer
+    - forget_Q_A_Prob # Probability on QA
+    - forget_Q_PARA_A_PARA_Prob # Probability on paraphrased question and paraphrased anser
+    - forget_Q_A_ROUGE # ROUGE on QA
+    - forget_Q_A_PARA_ROUGE # ROUGE on question and paraphrased answer
 
 device: cuda # device to load model
 output_dir: ${output_dir} # set to default eval directory
@@ -57,9 +57,9 @@ __NOTE__: The first line `@package eval.tofu` is not a comment, but populates `e
 
 Each metric has its own configuration, which specifies the datasets, collators, and any additional arguments needed for calculation.
 
-Sample Config [Q_A_Prob.yaml](../configs/eval/tofu_metrics/Q_A_Prob.yaml) for a metric with name `Q_A_Prob` which calculates probability of Question Answer pairs.
+Sample Config [forget_Q_A_Prob.yaml](../configs/eval/tofu_metrics/forget_Q_A_Prob.yaml) for a metric with name `forget_Q_A_Prob` which calculates probability of Question Answer pairs.
 ```yaml
-# @package eval.tofu.metrics.Q_A_Prob
+# @package eval.tofu.metrics.forget_Q_A_Prob
 
 defaults:
   - ../../data/datasets@datasets: TOFU_QA_FORGET10
@@ -77,14 +77,14 @@ batch_size: 16
 
 __NOTE__: 
 - The prefix `../../data/datasets` and `../../collator` are used to locate the `datasets` amd `collator` config packages w.r.t [tofu_metrics](../configs/eval/tofu_metrics/) sub-package,
-- The first line `@package eval.tofu.metrics.Q_A_Prob` is not a comment, but populates the `metrics` key in [eval/tofu.yaml](../configs/eval/tofu.yaml). See [Hydra](https://hydra.cc/docs/upgrades/0.11_to_1.0/adding_a_package_directive/) documenation.
+- The first line `@package eval.tofu.metrics.forget_Q_A_Prob` is not a comment, but populates the `metrics` key in [eval/tofu.yaml](../configs/eval/tofu.yaml). See [Hydra](https://hydra.cc/docs/upgrades/0.11_to_1.0/adding_a_package_directive/) documenation.
 
 ## Metric Handler Implementation
 
 
 
 
-A metric handler is implemented as a function decorated with `@unlearning_metric`. This decorator wraps the function into an UnlearningMetric object. This helps to automatically load and prepare datasets and collators for `probability` as specified in the eval config ([example](../configs/eval/tofu_metrics/Q_A_Prob.yaml)), so they are readily available for use in the function.
+A metric handler is implemented as a function decorated with `@unlearning_metric`. This decorator wraps the function into an UnlearningMetric object. This helps to automatically load and prepare datasets and collators for `probability` as specified in the eval config ([example](../configs/eval/tofu_metrics/forget_Q_A_Prob.yaml)), so they are readily available for use in the function.
 
 Implementation of `probability` Metric
 
@@ -103,7 +103,7 @@ def probability(model, **kwargs):
 ```
 
 - **@unlearning_metric(name="probability")**: Defines a metric with handler name as `probability`.
-- `datasets` and `collators` defined in config [Q_A_Prob.yaml](../configs/eval/tofu_metrics/Q_A_Prob.yaml) are automatically loaded with their data handlers and can be accessed in kwargs.
+- `datasets` and `collators` defined in config [forget_Q_A_Prob.yaml](../configs/eval/tofu_metrics/forget_Q_A_Prob.yaml) are automatically loaded with their data handlers and can be accessed in kwargs.
 
 
 ## Register Metric
@@ -122,36 +122,36 @@ _register_metric(probability)
 
 ### Pre-Compute
 
-In TOFU, we support the creation of aggregated metrics that depend on other metrics computed previously. For example, the `truth_ratio` metric relies on both *perturbed* and *paraphrased* probabilities for questions and answers, so its implementation could utilize existing metric and their evaluations. To avoid redundant computation, we provide a pre-compute option, allowing metrics to be calculated in advance and referenced in other metrics. Then while, implementing the dependent metric, the evals for the others can be accessed and used directly.
+In TOFU, we support the creation of aggregated metrics that depend on other metrics computed previously. For example, the `forget_truth_ratio` metric relies on both *perturbed* and *paraphrased* probabilities for questions and answers, so its implementation could utilize existing metric and their evaluations. To avoid redundant computation, we provide a pre-compute option, allowing metrics to be calculated in advance and referenced in other metrics. Then while, implementing the dependent metric, the evals for the others can be accessed and used directly.
 
 ```yaml
-# @package eval.tofu.metrics.truth_ratio
+# @package eval.tofu.metrics.forget_truth_ratio
 
 defaults:
-  - .@pre_compute.Q_A_PARA_Prob: Q_A_PARA_Prob
-  - .@pre_compute.Q_A_PERT_Prob: Q_A_PERT_Prob
+  - .@pre_compute.forget_Q_A_PARA_Prob: forget_Q_A_PARA_Prob
+  - .@pre_compute.forget_Q_A_PERT_Prob: forget_Q_A_PERT_Prob
 
 pre_compute:
-  Q_A_PARA_Prob:
+  forget_Q_A_PARA_Prob:
     access_key: paraphrase
-  Q_A_PERT_Prob:
+  forget_Q_A_PERT_Prob:
     access_key: perturb
 
-handler: truth_ratio
+handler: forget_truth_ratio
 ```
-- **.@pre_compute.Q_A_PARA_Prob: Q_A_PARA_Prob**: This specifies that, for the current package (`.`), we are renaming a configuration to pre_compute with a key of `Q_A_PARA_Prob`. The configuration parameters for this key are loaded from the file [Q_A_PARA_Prob.yaml](../configs/eval/tofu_metrics/Q_A_PARA_Prob.yaml).
-- **handler: truth_ratio**: Specifies the handler implemented for the aggregated metric evaluation.
+- **.@pre_compute.forget_Q_A_PARA_Prob: forget_Q_A_PARA_Prob**: This specifies that, for the current package (`.`), we are renaming a configuration to pre_compute with a key of `forget_Q_A_PARA_Prob`. The configuration parameters for this key are loaded from the file [forget_Q_A_PARA_Prob.yaml](../configs/eval/tofu_metrics/forget_Q_A_PARA_Prob.yaml).
+- **handler: forget_truth_ratio**: Specifies the handler implemented for the aggregated metric evaluation.
   
 ```yaml
 pre_compute:
-  Q_A_PARA_Prob:
+  forget_Q_A_PARA_Prob:
     access_key: paraphrase
 ```
-- **access_key**: Specifies how the pre-computed results should be accessed within the `truth_ratio` handler. Here, the `Q_A_PARA_Prob` results are accessible under the key `paraphrase`, while `Q_A_PERT_Prob` is accessible under `perturb`.
+- **access_key**: Specifies how the pre-computed results should be accessed within the `forget_truth_ratio` handler. Here, the `forget_Q_A_PARA_Prob` results are accessible under the key `paraphrase`, while `forget_Q_A_PERT_Prob` is accessible under `perturb`.
 
 ```python
-@unlearning_metric(name="truth_ratio")
-def truth_ratio(model, **kwargs):
+@unlearning_metric(name="forget_truth_ratio")
+def forget_truth_ratio(model, **kwargs):
     para_results = kwargs["pre_compute"]["paraphrase"]
     pert_results = kwargs["pre_compute"]["perturb"]
     index_to_scores = {}
@@ -159,7 +159,7 @@ def truth_ratio(model, **kwargs):
         para_prob = para_result["prob"]
         pert_result = pert_results[k]
         pert_prob = sum([r["prob"] for r in pert_result]) / len(pert_result)
-        index_to_scores[k] = {"truth_ratio": pert_prob / para_prob}
+        index_to_scores[k] = {"forget_truth_ratio": pert_prob / para_prob}
     return index_to_scores
 ```
 - Access the pre-computed metric results of paraphrased probability through `kwargs["pre_compute"]["paraphrase"]`.
