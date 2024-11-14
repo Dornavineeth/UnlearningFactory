@@ -21,11 +21,13 @@ def main(cfg: DictConfig):
     model, tokenizer = get_model(model_cfg)
 
     eval_cfgs = cfg.eval
-    evaluators = get_evaluators(
-        eval_cfgs, template_args=template_args, model=model, tokenizer=tokenizer
-    )
+    evaluators = get_evaluators(eval_cfgs)
     for evaluator_name, evaluator in evaluators.items():
-        eval_args = eval_cfgs[evaluator_name]
+        eval_args = {
+            "template_args": template_args,
+            "model": model, 
+            "tokenizer": tokenizer
+        }
         _ = evaluator.evaluate(**eval_args)
 
 

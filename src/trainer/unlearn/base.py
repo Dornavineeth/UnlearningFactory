@@ -1,13 +1,9 @@
-# Modified from https://github.com/huggingface/transformers/blob/v4.45.1/src/transformers/trainer.py
-
 from typing import Any, Dict, List, Optional, Tuple, Union
 
 import torch
 from torch import nn
 from packaging import version
-from transformers import Trainer
-from torch.utils.data import Dataset
-
+from trainer.base import FinetuneTrainer
 
 from transformers.trainer_pt_utils import (
     nested_detach,
@@ -31,19 +27,7 @@ if is_sagemaker_mp_enabled():
 else:
     IS_SAGEMAKER_MP_POST_1_10 = False
 
-
-class UnlearnTrainer(Trainer):
-    def __init__(self, eval_cfg=None, *args, **kwargs):
-        self.eval_cfg = eval_cfg
-        super().__init__(*args, **kwargs)
-
-    def evaluate(
-        self,
-        eval_dataset: Optional[Union[Dataset, Dict[str, Dataset]]] = None,
-        ignore_keys: Optional[List[str]] = None,
-        metric_key_prefix: str = "eval",
-    ) -> Dict[str, float]:
-        return super().evaluate(eval_dataset, ignore_keys, metric_key_prefix)
+class UnlearnTrainer(FinetuneTrainer):
 
     def prediction_step(
         self,
@@ -53,27 +37,7 @@ class UnlearnTrainer(Trainer):
         ignore_keys: Optional[List[str]] = None,
     ) -> Tuple[Optional[torch.Tensor], Optional[torch.Tensor], Optional[torch.Tensor]]:
         """
-        Perform an evaluation step on `model` using `inputs`.
-
-        Subclass and override to inject custom behavior.
-
-        Args:
-            model (`nn.Module`):
-                The model to evaluate.
-            inputs (`Dict[str, Union[torch.Tensor, Any]]`):
-                The inputs and targets of the model.
-
-                The dictionary will be unpacked before being fed to the model. Most models expect the targets under the
-                argument `labels`. Check your model's documentation for all accepted arguments.
-            prediction_loss_only (`bool`):
-                Whether or not to return the loss only.
-            ignore_keys (`List[str]`, *optional*):
-                A list of keys in the output of your model (if it is a dictionary) that should be ignored when
-                gathering predictions.
-
-        Return:
-            Tuple[Optional[torch.Tensor], Optional[torch.Tensor], Optional[torch.Tensor]]: A tuple with the loss,
-            logits and labels (each being optional).
+        Calls self.compute loss instead of compute
         """
         has_labels = (
             False
@@ -136,6 +100,7 @@ class UnlearnTrainer(Trainer):
             else:
                 if has_labels or loss_without_labels:
                     with self.compute_loss_context_manager():
+                        ### Call compute_loss of super class since unlearning compute loss might not be applicable to evaluation dataset.
                         loss, outputs = super().compute_loss(
                             model, inputs, return_outputs=True
                         )
