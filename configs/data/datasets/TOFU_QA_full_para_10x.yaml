@@ -1,4 +1,4 @@
-TOFU_QA_full_para_10:
+TOFU_QA_full_para_10x:
   handler: QADataset
   args:
     hf_args:
