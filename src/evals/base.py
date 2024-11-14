@@ -12,11 +12,9 @@ class Evaluator:
 
     def get_logs_file_path(self, output_dir):
         """Returns the path to json file to store results"""
-        logs_filename = os.path.join(
-            output_dir, f"{self.name}_EVAL.json"
-        )
+        logs_filename = os.path.join(output_dir, f"{self.name}_EVAL.json")
         return logs_filename
-    
+
     def load_logs_from_file(self, file):
         """Returns the cache of existing results"""
         logs = {}
@@ -25,13 +23,13 @@ class Evaluator:
             with open(file, "r") as f:
                 logs = json.load(f)
         return logs
-    
+
     def save_logs(self, logs, file):
         """Save the logs in a json file"""
         os.makedirs(os.path.dirname(file), exist_ok=True)
         with open(file, "w") as f:
             json.dump(logs, f, indent=4)
-    
+
     def prepare_model(self, model):
         """Prepare model for evaluation"""
         self.device = self.eval_cfg.device
@@ -47,21 +45,24 @@ class Evaluator:
     def evaluate(self, model, output_dir=None, overwrite=False, **kwargs):
         # Prepare model for evaluation
         model = self.prepare_model(model)
-        
+
         # Set output_dir and file to store results
         output_dir = output_dir if output_dir else self.eval_cfg.output_dir
         logs_file_path = self.get_logs_file_path(output_dir)
-        
+
         # Load exisiting results from file if any.
         logs = self.load_logs_from_file(logs_file_path)
-        
+
         print(f"***** Running Evaluation {self.name} *****")
         for metric_name, metric_fn in self.metrics.items():
             if not overwrite and metric_name in logs:
                 print(f"Skipping {metric_name}, already evaluated.")
                 continue
             _ = logs.pop(metric_name, None)  # overwriting existing evals if present
-            kwargs = {"tokenizer": kwargs.get("tokenizer", None), "template_args": kwargs.get("template_args", None)}
+            kwargs = {
+                "tokenizer": kwargs.get("tokenizer", None),
+                "template_args": kwargs.get("template_args", None),
+            }
             metrics_args = self.eval_cfg.metrics[metric_name]
             _ = metric_fn(
                 model,

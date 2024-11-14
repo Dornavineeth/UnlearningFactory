@@ -29,7 +29,7 @@ def load_trainer(
     tokenizer=None,
     data_collator=None,
     evaluator=None,
-    template_args=None
+    template_args=None,
 ):
     trainer_args = trainer_cfg.args
     method_args = trainer_cfg.get("method_args", {})

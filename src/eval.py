@@ -25,8 +25,8 @@ def main(cfg: DictConfig):
     for evaluator_name, evaluator in evaluators.items():
         eval_args = {
             "template_args": template_args,
-            "model": model, 
-            "tokenizer": tokenizer
+            "model": model,
+            "tokenizer": tokenizer,
         }
         _ = evaluator.evaluate(**eval_args)
 

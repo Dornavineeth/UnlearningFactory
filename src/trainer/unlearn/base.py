@@ -27,8 +27,8 @@ if is_sagemaker_mp_enabled():
 else:
     IS_SAGEMAKER_MP_POST_1_10 = False
 
-class UnlearnTrainer(FinetuneTrainer):
 
+class UnlearnTrainer(FinetuneTrainer):
     def prediction_step(
         self,
         model: nn.Module,

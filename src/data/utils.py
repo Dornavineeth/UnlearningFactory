@@ -56,10 +56,12 @@ def package_prompt_response(
 
     if chat_ids[-1] != tokenizer.eos_token_id:
         chat_ids += [tokenizer.eos_token_id]
-    
-    if template_config["asst_tag"]!="": ## for llama2 model don't assert
-        assert chat_ids[: len(prompt_ids)] == prompt_ids, ValueError("Tokenization at the end of prompt is not same when tokenized with just pomrpt and prompt+response")
-    
+
+    if template_config["asst_tag"] != "":  ## for llama2 model don't assert
+        assert chat_ids[: len(prompt_ids)] == prompt_ids, ValueError(
+            "Tokenization at the end of prompt is not same when tokenized with just pomrpt and prompt+response"
+        )
+
     labels = [IGNORE_INDEX] * len(prompt_ids) + chat_ids[len(prompt_ids) :]
     item = {}
     if predict_with_generate:

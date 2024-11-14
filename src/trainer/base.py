@@ -10,6 +10,7 @@ from transformers.trainer_utils import PREFIX_CHECKPOINT_DIR
 
 logger = logging.getLogger(__name__)
 
+
 class FinetuneTrainer(Trainer):
     def __init__(self, evaluator=None, template_args=None, *args, **kwargs):
         self.evaluator = evaluator
@@ -35,10 +36,12 @@ class FinetuneTrainer(Trainer):
                 eval_args = {
                     "output_dir": output_dir,
                     "template_args": self.template_args,
-                    "model": self.model, 
-                    "tokenizer": self.tokenizer
+                    "model": self.model,
+                    "tokenizer": self.tokenizer,
                 }
                 self.evaluator.evaluate(**eval_args)
             else:
-                logger.warning("Unlearning Evaluation skipped as it supports only single gpu configuarations")   
+                logger.warning(
+                    "Unlearning Evaluation skipped as it supports only single gpu configuarations"
+                )
         return super()._evaluate(trial, ignore_keys_for_eval, skip_scheduler)
