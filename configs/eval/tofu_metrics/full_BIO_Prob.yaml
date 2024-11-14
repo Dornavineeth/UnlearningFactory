@@ -1,4 +1,4 @@
-# @package eval.tofu.metrics.BIO_Prob
+# @package eval.tofu.metrics.full_BIO_Prob
 defaults:
   - ../../data/datasets@datasets: TOFU_QA_BIO
   - ../../collator@collators: DataCollatorForSupervisedDatasetwithIndex

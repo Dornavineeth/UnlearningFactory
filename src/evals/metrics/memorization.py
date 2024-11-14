@@ -134,8 +134,8 @@ def rouge(model, **kwargs):
     return index_to_scores
 
 
-@unlearning_metric(name="truth_ratio")
-def truth_ratio(model, **kwargs):
+@unlearning_metric(name="forget_truth_ratio")
+def forget_truth_ratio(model, **kwargs):
     para_results = kwargs["pre_compute"]["paraphrase"]
     pert_results = kwargs["pre_compute"]["perturb"]
     index_to_scores = {}
@@ -143,5 +143,5 @@ def truth_ratio(model, **kwargs):
         para_prob = para_result["prob"]
         pert_result = pert_results[k]
         pert_prob = sum([r["prob"] for r in pert_result]) / len(pert_result)
-        index_to_scores[k] = {"truth_ratio": pert_prob / para_prob}
+        index_to_scores[k] = {"forget_truth_ratio": pert_prob / para_prob}
     return index_to_scores

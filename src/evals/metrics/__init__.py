@@ -1,7 +1,7 @@
 from typing import Dict
 from omegaconf import DictConfig
 from evals.metrics.base import UnlearningMetric
-from evals.metrics.memorization import probability, rouge, truth_ratio
+from evals.metrics.memorization import probability, rouge, forget_truth_ratio
 
 METRICS_REGISTRY: Dict[str, UnlearningMetric] = {}
 
@@ -34,4 +34,4 @@ def get_metrics(metric_cfgs: DictConfig, **kwargs):
 # Register Metrics for unlearning here
 _register_metric(probability)
 _register_metric(rouge)
-_register_metric(truth_ratio)
+_register_metric(forget_truth_ratio)

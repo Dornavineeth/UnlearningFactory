@@ -1,0 +1,12 @@
+# @package eval.tofu.metrics.forget_truth_ratio
+defaults:
+  - .@pre_compute.forget_Q_A_PARA_Prob: forget_Q_A_PARA_Prob
+  - .@pre_compute.forget_Q_A_PERT_Prob: forget_Q_A_PERT_Prob
+
+pre_compute:
+  forget_Q_A_PARA_Prob:
+    access_key: paraphrase
+  forget_Q_A_PERT_Prob:
+    access_key: perturb
+
+handler: forget_truth_ratio
