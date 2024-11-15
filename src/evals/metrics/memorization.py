@@ -48,6 +48,7 @@ def run_batchwise_evals(model, dataloader, batch_eval_fn, batch_eval_fn_args, ev
     # for each index return a dict with all intra_item_idx values in list
     # now looks like {idx453: {prob: [0.1, 0.2], loss: [1, 2]}}
     evals = dict_transpose(evals)
+    print("Evaluated", len(evals), "indices")
     return evals
     
 
@@ -86,8 +87,8 @@ def eval_text_similarity_batch(model, tokenizer, batch, generation_args):
         evals = []
         for gen, gt in zip(gen_outputs, ground_truths):
             rouge_scores = scorer.score(gt, gen)
-            evals.append([{'rouge1_recall': rouge_scores["rouge1"].recall,
-                        'rougeL_recall': rouge_scores["rougeL"].recall}])
+            evals.append({'rouge1_recall': rouge_scores["rouge1"].recall,
+                        'rougeL_recall': rouge_scores["rougeL"].recall})
         return evals
     
     batch = {k: v.to(model.device) for k, v in batch.items()}
