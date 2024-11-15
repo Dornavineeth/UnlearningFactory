@@ -1,10 +1,14 @@
 import torch
+import logging
 from torch import nn
 from tqdm import tqdm
 from rouge_score import rouge_scorer
 from torch.utils.data import DataLoader
 
 from evals.metrics.base import unlearning_metric
+
+# Supress the info messages logged while calculating rouge using rouge_scorer
+logging.getLogger("absl").setLevel(logging.WARNING)
 
 
 def evaluate_probability_batch(model, batch):

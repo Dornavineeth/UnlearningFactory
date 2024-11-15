@@ -37,7 +37,7 @@ class UnlearnTrainer(FinetuneTrainer):
         ignore_keys: Optional[List[str]] = None,
     ) -> Tuple[Optional[torch.Tensor], Optional[torch.Tensor], Optional[torch.Tensor]]:
         """
-        Calls self.compute loss instead of compute
+        The only change to this function is calling the Trainer's compute_loss, as it's often overridden by unlearning methods, and we want to maintain the Trainer's evaluation setup.
         """
         has_labels = (
             False
@@ -100,7 +100,7 @@ class UnlearnTrainer(FinetuneTrainer):
             else:
                 if has_labels or loss_without_labels:
                     with self.compute_loss_context_manager():
-                        ### Call compute_loss of super class since unlearning compute loss might not be applicable to evaluation dataset.
+                        ### Call compute_loss of super class since overridden compute_loss is not be applicable to eval_dataset.
                         loss, outputs = super().compute_loss(
                             model, inputs, return_outputs=True
                         )

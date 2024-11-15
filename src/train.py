@@ -1,12 +1,9 @@
 import hydra
 from omegaconf import DictConfig
-import logging
 from data import get_data, get_collators
 from model import get_model
 from trainer import load_trainer
 from evals import get_evaluator
-
-logging.getLogger("absl").setLevel(logging.WARNING)
 
 
 @hydra.main(version_base=None, config_path="../configs", config_name="train.yaml")

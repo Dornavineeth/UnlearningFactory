@@ -38,7 +38,7 @@ class Evaluator:
         return model
 
     def load_metrics(self, metrics_cfg):
-        "Load metrics for evaluation"
+        """Load metrics for evaluation"""
         metrics = get_metrics(metrics_cfg)
         return metrics
 

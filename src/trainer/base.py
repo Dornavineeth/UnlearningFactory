@@ -26,22 +26,25 @@ class FinetuneTrainer(Trainer):
         return super().evaluate(eval_dataset, ignore_keys, metric_key_prefix)
 
     def _evaluate(self, trial, ignore_keys_for_eval, skip_scheduler=False):
-        """Performs Unlearning Evaluation pipeline and standard evaluation of HF Trainer"""
-        if self.accelerator.is_local_main_process:
-            if self.accelerator.num_processes == 1:
-                run_dir = self._get_output_dir(trial=trial)
-                checkpoint_folder = f"{PREFIX_CHECKPOINT_DIR}-{self.state.global_step}"
-                output_dir = os.path.join(run_dir, checkpoint_folder, "evals")
-                os.makedirs(output_dir, exist_ok=True)
-                eval_args = {
-                    "output_dir": output_dir,
-                    "template_args": self.template_args,
-                    "model": self.model,
-                    "tokenizer": self.tokenizer,
-                }
-                self.evaluator.evaluate(**eval_args)
-            else:
-                logger.warning(
-                    "Unlearning Evaluation skipped as it supports only single gpu configuarations"
-                )
+        """Runs a custom evaluator and saves results before running the HuggingFace Trainer._evaluate()"""
+        if self.evaluator:
+            if self.accelerator.is_local_main_process:
+                if self.accelerator.num_processes == 1:
+                    run_dir = self._get_output_dir(trial=trial)
+                    checkpoint_folder = (
+                        f"{PREFIX_CHECKPOINT_DIR}-{self.state.global_step}"
+                    )
+                    output_dir = os.path.join(run_dir, checkpoint_folder, "evals")
+                    os.makedirs(output_dir, exist_ok=True)
+                    eval_args = {
+                        "output_dir": output_dir,
+                        "template_args": self.template_args,
+                        "model": self.model,
+                        "tokenizer": self.tokenizer,
+                    }
+                    self.evaluator.evaluate(**eval_args)
+                else:
+                    logger.warning(
+                        "Custom evaluator can be run with this Trainer only on a single GPU"
+                    )
         return super()._evaluate(trial, ignore_keys_for_eval, skip_scheduler)

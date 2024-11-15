@@ -59,7 +59,7 @@ def package_prompt_response(
 
     if template_config["asst_tag"] != "":  ## for llama2 model don't assert
         assert chat_ids[: len(prompt_ids)] == prompt_ids, ValueError(
-            "Tokenization at the end of prompt is not same when tokenized with just pomrpt and prompt+response"
+            "Tokenization mismatch: tokenized prompt should be a prefix of tokenized prompt+response. Discrepancy usually arises around the last prompt index."
         )
 
     labels = [IGNORE_INDEX] * len(prompt_ids) + chat_ids[len(prompt_ids) :]
