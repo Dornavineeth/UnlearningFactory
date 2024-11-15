@@ -215,7 +215,7 @@ def truth_ratio_helper(correct_answer_results, wrong_answers_results):
 @unlearning_metric(name="forget_truth_ratio")
 def forget_truth_ratio(model, **kwargs):
     # returns truth_ratio value in indices (false/true)
-    # aggregate by averaging min(x 1/x) values of truth_ratio
+    # aggregate by averaging min(x, 1/x) values of truth_ratio
     # because for forget truth ratio is better if closer to 1
     correct_answer_results = kwargs["pre_compute"]["correct"]["value_by_index"]
     wrong_answers_results = kwargs["pre_compute"]["wrong"]["value_by_index"]
