@@ -23,12 +23,12 @@ class Evaluator:
             print(f"Loading existing evaluations from {self.logs_filename}")
             with open(self.logs_filename, "r") as f:
                 self.logs = json.load(f)
-    
+
     def save_logs(self):
         os.makedirs(self.eval_cfg.output_dir, exist_ok=True)
         with open(self.logs_filename, "w") as f:
-            json.dump(self.logs, f, indent=4)    
-    
+            json.dump(self.logs, f, indent=4)
+
     def prepare_model(self):
         self.device = self.eval_cfg.device
         self.model.to(self.device)
@@ -44,7 +44,9 @@ class Evaluator:
             if not overwrite and metric_name in self.logs:
                 print(f"Skipping {metric_name}, already evaluated.")
                 continue
-            _ = self.logs.pop(metric_name, None)  # overwriting existing evals if present
+            _ = self.logs.pop(
+                metric_name, None
+            )  # overwriting existing evals if present
             kwargs = {"tokenizer": self.tokenizer, "template_args": self.template_args}
             metrics_args = self.eval_cfg.metrics[metric_name]
             _ = metric_fn(
