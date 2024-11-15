@@ -6,13 +6,13 @@ defaults: # include all defined metrics files
   # metric key below, enabled by the @package directive at the top of each configuration file.
     - forget_Q_A_Prob
     # - forget_Q_PARA_A_PARA_Prob
-    # - forget_Q_A_PERT_Prob
-    # - forget_Q_A_ROUGE
+    - forget_Q_A_PERT_Prob
+    - forget_Q_A_ROUGE
     # - forget_Q_PARA_A_PARA_ROUGE
-    - forget_Q_A_PARA_ROUGE
-    - forget_Q_A_PERT_ROUGE
-    - full_BIO_Prob
-    - full_BIO_ROUGE
+    # - forget_Q_A_PARA_ROUGE
+    # - forget_Q_A_PERT_ROUGE
+    # - full_BIO_Prob
+    # - full_BIO_ROUGE
     - forget_Q_A_PARA_Prob
     - forget_Truth_Ratio
 
