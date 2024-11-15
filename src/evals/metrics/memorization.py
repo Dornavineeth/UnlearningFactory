@@ -1,9 +1,11 @@
 import torch
 import logging
 from torch import nn
+import numpy as np
 from tqdm import tqdm
 from rouge_score import rouge_scorer
 from torch.utils.data import DataLoader
+from collections import defaultdict
 
 from evals.metrics.base import unlearning_metric
 
@@ -25,27 +27,43 @@ def evaluate_probability_batch(model, batch):
     num_token_gt = (batch["labels"] != -100).sum(-1)
     avg_loss = loss / num_token_gt
     normalized_probs = torch.exp(-avg_loss)
-    return normalized_probs.cpu().numpy().tolist()
+    return {'prob': normalized_probs.cpu().numpy().tolist(), 'avg_loss': avg_loss.cpu().numpy().tolist()}
 
 
 def evaluate_probability(model, dataloader):
-    index_to_prob = {}
+    evals = defaultdict(dict)
     for batch in tqdm(dataloader, desc="Calculating loss", total=len(dataloader)):
+        # if data arrives in normal format we convert the batch to multiple answer-style
+        # as in tofu_perturbed by adding a fake answer index
         if "input_ids" in batch:
             batch = {0: batch}
+        # Assume batch like {"0": {"input_ids": [[]]..., "index": [453, 454..]}, 
+        #                   "1": {.., "index":  [453, 454..]}..}
         assert isinstance(next(iter(batch.values())), dict) and "input_ids" in next(iter(batch.values()))
-        for _, mini_batch in batch.items():
-            index = mini_batch.pop("index").cpu().numpy().tolist()
-            probs = evaluate_probability_batch(model, mini_batch)
-            for idx, prob in zip(index, probs):
-                if idx in index_to_prob:
-                    if isinstance(index_to_prob[idx], list):
-                        index_to_prob[idx].append({"prob": prob})
-                    else:
-                        index_to_prob[idx] = [index_to_prob[idx]] + [{"prob": prob}]
-                else:
-                    index_to_prob[idx] = {"prob": prob}
-    return index_to_prob
+        for intra_item_idx, mini_batch in batch.items():
+            data_indices = mini_batch.pop("index").cpu().numpy().tolist() # data item indices
+            batch_evals = evaluate_probability_batch(model, mini_batch) # batch_evals maps each attr to a list of length bsz
+            transpose_batch_evals = [  # a list of len bsz which maps for each attr to an indiv value
+                dict(zip(batch_evals.keys(), values)) 
+                for values in zip(*batch_evals.values())
+            ]
+            indexwise_batch_evals = dict(zip(data_indices, transpose_batch_evals)) # map data indices to attr maps
+            assert not (evals[intra_item_idx].keys() & indexwise_batch_evals.keys()), "Data indices repeated while iterating dataloader"
+            evals[intra_item_idx] |= indexwise_batch_evals # append to existing collection for index
+    
+    if len(evals) == 1: # normal single answer dataset
+        return evals[0]
+    else:
+        all_iidxs = list(evals.keys())
+        all_idxs = list(evals[all_iidxs[0]].keys())
+        all_stats = list(evals[all_iidxs[0]][all_idxs[0]].keys())
+        # invert the dict, put outermost key to deepest
+        evals = {idx: {stat: [evals[iidx][idx][stat] 
+                              for iidx in all_iidxs]
+                       for stat in all_stats}
+                 for idx in all_idxs}
+        return evals
+    
 
 
 def eval_rouge_recall(gen_outputs, ground_truths):
@@ -140,12 +158,19 @@ def rouge(model, **kwargs):
 
 @unlearning_metric(name="forget_truth_ratio")
 def forget_truth_ratio(model, **kwargs):
-    para_results = kwargs["pre_compute"]["paraphrase"]
-    pert_results = kwargs["pre_compute"]["perturb"]
-    scores_by_index = {}
-    for k, para_result in para_results.items():
-        para_prob = para_result["prob"]
-        pert_result = pert_results[k]
-        pert_prob = sum([r["prob"] for r in pert_result]) / len(pert_result)
-        scores_by_index[k] = {"forget_truth_ratio": pert_prob / para_prob}
-    return scores_by_index
+    def aggregate(x):
+        return sum(x) / len(x) if isinstance(x, list) else x
+    correct_answer_results = kwargs["pre_compute"]["paraphrase"]
+    correct_loss = {idx: aggregate(result["avg_loss"])
+                    for idx, result in correct_answer_results.items()}
+    correct_prob = {idx: np.exp(-loss) for idx, loss in correct_loss.items()}
+    
+    wrong_answers_results = kwargs["pre_compute"]["perturb"]
+    wrong_loss = {idx: aggregate(result["avg_loss"])
+                  for idx, result in wrong_answers_results.items()}
+    wrong_prob = {idx: np.exp(-loss) for idx, loss in wrong_loss.items()}
+    
+    assert correct_prob.keys() == wrong_prob.keys()
+    truth_ratio = {idx: {"truth_ratio": wrong_prob[idx]/correct_prob[idx]}
+                   for idx in correct_prob.keys()}
+    return truth_ratio
