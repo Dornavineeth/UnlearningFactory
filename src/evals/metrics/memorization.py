@@ -52,10 +52,11 @@ def run_batchwise_evals(model, dataloader, batch_eval_fn, batch_eval_fn_args, ev
     # evals looks like {iidx0: {idx453: {prob: 0.1, loss: 1}},
     #                   iidx1: {idx453: {prob: 0.2, loss: 2}}}
     if len(evals) == 1:  # normal single answer dataset, no need for list
-        return next(iter(evals.values()))
+        evals = next(iter(evals.values()))
+    else:
     # for each index return a dict with all intra_item_idx values in list
     # now looks like {idx453: {prob: [0.1, 0.2], loss: [1, 2]}}
-    evals = dict_transpose(evals)
+        evals = dict_transpose(evals)
     print("Evaluated", len(evals), "indices")
     return evals
 
@@ -201,6 +202,5 @@ def forget_truth_ratio(model, **kwargs):
     value_by_index = dict(
         zip(correct_indices, [{"truth_ratio": val for val in forget_tr_stats}])
     )
-    value_by_index = dict(zip(correct_indices, forget_tr_stats.tolist()))
 
     return {"agg_value": forget_tr_avg, "value_by_index": value_by_index}
