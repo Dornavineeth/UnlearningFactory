@@ -200,8 +200,8 @@ def forget_truth_ratio(model, **kwargs):
     # returns truth_ratio value in indices
     # aggregate by averaging 1-closed values of truth_ratio
 
-    correct_answer_results = kwargs["pre_compute"]["paraphrase"]["value_by_index"]
-    wrong_answers_results = kwargs["pre_compute"]["perturb"]["value_by_index"]
+    correct_answer_results = kwargs["pre_compute"]["correct"]["value_by_index"]
+    wrong_answers_results = kwargs["pre_compute"]["wrong"]["value_by_index"]
 
     # Separate indices and losses
     correct_indices = list(correct_answer_results.keys())

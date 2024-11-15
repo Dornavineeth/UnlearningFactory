@@ -5,8 +5,8 @@ defaults:
 
 pre_compute:
   forget_Q_A_PARA_Prob:
-    access_key: paraphrase
+    access_key: correct
   forget_Q_A_PERT_Prob:
-    access_key: perturb
+    access_key: wrong
 
 handler: forget_truth_ratio

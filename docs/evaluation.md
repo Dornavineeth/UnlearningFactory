@@ -133,9 +133,9 @@ defaults:
 
 pre_compute:
   forget_Q_A_PARA_Prob:
-    access_key: paraphrase
+    access_key: correct
   forget_Q_A_PERT_Prob:
-    access_key: perturb
+    access_key: wrong
 
 handler: forget_truth_ratio
 ```
@@ -145,15 +145,15 @@ handler: forget_truth_ratio
 ```yaml
 pre_compute:
   forget_Q_A_PARA_Prob:
-    access_key: paraphrase
+    access_key: correct
 ```
-- **access_key**: Specifies how the pre-computed results should be accessed within the `forget_truth_ratio` handler. Here, the `forget_Q_A_PARA_Prob` results are accessible under the key `paraphrase`, while `forget_Q_A_PERT_Prob` is accessible under `perturb`.
+- **access_key**: Specifies how the pre-computed results should be accessed within the `forget_truth_ratio` handler. Here, the `forget_Q_A_PARA_Prob` results are accessible under the key `correct`, while `forget_Q_A_PERT_Prob` is accessible under `wrong`.
 
 ```python
 @unlearning_metric(name="forget_truth_ratio")
 def forget_truth_ratio(model, **kwargs):
-    para_results = kwargs["pre_compute"]["paraphrase"]
-    pert_results = kwargs["pre_compute"]["perturb"]
+    para_results = kwargs["pre_compute"]["correct"]
+    pert_results = kwargs["pre_compute"]["wrong"]
     index_to_scores = {}
     for k, para_result in para_results.items():
         para_prob = para_result["prob"]
@@ -162,4 +162,4 @@ def forget_truth_ratio(model, **kwargs):
         index_to_scores[k] = {"forget_truth_ratio": pert_prob / para_prob}
     return index_to_scores
 ```
-- Access the pre-computed metric results of paraphrased probability through `kwargs["pre_compute"]["paraphrase"]`.
+- Access the pre-computed metric results of paraphrased probability through `kwargs["pre_compute"]["correct"]`.
