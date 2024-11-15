@@ -46,7 +46,7 @@ def get_datasets(dataset_cfgs: DictConfig, **kwargs):
     if len(dataset) == 1:
         # return a single dataset
         return list(dataset.values())[0]
-    # return a multiple datasets in dictionary
+    # return mapping to multiple datasets
     return dataset
 
 
