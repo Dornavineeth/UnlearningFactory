@@ -25,6 +25,11 @@ def dict_transpose(evals):
     return evals
 
 
+# Do you think helper functions like this and the above must be in some other file?
+def aggregate_to_1D(x):
+    return np.mean(x, axis=tuple(range(1, x.ndim)))
+
+
 def run_batchwise_evals(model, dataloader, batch_eval_fn, batch_eval_fn_args, eval_msg):
     evals = defaultdict(dict)
     for batch in tqdm(dataloader, desc=eval_msg, total=len(dataloader)):
@@ -54,10 +59,10 @@ def run_batchwise_evals(model, dataloader, batch_eval_fn, batch_eval_fn_args, ev
     if len(evals) == 1:  # normal single answer dataset, no need for list
         evals = next(iter(evals.values()))
     else:
-    # for each index return a dict with all intra_item_idx values in list
-    # now looks like {idx453: {prob: [0.1, 0.2], loss: [1, 2]}}
+        # for each index return a dict with all intra_item_idx values in list
+        # now looks like {idx453: {prob: [0.1, 0.2], loss: [1, 2]}}
         evals = dict_transpose(evals)
-    print("Evaluated", len(evals), "indices")
+    print("Evaluated", len(evals), "examples")
     return evals
 
 
@@ -150,17 +155,23 @@ def eval_text_similarity(model, tokenizer, dataloader, generation_args):
 
 @unlearning_metric(name="probability")
 def probability(model, **kwargs):
+    # returns the prob and avg_loss in scores
+    # aggregate the prob values
     data = kwargs["data"]
     collator = kwargs["collators"]
     batch_size = kwargs["batch_size"]
 
     dataloader = DataLoader(data, batch_size=batch_size, collate_fn=collator)
     scores_by_index = evaluate_probability(model, dataloader)
-    return scores_by_index
+    prob_values = np.array([evals["prob"] for evals in scores_by_index.values()])
+    prob_values = aggregate_to_1D(prob_values)
+    return {"agg_value": np.mean(prob_values), "value_by_index": scores_by_index}
 
 
 @unlearning_metric(name="rouge")
 def rouge(model, **kwargs):
+    # returns the rouge1_recall, rougeL_recall, input, ground_truth, generation keys in scores
+    # aggregate the rougeL_recall values
     tokenizer = kwargs["tokenizer"]
     data = kwargs["data"]
     collator = kwargs["collators"]
@@ -170,13 +181,20 @@ def rouge(model, **kwargs):
     scores_by_index = eval_text_similarity(
         model, tokenizer, dataloader, generation_args
     )
-    return scores_by_index
+    rougeL_recall_values = np.array(
+        [evals["rougeL_recall"] for evals in scores_by_index.values()]
+    )
+    rougeL_recall_values = aggregate_to_1D(rougeL_recall_values)
+    return {
+        "agg_value": np.mean(rougeL_recall_values),
+        "value_by_index": scores_by_index,
+    }
 
 
 @unlearning_metric(name="forget_truth_ratio")
 def forget_truth_ratio(model, **kwargs):
-    def aggregate_to_1D(x):
-        return np.mean(x, axis=tuple(range(1, x.ndim)))
+    # returns truth_ratio value in indices
+    # aggregate by averaging 1-closed values of truth_ratio
 
     correct_answer_results = kwargs["pre_compute"]["paraphrase"]
     wrong_answers_results = kwargs["pre_compute"]["perturb"]
