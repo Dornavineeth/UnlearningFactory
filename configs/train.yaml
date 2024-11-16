@@ -3,7 +3,9 @@ defaults:
   - trainer: finetune
   - data: finetune
   - collator: DataCollatorForSupervisedDataset
+  - eval: tofu
   - hydra: default
   - paths: default
+  - _self_
 
 mode: train

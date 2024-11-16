@@ -2,6 +2,7 @@ from typing import Dict, Any
 from omegaconf import DictConfig
 from transformers import Trainer, TrainingArguments
 
+from trainer.base import FinetuneTrainer
 from trainer.unlearn.grad_ascent import GradAscent
 from trainer.unlearn.grad_diff import GradDiff
 from trainer.unlearn.npo import NPO
@@ -27,6 +28,8 @@ def load_trainer(
     eval_dataset=None,
     tokenizer=None,
     data_collator=None,
+    evaluator=None,
+    template_args=None,
 ):
     trainer_args = trainer_cfg.args
     method_args = trainer_cfg.get("method_args", {})
@@ -46,6 +49,8 @@ def load_trainer(
         tokenizer=tokenizer,
         data_collator=data_collator,
         args=trainer_args,
+        evaluator=evaluator,
+        template_args=template_args,
         **method_args,
     )
     return trainer, trainer_args
@@ -53,6 +58,7 @@ def load_trainer(
 
 # Register Finetuning Trainer
 _register_trainer(Trainer)
+_register_trainer(FinetuneTrainer)
 
 # Register Unlearning Trainer
 _register_trainer(GradAscent)
