@@ -17,7 +17,14 @@ defaults: # include all defined metrics files
     - retain_Q_A_ROUGE
     - retain_Q_A_PERT_Prob
     - retain_Q_A_PARA_Prob
-    - Truth_Ratio
+    - retain_Truth_Ratio
+
+
+    - ra_Q_A_Prob
+    - ra_Q_A_ROUGE
+    - ra_Q_A_PERT_Prob
+    - ra_Truth_Ratio
+
     # - full_BIO_Prob
     # - full_BIO_ROUGE
 

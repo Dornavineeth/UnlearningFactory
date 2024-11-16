@@ -1,14 +1,15 @@
-# @package eval.tofu.metrics.forget_Q_A_PERT_ROUGE
+# @package eval.tofu.metrics.wf_Q_A_ROUGE
 defaults:
-  - ../../data/datasets@datasets: TOFU_QA_forget_pert
+  - ../../data/datasets@datasets: TOFU_QA_wf
   - ../../collator@collators: DataCollatorForSupervisedDatasetwithIndex
   - ../../generation@generation_args: default
+  
   # ^ get default dataset and generation config information
 
 handler: rouge
 batch_size: 32
 datasets: # override as needed
-  TOFU_QA_forget_pert:
+  TOFU_QA_wf:
     args:
       predict_with_generate: True
 collators:

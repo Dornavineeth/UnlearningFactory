@@ -6,7 +6,7 @@ defaults:
   # ^ get default dataset and generation config information
 
 handler: rouge
-batch_size: 16
+batch_size: 32
 generation_args:
   max_new_tokens: 1024
 datasets: # override as needed
