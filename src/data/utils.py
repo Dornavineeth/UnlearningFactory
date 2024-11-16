@@ -57,7 +57,11 @@ def package_prompt_response(
     if chat_ids[-1] != tokenizer.eos_token_id:
         chat_ids += [tokenizer.eos_token_id]
 
-    assert chat_ids[: len(prompt_ids)] == prompt_ids
+    if template_config["asst_tag"] != "":  ## for llama2 model don't assert
+        assert chat_ids[: len(prompt_ids)] == prompt_ids, ValueError(
+            "Tokenization mismatch: tokenized prompt should be a prefix of tokenized prompt+response. Discrepancy usually arises around the last prompt index."
+        )
+    
     labels = [IGNORE_INDEX] * len(prompt_ids) + chat_ids[len(prompt_ids) :]
     item = {}
     if predict_with_generate:
