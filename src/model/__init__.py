@@ -10,11 +10,11 @@ def get_dtype(model_args):
     with open_dict(model_args):
         torch_dtype = model_args.pop("torch_dtype", None)
     # handle https://github.com/Dao-AILab/flash-attention/blob/7153673c1a3c7753c38e4c10ef2c98a02be5f778/flash_attn/flash_attn_triton.py#L820
-    # if you want to run at float32 consider running "training or inference using 
-    # Automatic Mixed-Precision via the `with torch.autocast(device_type='torch_device'):` 
+    # if you want to run at float32 consider running "training or inference using
+    # Automatic Mixed-Precision via the `with torch.autocast(device_type='torch_device'):`
     # decorator"
-    if model_args['attn_implementation'] == 'flash_attention_2':
-        assert torch_dtype in ['float16', 'bfloat16']
+    if model_args["attn_implementation"] == "flash_attention_2":
+        assert torch_dtype in ["float16", "bfloat16"]
     if torch_dtype == "float16":
         return torch.float16
     elif torch_dtype == "bfloat16":

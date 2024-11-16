@@ -61,7 +61,7 @@ def package_prompt_response(
         assert chat_ids[: len(prompt_ids)] == prompt_ids, ValueError(
             "Tokenization mismatch: tokenized prompt should be a prefix of tokenized prompt+response. Discrepancy usually arises around the last prompt index."
         )
-    
+
     labels = [IGNORE_INDEX] * len(prompt_ids) + chat_ids[len(prompt_ids) :]
     item = {}
     if predict_with_generate:
