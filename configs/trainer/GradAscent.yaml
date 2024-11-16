@@ -2,3 +2,6 @@ defaults:
   - finetune
 
 handler: GradAscent
+args:
+  warmup_steps: 12
+  num_train_epochs: 10

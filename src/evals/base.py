@@ -26,6 +26,7 @@ class Evaluator:
 
     def save_logs(self, logs, file):
         """Save the logs in a json file"""
+        logs = dict(sorted(logs.items()))
         os.makedirs(os.path.dirname(file), exist_ok=True)
         with open(file, "w") as f:
             json.dump(logs, f, indent=4)

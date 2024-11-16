@@ -1,12 +1,8 @@
 import hydra
-import logging
 from omegaconf import DictConfig
+
 from model import get_model
-
-# from data import get_datasets
 from evals import get_evaluators
-
-logging.getLogger("absl").setLevel(logging.WARNING)
 
 
 @hydra.main(version_base=None, config_path="../configs", config_name="eval.yaml")
@@ -21,11 +17,13 @@ def main(cfg: DictConfig):
     model, tokenizer = get_model(model_cfg)
 
     eval_cfgs = cfg.eval
-    evaluators = get_evaluators(
-        eval_cfgs, template_args=template_args, model=model, tokenizer=tokenizer
-    )
+    evaluators = get_evaluators(eval_cfgs)
     for evaluator_name, evaluator in evaluators.items():
-        eval_args = eval_cfgs[evaluator_name]
+        eval_args = {
+            "template_args": template_args,
+            "model": model,
+            "tokenizer": tokenizer,
+        }
         _ = evaluator.evaluate(**eval_args)
 
 
