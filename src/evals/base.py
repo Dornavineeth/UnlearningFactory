@@ -45,7 +45,7 @@ class Evaluator:
     def evaluate(self, model, output_dir=None, overwrite=None, **kwargs):
         # set flag to overwrite metrics
         overwrite = self.eval_cfg.overwrite if overwrite is None else overwrite
-        
+
         # Prepare model for evaluation
         model = self.prepare_model(model)
 
