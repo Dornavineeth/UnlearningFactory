@@ -4,21 +4,22 @@
 defaults: # include all defined metrics files
   - tofu_metrics: # When you import a metric here, its configuration automatically populates the 
   # metric key below, enabled by the @package directive at the top of each configuration file.
-    # - forget_Q_A_Prob
+    - forget_Q_A_Prob
     # - forget_Q_PARA_A_PARA_Prob
     - forget_Q_A_PERT_Prob
     # - forget_Q_A_ROUGE
     # - forget_Q_PARA_A_PARA_ROUGE
     # - forget_Q_A_PARA_ROUGE
     # - forget_Q_A_PERT_ROUGE
-    # - full_BIO_Prob
-    # - full_BIO_ROUGE
     - forget_Q_A_PARA_Prob
     - forget_Truth_Ratio
     - retain_Q_A_Prob
+    - retain_Q_A_ROUGE
     - retain_Q_A_PERT_Prob
     - retain_Q_A_PARA_Prob
     - Truth_Ratio
+    # - full_BIO_Prob
+    # - full_BIO_ROUGE
 
 handler: TOFUEvaluator
 device: cuda
