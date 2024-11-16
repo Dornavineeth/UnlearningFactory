@@ -216,6 +216,7 @@ def truth_ratio_helper(correct_answer_results, wrong_answers_results):
     )
     return value_by_index
 
+
 @unlearning_metric(name="forget_truth_ratio")
 def forget_truth_ratio(model, **kwargs):
     # returns truth_ratio value in indices (false/true)
@@ -225,9 +226,14 @@ def forget_truth_ratio(model, **kwargs):
     wrong_answers_results = kwargs["pre_compute"]["wrong"]["value_by_index"]
 
     value_by_index = truth_ratio_helper(correct_answer_results, wrong_answers_results)
-    truth_ratio_stats = np.array([evals["truth_ratio"] for evals in value_by_index.values()])
-    forget_tr_avg = np.mean(np.minimum(truth_ratio_stats, 1 / (truth_ratio_stats + 1e-10)))
+    truth_ratio_stats = np.array(
+        [evals["truth_ratio"] for evals in value_by_index.values()]
+    )
+    forget_tr_avg = np.mean(
+        np.minimum(truth_ratio_stats, 1 / (truth_ratio_stats + 1e-10))
+    )
     return {"agg_value": forget_tr_avg, "value_by_index": value_by_index}
+
 
 @unlearning_metric(name="truth_ratio")
 def truth_ratio(model, **kwargs):
@@ -238,6 +244,8 @@ def truth_ratio(model, **kwargs):
     wrong_answers_results = kwargs["pre_compute"]["wrong"]["value_by_index"]
 
     value_by_index = truth_ratio_helper(correct_answer_results, wrong_answers_results)
-    truth_ratio_stats = np.array([evals["truth_ratio"] for evals in value_by_index.values()])
+    truth_ratio_stats = np.array(
+        [evals["truth_ratio"] for evals in value_by_index.values()]
+    )
     forget_tr_avg = np.mean(np.maximum(0, 1 - truth_ratio_stats))
     return {"agg_value": forget_tr_avg, "value_by_index": value_by_index}
