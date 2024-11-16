@@ -3,7 +3,6 @@ defaults:
   - trainer: GradAscent
   - data: unlearn
   - collator: DataCollatorForSupervisedDataset
-  - eval: tofu
   - hydra: default
   - paths: default
 

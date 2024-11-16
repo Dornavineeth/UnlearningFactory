@@ -1,9 +1,9 @@
-handler: FinetuneTrainer
+handler: Trainer
 args:
-  per_device_train_batch_size: 8
+  per_device_train_batch_size: 2
   per_device_eval_batch_size: 16
   gradient_accumulation_steps: 4
-  warmup_steps: 62
+  warmup_steps: 5
   learning_rate: 1e-5
   bf16: True
   bf16_full_eval: True
@@ -11,11 +11,11 @@ args:
   output_dir: ${paths.train_output_dir}
   logging_dir: ${trainer.args.output_dir}/logs
   optim: paged_adamw_32bit
-  save_strategy: 'no'
+  save_strategy: epoch
   save_only_model: True
   weight_decay: 0.01
   do_train: True
   do_eval: True
   eval_strategy: epoch
-  num_train_epochs: 5
+  num_train_epochs: 10
   seed: 0

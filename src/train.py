@@ -3,7 +3,6 @@ from omegaconf import DictConfig
 from data import get_data, get_collators
 from model import get_model
 from trainer import load_trainer
-from evals import get_evaluator
 
 
 @hydra.main(version_base=None, config_path="../configs", config_name="train.yaml")
@@ -32,22 +31,6 @@ def main(cfg: DictConfig):
     trainer_cfg = cfg.trainer
     assert trainer_cfg is not None, ValueError("Please set trainer")
 
-    # Get Evaluator
-    evaluator = None
-    eval_cfgs = cfg.get("eval", None)
-    if eval_cfgs:
-        assert len(eval_cfgs) <= 1, ValueError(
-            "Only one evaluation supported while training"
-        )
-        eval_name, eval_cfg = next(iter(eval_cfgs.items()))
-        evaluator = get_evaluator(
-            eval_name,
-            eval_cfg,
-            template_args=template_args,
-            model=model,
-            tokenizer=tokenizer,
-        )
-
     trainer, trainer_args = load_trainer(
         trainer_cfg=trainer_cfg,
         model=model,
@@ -55,8 +38,6 @@ def main(cfg: DictConfig):
         eval_dataset=data.get("eval", None),
         tokenizer=tokenizer,
         data_collator=collator,
-        evaluator=evaluator,
-        template_args=template_args,
     )
 
     if trainer_args.do_train:

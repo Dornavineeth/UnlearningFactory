@@ -1,5 +1,4 @@
 import torch
-import logging
 from torch import nn
 import numpy as np
 from tqdm import tqdm
@@ -8,9 +7,6 @@ from torch.utils.data import DataLoader
 from collections import defaultdict
 
 from evals.metrics.base import unlearning_metric
-
-# Supress the info messages logged while calculating rouge using rouge_scorer
-logging.getLogger("absl").setLevel(logging.WARNING)
 
 
 def dict_transpose(evals):
