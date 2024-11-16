@@ -1,7 +1,6 @@
 model_args:
   pretrained_model_name_or_path: "NousResearch/Llama-2-7b-chat-hf"
   attn_implementation: 'flash_attention_2'
-  torch_dtype: bfloat16
 tokenizer_args:
   pretrained_model_name_or_path: "NousResearch/Llama-2-7b-chat-hf"
 template_args:
