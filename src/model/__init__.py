@@ -14,7 +14,9 @@ def get_dtype(model_args):
     # Automatic Mixed-Precision via the `with torch.autocast(device_type='torch_device'):`
     # decorator"
     if model_args["attn_implementation"] == "flash_attention_2":
-        assert torch_dtype in ["float16", "bfloat16"]
+        assert torch_dtype in ["float16", "bfloat16"], ValueError(
+            f"Invalid torch_dtype '{torch_dtype}' for flash_attention_2. Supported types are 'float16' and 'bfloat16'."
+        )
     if torch_dtype == "float16":
         return torch.float16
     elif torch_dtype == "bfloat16":
