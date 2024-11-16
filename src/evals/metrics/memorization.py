@@ -178,8 +178,8 @@ def probability_w_options(model, **kwargs):
     correct_indices = list(correct_answer_results.keys())
     wrong_indices = list(wrong_answers_results.keys())
     assert correct_indices == wrong_indices
-    correct = [evals["probs"] for evals in correct_answer_results.values()]
-    all_wrong = [evals["probs"] for evals in wrong_answers_results.values()]
+    correct = [evals["prob"] for evals in correct_answer_results.values()]
+    all_wrong = [evals["prob"] for evals in wrong_answers_results.values()]
 
     correct = np.array(correct)
     all_wrong = np.array(all_wrong)
