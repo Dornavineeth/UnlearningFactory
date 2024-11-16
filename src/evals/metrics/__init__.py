@@ -3,6 +3,7 @@ from omegaconf import DictConfig
 from evals.metrics.base import UnlearningMetric
 from evals.metrics.memorization import (
     probability,
+    probability_w_options,
     rouge,
     forget_truth_ratio,
     truth_ratio,
@@ -38,6 +39,7 @@ def get_metrics(metric_cfgs: DictConfig, **kwargs):
 
 # Register Metrics for unlearning here
 _register_metric(probability)
+_register_metric(probability_w_options)
 _register_metric(rouge)
 _register_metric(forget_truth_ratio)
 _register_metric(truth_ratio)

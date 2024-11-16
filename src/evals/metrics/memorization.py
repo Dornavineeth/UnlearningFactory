@@ -168,6 +168,29 @@ def probability(model, **kwargs):
     return {"agg_value": np.mean(prob_values), "value_by_index": scores_by_index}
 
 
+@unlearning_metric(name="probability_w_options")
+def probability_w_options(model, **kwargs):
+    # normalises probability against that of false answers
+    # needed for more open ended datasets
+    correct_answer_results = kwargs["pre_compute"]["correct"]["value_by_index"]
+    wrong_answers_results = kwargs["pre_compute"]["wrong"]["value_by_index"]
+
+    correct_indices = list(correct_answer_results.keys())
+    wrong_indices = list(wrong_answers_results.keys())
+    assert correct_indices == wrong_indices
+    correct = [evals["probs"] for evals in correct_answer_results.values()]
+    all_wrong = [evals["probs"] for evals in wrong_answers_results.values()]
+
+    correct = np.array(correct)
+    all_wrong = np.array(all_wrong)
+    wrong = np.sum(all_wrong, axis=tuple(range(1, all_wrong.ndim)))
+
+    probs = correct / (correct + wrong)
+
+    value_by_index = dict(zip(correct_indices, [{"prob": val} for val in probs]))
+    return {"agg_value": np.mean(probs), "value_by_index": value_by_index}
+
+
 @unlearning_metric(name="rouge")
 def rouge(model, **kwargs):
     # returns the rouge1_recall, rougeL_recall, input, ground_truth, generation keys in scores
