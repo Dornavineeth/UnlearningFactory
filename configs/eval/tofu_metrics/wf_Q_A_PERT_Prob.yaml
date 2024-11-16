@@ -1,6 +1,6 @@
-# @package eval.tofu.metrics.retain_Q_A_PERT_Prob
+# @package eval.tofu.metrics.wf_Q_A_PERT_Prob
 defaults:
-  - ../../data/datasets@datasets: TOFU_QA_retain_pert
+  - ../../data/datasets@datasets: TOFU_QA_wf_pert
   - ../../collator@collators: DataCollatorForSupervisedDatasetwithIndex
   # ^ get default dataset and generation config information
 
