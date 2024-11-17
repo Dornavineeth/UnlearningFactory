@@ -19,8 +19,9 @@ defaults: # include all defined metrics files
     - ra_Q_A_ROUGE
     - ra_Truth_Ratio
     - wf_Q_A_Prob_normalised
-    - wf_Truth_Ratio
     - wf_Q_A_ROUGE
+    - wf_Truth_Ratio
+    - model_utility
 
     # - full_BIO_Prob
     # - full_BIO_ROUGE
