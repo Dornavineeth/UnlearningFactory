@@ -12,10 +12,12 @@ def get_dtype(model_args):
     # handle https://github.com/Dao-AILab/flash-attention/blob/7153673c1a3c7753c38e4c10ef2c98a02be5f778/flash_attn/flash_attn_triton.py#L820
     # if you want to run at float32 consider running "training or inference using
     # Automatic Mixed-Precision via the `with torch.autocast(device_type='torch_device'):`
-    # decorator"
+    # decorator" or not using flash_attention_2 as the attn_implementation in model config
     if model_args["attn_implementation"] == "flash_attention_2":
         assert torch_dtype in ["float16", "bfloat16"], ValueError(
-            f"Invalid torch_dtype '{torch_dtype}' for flash_attention_2. Supported types are 'float16' and 'bfloat16'."
+            f"Invalid torch_dtype '{torch_dtype}' for the requested attention "
+            f"implementation: 'flash_attention_2'. Supported types are 'float16' "
+            f"and 'bfloat16'."
         )
     if torch_dtype == "float16":
         return torch.float16
