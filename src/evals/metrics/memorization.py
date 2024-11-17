@@ -1,5 +1,6 @@
 import logging
 import numpy as np
+import scipy as sc
 from torch.utils.data import DataLoader
 
 from evals.metrics.utils import (
@@ -141,3 +142,9 @@ def truth_ratio(model, **kwargs):
         kwargs["pre_compute"]["wrong"]["value_by_index"],
         aggregator=lower_from_1,
     )
+
+
+@unlearning_metric(name="hm_aggregate")
+def hm_aggregate(model, **kwargs):
+    values = [result["agg_value"] for _, result in kwargs["pre_compute"].items()]
+    return {"agg_value": sc.stats.hmean(values)}

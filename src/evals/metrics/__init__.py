@@ -7,6 +7,7 @@ from evals.metrics.memorization import (
     rouge,
     forget_truth_ratio,
     truth_ratio,
+    hm_aggregate,
 )
 
 METRICS_REGISTRY: Dict[str, UnlearningMetric] = {}
@@ -37,9 +38,10 @@ def get_metrics(metric_cfgs: DictConfig, **kwargs):
     return metrics
 
 
-# Register Metrics for unlearning here
+# Register metrics here
 _register_metric(probability)
 _register_metric(probability_w_options)
 _register_metric(rouge)
 _register_metric(forget_truth_ratio)
 _register_metric(truth_ratio)
+_register_metric(hm_aggregate)
