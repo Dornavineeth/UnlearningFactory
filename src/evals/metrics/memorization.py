@@ -89,15 +89,15 @@ def rouge(model, **kwargs):
 
 @unlearning_metric(name="truth_ratio")
 def truth_ratio(model, **kwargs):
-    """Compute the truth ratio, aggregating false/true scores, and 
+    """Compute the truth ratio, aggregating false/true scores, and
     return the aggregated value."""
-    
+
     # Forget data: It is better if false and true are equally likely,
     # i.e., tr=false/true is closest to 1.
     def closer_to_1_better(arr):
         return np.mean(np.minimum(arr, 1 / (arr + 1e-10)))
 
-    # Non-forget data: It is better if tr=false/true is lower, i.e., 
+    # Non-forget data: It is better if tr=false/true is lower, i.e.,
     # 1-tr is higher.
     def true_better(arr):
         return np.mean(np.maximum(0, 1 - arr))
@@ -108,7 +108,7 @@ def truth_ratio(model, **kwargs):
         aggregator = true_better
     else:
         raise ValueError(f"Invalid truth ratio aggregator: {kwargs['aggregator']}")
-    
+
     correct_answer_results = kwargs["pre_compute"]["correct"]["value_by_index"]
     correct_indices = list(correct_answer_results.keys())
     correct_avg_losses = [

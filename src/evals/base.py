@@ -57,7 +57,7 @@ class Evaluator:
         # Load exisiting results from file if any.
         logs = self.load_logs_from_file(logs_file_path)
 
-        print(f"***** Running Evaluation {self.name} *****")
+        print(f"***** Running {self.name} evaluation suite *****")
         for metric_name, metric_fn in self.metrics.items():
             if not overwrite and metric_name in logs:
                 print(f"Skipping {metric_name}, already evaluated.")
@@ -68,12 +68,15 @@ class Evaluator:
                 "template_args": kwargs.get("template_args", None),
             }
             metrics_args = self.eval_cfg.metrics[metric_name]
-            _ = metric_fn(
+            _
+            result = metric_fn(
                 model,
                 metric_name=metric_name,
                 cache=logs,
                 **kwargs,
                 **metrics_args,
             )
+            if "agg_value" in result:
+                print(f"Result for metric: {metric_name}:\t{result['agg_value']}")
             self.save_logs(logs, logs_file_path)
         return logs
