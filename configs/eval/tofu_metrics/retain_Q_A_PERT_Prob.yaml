@@ -1,8 +1,8 @@
-# @package eval.tofu.metrics.Q_A_Prob
+# @package eval.tofu.metrics.retain_Q_A_PERT_Prob
 defaults:
-  - ../../data/datasets@datasets: TOFU_QA_FORGET10
+  - ../../data/datasets@datasets: TOFU_QA_retain_pert
   - ../../collator@collators: DataCollatorForSupervisedDatasetwithIndex
   # ^ get default dataset and generation config information
 
 handler: probability
-batch_size: 16
+batch_size: 64
