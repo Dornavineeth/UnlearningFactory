@@ -5,7 +5,6 @@ from evals.metrics.memorization import (
     probability,
     probability_w_options,
     rouge,
-    forget_truth_ratio,
     truth_ratio,
     hm_aggregate,
 )
@@ -42,6 +41,5 @@ def get_metrics(metric_cfgs: DictConfig, **kwargs):
 _register_metric(probability)
 _register_metric(probability_w_options)
 _register_metric(rouge)
-_register_metric(forget_truth_ratio)
 _register_metric(truth_ratio)
 _register_metric(hm_aggregate)
