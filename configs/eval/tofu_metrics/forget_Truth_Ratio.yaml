@@ -9,4 +9,5 @@ pre_compute:
   forget_Q_A_PERT_Prob:
     access_key: wrong
 
-handler: forget_truth_ratio
+handler: truth_ratio
+aggregator: closer_to_1_better

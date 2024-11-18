@@ -10,3 +10,4 @@ pre_compute:
     access_key: wrong
 
 handler: truth_ratio
+aggregator: true_better

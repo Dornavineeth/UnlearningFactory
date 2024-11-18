@@ -87,11 +87,34 @@ def rouge(model, **kwargs):
     }
 
 
-def truth_ratio_helper(correct_answer_results, wrong_answer_results, aggregator):
+@unlearning_metric(name="truth_ratio")
+def truth_ratio(model, **kwargs):
+    """Compute the truth ratio, aggregating false/true scores, and 
+    return the aggregated value."""
+    
+    # Forget data: It is better if false and true are equally likely,
+    # i.e., tr=false/true is closest to 1.
+    def closer_to_1_better(arr):
+        return np.mean(np.minimum(arr, 1 / (arr + 1e-10)))
+
+    # Non-forget data: It is better if tr=false/true is lower, i.e., 
+    # 1-tr is higher.
+    def true_better(arr):
+        return np.mean(np.maximum(0, 1 - arr))
+
+    if kwargs["aggregator"] == "closer_to_1_better":
+        aggregator = closer_to_1_better
+    elif kwargs["aggregator"] == "true_better":
+        aggregator = true_better
+    else:
+        raise ValueError(f"Invalid truth ratio aggregator: {kwargs['aggregator']}")
+    
+    correct_answer_results = kwargs["pre_compute"]["correct"]["value_by_index"]
     correct_indices = list(correct_answer_results.keys())
     correct_avg_losses = [
         evals["avg_loss"] for evals in correct_answer_results.values()
     ]
+    wrong_answer_results = kwargs["pre_compute"]["wrong"]["value_by_index"]
     wrong_indices = list(wrong_answer_results.keys())
     wrong_avg_losses = [evals["avg_loss"] for evals in wrong_answer_results.values()]
 
@@ -111,37 +134,6 @@ def truth_ratio_helper(correct_answer_results, wrong_answer_results, aggregator)
     )
     forget_tr_avg = aggregator(truth_ratio_stats)
     return {"agg_value": forget_tr_avg, "value_by_index": value_by_index}
-
-
-@unlearning_metric(name="forget_truth_ratio")
-def forget_truth_ratio(model, **kwargs):
-    """Compute the forget truth ratio (false/true), aggregating values using
-    min(x, 1/x) to favor scores closer to 1 - which is ideal for forget set,
-    and return the aggregated value."""
-
-    def close_to_1(array):
-        return np.mean(np.minimum(array, 1 / (array + 1e-10)))
-
-    return truth_ratio_helper(
-        kwargs["pre_compute"]["correct"]["value_by_index"],
-        kwargs["pre_compute"]["wrong"]["value_by_index"],
-        aggregator=close_to_1,
-    )
-
-
-@unlearning_metric(name="truth_ratio")
-def truth_ratio(model, **kwargs):
-    """Compute the truth ratio (false/true), aggregating scores farther from 1
-    (lower is better in general), and return the aggregated value."""
-
-    def lower_from_1(array):
-        return np.mean(np.maximum(0, 1 - array))
-
-    return truth_ratio_helper(
-        kwargs["pre_compute"]["correct"]["value_by_index"],
-        kwargs["pre_compute"]["wrong"]["value_by_index"],
-        aggregator=lower_from_1,
-    )
 
 
 @unlearning_metric(name="hm_aggregate")
