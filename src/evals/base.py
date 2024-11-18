@@ -77,6 +77,6 @@ class Evaluator:
                 **metrics_args,
             )
             if "agg_value" in result:
-                print(f"Result for metric: {metric_name}:\t{result['agg_value']}")
+                print(f"Result for metric {metric_name}:\t{result['agg_value']}")
             self.save_logs(logs, logs_file_path)
         return logs
