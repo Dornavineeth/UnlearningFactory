@@ -61,6 +61,7 @@ def main(cfg: DictConfig):
 
     if trainer_args.do_train:
         trainer.train()
+        trainer.save_state()
         model.save_pretrained(trainer_args.output_dir)
         tokenizer.save_pretrained(trainer_args.output_dir)
 
