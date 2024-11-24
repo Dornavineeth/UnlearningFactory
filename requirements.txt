@@ -9,3 +9,4 @@ bitsandbytes==0.44.1
 rouge-score==0.1.2
 pre-commit==4.0.1
 scipy==1.14.1
+tensorboard==2.18.0

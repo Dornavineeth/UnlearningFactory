@@ -42,7 +42,9 @@ class FinetuneTrainer(Trainer):
                         "model": self.model,
                         "tokenizer": self.tokenizer,
                     }
-                    self.evaluator.evaluate(**eval_args)
+                    eval_metrics = self.evaluator.evaluate(**eval_args)
+                    eval_metrics = self.evaluator.summarize(eval_metrics)
+                    self.log(eval_metrics)
                 else:
                     logger.warning(
                         "Custom evaluator can be run with this Trainer only on a single GPU"
