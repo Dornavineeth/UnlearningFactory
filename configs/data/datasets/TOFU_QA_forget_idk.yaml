@@ -9,4 +9,5 @@ TOFU_QA_forget_idk:
     answer_key: "answer"
     max_length: 512
     idk_path: ./data/idk.jsonl
+    return_original: true
     

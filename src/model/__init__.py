@@ -76,6 +76,7 @@ def get_tokenizer(tokenizer_cfg: DictConfig):
         raise RuntimeError(error_message)
 
     if tokenizer.eos_token_id is None:
+        print("replacing eos_token with <|endoftext|>")
         _add_or_replace_eos_token(tokenizer, eos_token="<|endoftext|>")
 
     if tokenizer.pad_token_id is None:

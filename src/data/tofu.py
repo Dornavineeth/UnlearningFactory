@@ -64,8 +64,9 @@ class QADataset(Dataset):
 
 
 class QAwithIdkDataset(QADataset):
-    def __init__(self, idk_path, *args, **kwargs):
+    def __init__(self, idk_path, return_original=True, *args, **kwargs):
         self.idk_path = idk_path
+        self.return_original = return_original
         self.idk_responses = open(self.idk_path, "r").readlines()
         super().__init__(*args, **kwargs)
 
@@ -90,4 +91,4 @@ class QAwithIdkDataset(QADataset):
                 idk_item = self.item_with_idk(question)
                 return_item["alternate"] = idk_item
                 # return_item.append([sample_item, idk_item])
-        return return_item
+        return return_item if self.return_original else return_item["alternate"]
