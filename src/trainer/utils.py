@@ -53,5 +53,5 @@ def compute_dpo_loss(model, ref_model, win_inputs=None, lose_inputs=None, beta=1
             lose_ref_loss, _ = compute_batch_nll(ref_model, lose_inputs)
         lose_log_ratio = -(lose_loss - lose_ref_loss)
 
-    loss = -2 / beta * F.logsigmoid(-beta * (win_log_ratio - lose_log_ratio)).mean()
+    loss = -2 / beta * F.logsigmoid(beta * (win_log_ratio - lose_log_ratio)).mean()
     return loss, (win_outputs, lose_outputs)

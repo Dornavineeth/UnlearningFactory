@@ -42,6 +42,15 @@ class Evaluator:
         """Load metrics for evaluation"""
         metrics = get_metrics(metrics_cfg)
         return metrics
+    
+    def summarize(self, logs):
+        """Summarize the metrics results"""
+        metric_summary = {}
+        for metric_name, metric_results in logs.items():
+            agg_value = metric_results.get("agg_value", None)
+            if agg_value:
+                metric_summary[metric_name] = agg_value
+        return metric_summary
 
     def evaluate(self, model, output_dir=None, overwrite=None, **kwargs):
         # set flag to overwrite metrics
