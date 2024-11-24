@@ -1,3 +1,4 @@
+import torch
 from typing import Dict, Any
 from omegaconf import DictConfig
 from transformers import Trainer, TrainingArguments
@@ -15,8 +16,16 @@ def _register_trainer(trainer_class):
     TRAINER_REGISTRY[trainer_class.__name__] = trainer_class
 
 
-def load_trainer_args(trainer_args: DictConfig):
+def load_trainer_args(trainer_args: DictConfig, dataset):
     trainer_args = dict(trainer_args)
+    warmup_epochs = trainer_args.pop("warmup_epochs", None)
+    if warmup_epochs:
+        batch_size = trainer_args["per_device_train_batch_size"]
+        grad_accum_steps = trainer_args["gradient_accumulation_steps"]
+        num_devices = torch.cuda.device_count()
+        dataset_len = len(dataset)
+        trainer_args["warmup_steps"] = int((warmup_epochs*dataset_len)//(batch_size*grad_accum_steps*num_devices))
+
     trainer_args = TrainingArguments(**trainer_args)
     return trainer_args
 
@@ -33,7 +42,7 @@ def load_trainer(
 ):
     trainer_args = trainer_cfg.args
     method_args = trainer_cfg.get("method_args", {})
-    trainer_args = load_trainer_args(trainer_args)
+    trainer_args = load_trainer_args(trainer_args, train_dataset)
     trainer_handler_name = trainer_cfg.get("handler")
     assert trainer_handler_name is not None, ValueError(
         f"{trainer_handler_name} handler not set"
