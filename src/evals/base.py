@@ -42,7 +42,7 @@ class Evaluator:
         """Load metrics for evaluation"""
         metrics = get_metrics(metrics_cfg)
         return metrics
-    
+
     def summarize(self, logs):
         """Summarize the metrics results"""
         metric_summary = {}

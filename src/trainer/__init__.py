@@ -24,7 +24,10 @@ def load_trainer_args(trainer_args: DictConfig, dataset):
         grad_accum_steps = trainer_args["gradient_accumulation_steps"]
         num_devices = torch.cuda.device_count()
         dataset_len = len(dataset)
-        trainer_args["warmup_steps"] = int((warmup_epochs*dataset_len)//(batch_size*grad_accum_steps*num_devices))
+        trainer_args["warmup_steps"] = int(
+            (warmup_epochs * dataset_len)
+            // (batch_size * grad_accum_steps * num_devices)
+        )
 
     trainer_args = TrainingArguments(**trainer_args)
     return trainer_args

@@ -4,7 +4,7 @@ from torch.utils.data import Dataset
 
 class ForgetRetainDataset(Dataset):
     # https://github.com/OPTML-Group/SOUL/blob/main/src/dataset/Base.py
-    def __init__(self, forget, retain, fix='forget'):
+    def __init__(self, forget, retain, fix="forget"):
         """Wraps the forget retain dataset into unlearning dataset.
 
         Args:
@@ -18,10 +18,14 @@ class ForgetRetainDataset(Dataset):
 
     def __len__(self):
         if self.fix == "forget":
-            assert self.forget is not None, ValueError("forget dataset can't be None when fix=forget")
+            assert self.forget is not None, ValueError(
+                "forget dataset can't be None when fix=forget"
+            )
             return len(self.forget)
         elif self.fix == "retain":
-            assert self.forget is not None, ValueError("retain dataset can't be None when fix=retain")
+            assert self.forget is not None, ValueError(
+                "retain dataset can't be None when fix=retain"
+            )
             return len(self.retain)
         else:
             raise NotImplementedError(f"{self.fix} can be only forget or retain")
@@ -37,5 +41,5 @@ class ForgetRetainDataset(Dataset):
             item["retain"] = self.retain[idx]
             if self.forget:
                 forget_idx = torch.randint(0, len(self.forget), (1,)).item()
-                item["forget"] = self.forget[forget_idx]        
+                item["forget"] = self.forget[forget_idx]
         return item
