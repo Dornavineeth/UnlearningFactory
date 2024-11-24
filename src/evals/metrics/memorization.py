@@ -125,7 +125,7 @@ def truth_ratio(model, **kwargs):
     correct_prob = np.exp(-correct_avg_losses)
     wrong_prob = np.exp(-wrong_avg_losses)
 
-    truth_ratios = wrong_prob / correct_prob
+    truth_ratios = wrong_prob / (correct_prob + 1e-10)
     value_by_index = dict(
         zip(correct_indices, [{"truth_ratio": val} for val in truth_ratios])
     )
