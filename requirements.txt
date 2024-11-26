@@ -4,7 +4,6 @@ hydra_colorlog==1.2.0
 torch==2.4.1
 datasets==3.0.1
 accelerate==0.34.2
-flash-attn==2.6.3
 bitsandbytes==0.44.1
 rouge-score==0.1.2
 pre-commit==4.0.1
