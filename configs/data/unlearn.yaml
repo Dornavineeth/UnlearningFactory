@@ -3,4 +3,4 @@ defaults:
   - datasets@retain: TOFU_QA_retain
   - datasets@eval: TOFU_QA_forget_para
 
-fix: forget
+anchor: forget

@@ -7,6 +7,9 @@ defaults:
   - override /data/datasets@data.forget: TOFU_QA_forget
   - override /data/datasets@data.retain: TOFU_QA_retain
 
+data:
+  anchor: retain
+
 trainer:
   args:
     learning_rate: 5e-5
