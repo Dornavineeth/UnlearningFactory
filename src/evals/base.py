@@ -1,8 +1,9 @@
 import os
 import json
+import logging
 from evals.metrics import get_metrics
 
-
+logger = logging.getLogger("evaluator")
 class Evaluator:
     def __init__(self, name, eval_cfg, **kwargs):
         self.name = name
@@ -19,7 +20,7 @@ class Evaluator:
         """Returns the cache of existing results"""
         logs = {}
         if os.path.exists(file):
-            print(f"Loading existing evaluations from {file}")
+            logger.info(f"Loading existing evaluations from {file}")
             with open(file, "r") as f:
                 logs = json.load(f)
         return logs
@@ -66,10 +67,10 @@ class Evaluator:
         # Load exisiting results from file if any.
         logs = self.load_logs_from_file(logs_file_path)
 
-        print(f"***** Running {self.name} evaluation suite *****")
+        logger.info(f"***** Running {self.name} evaluation suite *****")
         for metric_name, metric_fn in self.metrics.items():
             if not overwrite and metric_name in logs:
-                print(f"Skipping {metric_name}, already evaluated.")
+                logger.info(f"Skipping {metric_name}, already evaluated.")
                 continue
             _ = logs.pop(metric_name, None)  # overwriting existing evals if present
             kwargs = {
@@ -86,6 +87,6 @@ class Evaluator:
                 **metrics_args,
             )
             if "agg_value" in result:
-                print(f"Result for metric {metric_name}:\t{result['agg_value']}")
+                logger.info(f"Result for metric {metric_name}:\t{result['agg_value']}")
             self.save_logs(logs, logs_file_path)
         return logs
