@@ -10,13 +10,14 @@ class ForgetRetainDataset(Dataset):
         Args:
             forget (Dataset): Forget Dataset
             retain (Dataset): Retain Dataset
-            anchor (str, optional): Specifies which dataset to anchor while sampling from the other. Defaults to 'forget'.
+            anchor (str, optional): Specifies which dataset to anchor while randomly sampling from the other dataset. Defaults to 'forget'. 
         """
         self.forget = forget
         self.retain = retain
         self.anchor = anchor
 
     def __len__(self):
+        """Ensures the sampled dataset matches the anchor dataset's length."""
         if self.anchor == "forget":
             assert self.forget is not None, ValueError(
                 "forget dataset can't be None when anchor=forget"
