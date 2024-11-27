@@ -1,0 +1,9 @@
+model_args:
+  pretrained_model_name_or_path: "locuslab/phi-1_5"
+tokenizer_args:
+  pretrained_model_name_or_path: "microsoft/phi-1_5"
+template_args:
+  apply_chat_template: False
+  user_start_tag: "Question: "
+  user_end_tag: "\n"
+  asst_tag: "Answer:"

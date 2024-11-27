@@ -1,0 +1,34 @@
+# @package eval.tofu
+# NOTE: the above line is not a comment, but sets the package for config. See https://hydra.cc/docs/upgrades/0.11_to_1.0/adding_a_package_directive/
+
+defaults: # include all defined metrics files
+  - tofu_metrics: # When you import a metric here, its configuration automatically populates the 
+  # metric key below, enabled by the @package directive at the top of each configuration file.
+    
+    # - forget_Q_PARA_A_PARA_Prob
+    # - forget_Q_PARA_A_PARA_ROUGE
+    # - forget_Q_A_PARA_ROUGE
+    # - forget_Q_A_PERT_ROUGE
+    - forget_Q_A_Prob
+    - forget_Q_A_ROUGE
+    - forget_Truth_Ratio
+    - retain_Q_A_Prob
+    - retain_Q_A_ROUGE
+    - retain_Truth_Ratio
+    - ra_Q_A_Prob_normalised
+    - ra_Q_A_ROUGE
+    - ra_Truth_Ratio
+    - wf_Q_A_Prob_normalised
+    - wf_Q_A_ROUGE
+    - wf_Truth_Ratio
+    - model_utility
+
+    # - full_BIO_Prob
+    # - full_BIO_ROUGE
+
+handler: TOFUEvaluator
+device: cuda
+output_dir: ${paths.output_dir} # set to default eval directory
+metrics: {} # lists a mapping from each evaluation metric to its config 
+# populated through the first (@package) line in each metric config
+overwrite: false
