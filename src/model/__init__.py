@@ -2,9 +2,12 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 from omegaconf import DictConfig, open_dict
 import os
 import torch
+import logging
 
 hf_home = os.getenv("HF_HOME", default=None)
 
+
+logger = logging.getLogger(__name__)
 
 def get_dtype(model_args):
     with open_dict(model_args):
@@ -39,12 +42,9 @@ def get_model(model_cfg: DictConfig):
             torch_dtype=torch_dtype, **model_args, cache_dir=hf_home
         )
     except Exception as e:
-        print(f"Model {model_args.pretrained_model_name_or_path} requested with")
-        print(model_cfg.model_args)
-        print(
-            f"Error {e} while fetching model using AutoModelForCausalLM.from_pretrained()."
-        )
-        raise
+        logger.warning(f"Model {model_args.pretrained_model_name_or_path} requested with")
+        logger.warning(model_cfg.model_args)
+        raise ValueError(f"Error {e} while fetching model using AutoModelForCausalLM.from_pretrained().")
     tokenizer = get_tokenizer(tokenizer_args)
     return model, tokenizer
 
@@ -54,12 +54,12 @@ def _add_or_replace_eos_token(tokenizer, eos_token: str) -> None:
     num_added_tokens = tokenizer.add_special_tokens({"eos_token": eos_token})
 
     if is_added:
-        print("Add eos token: {}".format(tokenizer.eos_token))
+        logger.info("Add eos token: {}".format(tokenizer.eos_token))
     else:
-        print("Replace eos token: {}".format(tokenizer.eos_token))
+        logger.info("Replace eos token: {}".format(tokenizer.eos_token))
 
     if num_added_tokens > 0:
-        print("New tokens have been added, make sure `resize_vocab` is True.")
+        logger.info("New tokens have been added, make sure `resize_vocab` is True.")
 
 
 def get_tokenizer(tokenizer_cfg: DictConfig):
@@ -76,10 +76,11 @@ def get_tokenizer(tokenizer_cfg: DictConfig):
         raise RuntimeError(error_message)
 
     if tokenizer.eos_token_id is None:
+        logger.info("replacing eos_token with <|endoftext|>")
         _add_or_replace_eos_token(tokenizer, eos_token="<|endoftext|>")
 
     if tokenizer.pad_token_id is None:
         tokenizer.pad_token = tokenizer.eos_token
-        print("Setting pad_token as eos token: {}".format(tokenizer.pad_token))
+        logger.info("Setting pad_token as eos token: {}".format(tokenizer.pad_token))
 
     return tokenizer

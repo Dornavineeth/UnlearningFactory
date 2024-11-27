@@ -27,14 +27,14 @@ A unified repository for developing benchmarks for unlearning. This repository i
 ## Installation
 ```bash
 # Pip installation
-conda activate unlearning
 pip install -r requirements.txt
 
 
 # Conda Installation
-conda create unlearning python=3.11
+conda create -n unlearning python=3.11
 conda activate unlearning
 pip install -r requirements.txt
+pip install flash-attn==2.6.3 --no-build-isolation
 ```
 ## Benchmarks Included
 

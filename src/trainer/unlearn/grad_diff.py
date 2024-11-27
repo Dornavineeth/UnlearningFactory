@@ -4,8 +4,9 @@ from trainer.unlearn.base import UnlearnTrainer
 
 
 class GradDiff(UnlearnTrainer):
-    def __init__(self, alpha=1.0, retain_loss_type="NLL", *args, **kwargs):
+    def __init__(self, gamma=1.0, alpha=1.0, retain_loss_type="NLL", *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.gamma = gamma
         self.alpha = alpha
         self.retain_loss_type = retain_loss_type
         self.target_model = None
@@ -47,6 +48,6 @@ class GradDiff(UnlearnTrainer):
         }
         retain_loss = self.compute_retain_loss(model=model, retain_inputs=retain_inputs)
 
-        loss = forget_loss + self.alpha * retain_loss
+        loss = self.gamma * forget_loss + self.alpha * retain_loss
 
         return (loss, forget_outputs) if return_outputs else loss

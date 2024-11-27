@@ -1,4 +1,5 @@
 # custom .gitignore
+submit.py
 !src/data/__init__.py
 logs/
 unity/

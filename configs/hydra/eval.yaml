@@ -2,7 +2,8 @@ defaults:
   - default
 
 run:
-  dir: ${output_dir}
+  # dir: ${paths.save_dir}/${now:%Y-%m-%d}_${now:%H-%M-%S}
+  dir: ${paths.output_dir}
 
 job_logging:
   handlers:

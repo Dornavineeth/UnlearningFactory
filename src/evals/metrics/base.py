@@ -1,6 +1,8 @@
+import logging
 from typing import Callable, Any, Dict
 from data import get_datasets, get_collators
 
+logger = logging.getLogger("metrics")
 
 class UnlearningMetric:
     def __init__(
@@ -38,7 +40,7 @@ class UnlearningMetric:
         self.pre_compute_metrics.update(metrics)
 
     def evaluate_metric(self, model, metric_name, **kwargs):
-        print(f"Evaluating {metric_name}")
+        logger.info(f"Evaluating {metric_name}")
         results = self._metric_fn(model, **kwargs)
         return results
 
@@ -64,7 +66,7 @@ class UnlearningMetric:
             access_name = pre_metric_cfg.get("access_key", pre_metric_name)
             _results = {}
             if pre_metric_name in cache:
-                print(
+                logger.info(
                     f"Skipping {metric_name}'s precompute {pre_metric_name}, already evaluated."
                 )
                 _results = cache[pre_metric_name]
@@ -85,7 +87,7 @@ class UnlearningMetric:
     def evaluate(self, model, metric_name, cache, **kwargs):
         """Evaluates a metric including its pre_compute metrics"""
         if metric_name in cache:
-            print(f"Skipping {metric_name}, already evaluated.")
+            logger.info(f"Skipping {metric_name}, already evaluated.")
 
         metric_kwargs = self.prepare_kwargs_evaluate_metric(
             model, metric_name, cache, **kwargs

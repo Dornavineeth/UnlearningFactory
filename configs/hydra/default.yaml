@@ -7,7 +7,8 @@ defaults:
 
 # output directory, generated dynamically on each run
 run:
-  dir: ${trainer.args.output_dir}
+  # dir: ${paths.save_dir}/${now:%Y-%m-%d}_${now:%H-%M-%S}
+  dir: ${paths.output_dir}
 # sweep:
 #   dir: ${paths.log_dir}/${task_name}/multiruns/${now:%Y-%m-%d}_${now:%H-%M-%S}
 #   subdir: ${hydra.job.num}
