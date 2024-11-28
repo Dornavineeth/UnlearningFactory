@@ -1,7 +1,7 @@
 from typing import Dict, Any, Union
 from omegaconf import DictConfig
 
-from data.tofu import (
+from data.qa import (
     QADataset,
     QAwithIdkDataset,
 )
