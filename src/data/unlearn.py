@@ -24,7 +24,7 @@ class ForgetRetainDataset(Dataset):
             )
             return len(self.forget)
         elif self.anchor == "retain":
-            assert self.forget is not None, ValueError(
+            assert self.retain is not None, ValueError(
                 "retain dataset can't be None when anchor=retain"
             )
             return len(self.retain)
