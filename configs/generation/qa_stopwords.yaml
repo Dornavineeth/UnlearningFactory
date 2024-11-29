@@ -1,0 +1,4 @@
+defaults:
+  - default
+
+stopwords: ["\n\n", "\nQuestion", "Question:"]

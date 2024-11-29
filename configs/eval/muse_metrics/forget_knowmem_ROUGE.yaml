@@ -2,7 +2,7 @@
 defaults:
   - ../../data/datasets@datasets: MUSE_news_forget_qa
   - ../../collator@collators: DataCollatorForSupervisedDatasetwithIndex
-  - ../../generation@generation_args: default
+  - ../../generation@generation_args: qa_stopwords
   
   # ^ get default dataset and generation config information
 
