@@ -117,9 +117,13 @@ def eval_text_similarity(model, tokenizer, batch, generation_args):
     batch = {k: v.to(model.device) for k, v in batch.items()}
     input_ids = batch["input_ids"]
     labels = batch["labels"]
-    input_texts = tokenizer.batch_decode(input_ids, skip_special_tokens=True)
+    input_texts = tokenizer.batch_decode(input_ids, 
+                                         skip_special_tokens=True,
+                                         clean_up_tokenization_spaces=True)
     tokens = [label[label != -100] for label in labels]
-    ground_truths = tokenizer.batch_decode(tokens, skip_special_tokens=True)
+    ground_truths = tokenizer.batch_decode(tokens, 
+                                           skip_special_tokens=True,
+                                           clean_up_tokenization_spaces=True)
     attention_mask = batch["attention_mask"]
 
     output = model.generate(
@@ -129,7 +133,9 @@ def eval_text_similarity(model, tokenizer, batch, generation_args):
         pad_token_id=tokenizer.eos_token_id,
     )
     gen_texts = tokenizer.batch_decode(
-        output[:, input_ids.shape[-1] :], skip_special_tokens=True
+        output[:, input_ids.shape[-1] :], 
+        skip_special_tokens=True,
+        clean_up_tokenization_spaces=True
     )
     scores = eval_rouge_recall_batch(gen_texts, ground_truths)
     scores = [
