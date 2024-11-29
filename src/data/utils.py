@@ -13,24 +13,25 @@ def load_hf_dataset(path, **kwargs):
 def package_prompt_response(
     template_config,
     tokenizer,
-    prompts,
-    responses,
+    prompt_msgs,
+    response_msgs,
     max_length,
     predict_with_generate=False,
 ):
-    # when there are multiple prompts and responses, except the last pair, all 
-    # corresponding pairs are in-context examples
-    assert len(prompts) == len(responses)
-    if isinstance(prompts, str):
-        assert isinstance(responses, str)
-        prompts, responses = [prompts], [responses]
+    # prompt_msgs and response_msgs are lists where except the last pair, all corresponding
+    # pairs are in-context examples. When they are a string and not a list, there are no 
+    # in-context examples.
+    assert len(prompt_msgs) == len(response_msgs)
+    if isinstance(prompt_msgs, str):
+        assert isinstance(response_msgs, str)
+        prompt_msgs, response_msgs = [prompt_msgs], [response_msgs]
     
     if template_config["apply_chat_template"]:
         chat = []
         system_prompt = template_config.get("system_prompt", None)
         if system_prompt:
             chat += [{"role": "system", "content": system_prompt}]
-        for prompt, response in zip(prompts, responses):
+        for prompt, response in zip(prompt_msgs, response_msgs):
             chat += [{"role": "user", "content": prompt}]
             chat += [{"role": "assistant", "content": response}]
         chat_ids = tokenizer.apply_chat_template(
@@ -44,10 +45,10 @@ def package_prompt_response(
             chat[:-1], tokenize=True, add_generation_prompt=True
         )
     else:
-        n_few_shot = len(prompts)-1
+        n_few_shot = len(prompt_msgs)-1
         wrapped_prompt = ""
         for i in range(n_few_shot):
-            fs_prompt, fs_response = prompts[i], responses[i]
+            fs_prompt, fs_response = prompt_msgs[i], response_msgs[i]
             wrapped_prompt += (
                 template_config["user_start_tag"]
                 + fs_prompt
@@ -56,7 +57,7 @@ def package_prompt_response(
                 + fs_response
                 + template_config["example_separator"]
             )
-        final_prompt, final_response = prompts[-1], responses[-1]
+        final_prompt, final_response = prompt_msgs[-1], response_msgs[-1]
         
         wrapped_prompt += (
             template_config["user_start_tag"]
