@@ -9,3 +9,4 @@ template_args:
   user_start_tag: "[INST] "
   user_end_tag: " [/INST]"
   asst_tag: ""
+# must modify acc to https://www.reddit.com/r/LocalLLaMA/comments/1561vn5/here_is_a_practical_multiturn_llama2chat_prompt/

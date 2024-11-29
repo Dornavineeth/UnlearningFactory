@@ -17,8 +17,7 @@ logging.getLogger("absl").setLevel(logging.WARNING)
 
 @unlearning_metric(name="probability")
 def probability(model, **kwargs):
-    # returns the prob and avg_loss in scores
-    # aggregate the prob values
+    """Compute the probabilities by data points and report aggregated average"""
     data = kwargs["data"]
     collator = kwargs["collators"]
     batch_size = kwargs["batch_size"]

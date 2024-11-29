@@ -18,9 +18,9 @@ def package_prompt_response(
     max_length,
     predict_with_generate=False,
 ):
-    # prompt_msgs and response_msgs are lists where except the last pair, all corresponding
-    # pairs are in-context examples. When they are a string and not a list, there are no 
-    # in-context examples.
+    """prompt_msgs and response_msgs are lists where except the last pair, all 
+    corresponding pairs are in-context examples. When they are a string and not
+    a list, there are no in-context examples."""
     assert len(prompt_msgs) == len(response_msgs)
     if isinstance(prompt_msgs, str):
         assert isinstance(response_msgs, str)
@@ -45,8 +45,10 @@ def package_prompt_response(
             chat[:-1], tokenize=True, add_generation_prompt=True
         )
     else:
-        n_few_shot = len(prompt_msgs)-1
         wrapped_prompt = ""
+        
+        # add in-context examples
+        n_few_shot = len(prompt_msgs)-1
         for i in range(n_few_shot):
             fs_prompt, fs_response = prompt_msgs[i], response_msgs[i]
             wrapped_prompt += (
@@ -57,8 +59,9 @@ def package_prompt_response(
                 + fs_response
                 + template_config["example_separator"]
             )
-        final_prompt, final_response = prompt_msgs[-1], response_msgs[-1]
         
+        # add actual example
+        final_prompt, final_response = prompt_msgs[-1], response_msgs[-1]
         wrapped_prompt += (
             template_config["user_start_tag"]
             + final_prompt
