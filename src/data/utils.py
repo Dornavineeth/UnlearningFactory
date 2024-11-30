@@ -18,14 +18,14 @@ def package_prompt_response(
     max_length,
     predict_with_generate=False,
 ):
-    """prompt_msgs and response_msgs are lists where except the last pair, all 
+    """prompt_msgs and response_msgs are lists where except the last pair, all
     corresponding pairs are in-context examples. When they are a string and not
     a list, there are no in-context examples."""
     assert len(prompt_msgs) == len(response_msgs)
     if isinstance(prompt_msgs, str):
         assert isinstance(response_msgs, str)
         prompt_msgs, response_msgs = [prompt_msgs], [response_msgs]
-    
+
     if template_config["apply_chat_template"]:
         chat = []
         system_prompt = template_config.get("system_prompt", None)
@@ -46,9 +46,9 @@ def package_prompt_response(
         )
     else:
         wrapped_prompt = ""
-        
+
         # add in-context examples
-        n_few_shot = len(prompt_msgs)-1
+        n_few_shot = len(prompt_msgs) - 1
         for i in range(n_few_shot):
             fs_prompt, fs_response = prompt_msgs[i], response_msgs[i]
             wrapped_prompt += (
@@ -59,7 +59,7 @@ def package_prompt_response(
                 + fs_response
                 + template_config["example_separator"]
             )
-        
+
         # add actual example
         final_prompt, final_response = prompt_msgs[-1], response_msgs[-1]
         wrapped_prompt += (
@@ -74,7 +74,7 @@ def package_prompt_response(
             max_length=max_length,
             truncation=True,
         )["input_ids"]
-        
+
         prompt_ids = tokenizer(
             wrapped_prompt,
             add_special_tokens=True,
@@ -96,6 +96,42 @@ def package_prompt_response(
         item["input_ids"] = prompt_ids
     else:
         item["input_ids"] = chat_ids
+    item["labels"] = labels
+    item["attention_mask"] = [1] * len(item["input_ids"])
+    for attr in item:
+        item[attr] = torch.tensor(item[attr])
+    return item
+
+
+def package_prefix_cont(
+    template_config,
+    tokenizer,
+    prefix,
+    continuation,
+    max_cont_len,
+    predict_with_generate=False,
+):
+    """Language modelling dataset pre-processing"""
+    full_seq_ids = tokenizer(
+        prefix + continuation, add_special_tokens=True, truncation=True
+    )["input_ids"]
+    # we don't predict eos at the end
+    prefix_ids = tokenizer(
+        prefix, add_special_tokens=True, truncation=True
+    )["input_ids"]
+    pref_len = len(prefix_ids)
+    full_seq_ids = full_seq_ids[: pref_len + max_cont_len]
+
+    assert full_seq_ids[:pref_len] == prefix_ids, ValueError(
+        "Tokenization mismatch: tokenized prefix should be a prefix of tokenized full sequence. Discrepancy usually arises around the last prefix index."
+    )
+
+    labels = [IGNORE_INDEX] * pref_len + full_seq_ids[pref_len :]
+    item = {}
+    if predict_with_generate:
+        item["input_ids"] = prefix_ids
+    else:
+        item["input_ids"] = full_seq_ids
     item["labels"] = labels
     item["attention_mask"] = [1] * len(item["input_ids"])
     for attr in item:
