@@ -4,6 +4,7 @@
 defaults:
   - tofu_metrics:
     - forget_knowmem_ROUGE
+    - retain_knowmem_ROUGE
 
 handler: MUSEEvaluator
 device: cuda
