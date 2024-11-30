@@ -85,12 +85,21 @@ def package_prompt_response(
     if chat_ids[-1] != tokenizer.eos_token_id:
         chat_ids += [tokenizer.eos_token_id]
 
-    if template_config["asst_tag"] != "":  ## for llama2-chat model don't assert
-        assert chat_ids[: len(prompt_ids)] == prompt_ids, ValueError(
-            "Tokenization mismatch: tokenized prompt should be a prefix of tokenized prompt+response. Discrepancy usually arises around the last prompt index."
-        )
+    # finding last common token between prompt and chat to decide after which loss is computed through labels
+    prompt_len = len(prompt_ids)
+    matched_until_idx = -1
+    for idx in range(prompt_len - 1, -1, -1):
+        if chat_ids[idx] == prompt_ids[idx]:
+            matched_until_idx = idx
+            if matched_until_idx == prompt_len - 2:  # remove from code
+                print("matched prefix only")
+            break
+    len_matched = matched_until_idx + 1
+    assert len_matched in [prompt_len, prompt_len - 1], ValueError(
+        f"Tokenization mismatch for the last {prompt_len-len_matched} tokens. Tokenized prompt (until its last from second index) is not a prefix of the full tokenized chat."
+    )
 
-    labels = [IGNORE_INDEX] * len(prompt_ids) + chat_ids[len(prompt_ids) :]
+    labels = [IGNORE_INDEX] * len_matched + chat_ids[len_matched:]
     item = {}
     if predict_with_generate:
         item["input_ids"] = prompt_ids
@@ -116,17 +125,24 @@ def package_prefix_cont(
         prefix + continuation, add_special_tokens=True, truncation=True
     )["input_ids"]
     # we don't predict eos at the end
-    prefix_ids = tokenizer(
-        prefix, add_special_tokens=True, truncation=True
-    )["input_ids"]
-    pref_len = len(prefix_ids)
-    full_seq_ids = full_seq_ids[: pref_len + max_cont_len]
+    prefix_ids = tokenizer(prefix, add_special_tokens=True, truncation=True)[
+        "input_ids"
+    ]
+    prefix_len = len(prefix_ids)
+    full_seq_ids = full_seq_ids[: prefix_len + max_cont_len]
 
-    assert full_seq_ids[:pref_len] == prefix_ids, ValueError(
-        "Tokenization mismatch: tokenized prefix should be a prefix of tokenized full sequence. Discrepancy usually arises around the last prefix index."
+    # finding last common token between prefix and full seq to decide after which loss is computed through labels
+    matched_until_idx = -1
+    for idx in range(prefix_len - 1, -1, -1):
+        if full_seq_ids[idx] == prefix_ids[idx]:
+            matched_until_idx = idx
+            break
+    len_matched = matched_until_idx + 1
+    assert len_matched in [prefix_len, prefix_len - 1], ValueError(
+        f"Tokenization mismatch for the last {prefix_len-len_matched} tokens. Tokenized prefix (until its last from second index) is not a prefix of the full tokenized prefix and its continuation."
     )
 
-    labels = [IGNORE_INDEX] * pref_len + full_seq_ids[pref_len :]
+    labels = [IGNORE_INDEX] * len_matched + full_seq_ids[len_matched:]
     item = {}
     if predict_with_generate:
         item["input_ids"] = prefix_ids
