@@ -6,7 +6,7 @@ defaults:
 handler: rouge
 batch_size: 32
 datasets: # override as needed
-  TOFU_QA_retain_para:
+  MUSE_news_forget_qa:
     args:
       predict_with_generate: True
 collators:
