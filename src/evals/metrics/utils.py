@@ -2,6 +2,7 @@ from typing import List
 from tqdm import tqdm
 from rouge_score import rouge_scorer
 from collections import defaultdict
+from omegaconf import OmegaConf
 import numpy as np
 import scipy as sc
 from torch import nn
@@ -186,6 +187,8 @@ def eval_text_similarity(model, tokenizer, batch, generation_args):
     )
     attention_mask = batch["attention_mask"]
 
+    # convert to a simple dict from DictConfig
+    generation_args = OmegaConf.to_container(generation_args, resolve=True)
     stopwords = generation_args.pop("stopwords", None)
     if stopwords is not None:
         assert isinstance(stopwords, list)
@@ -205,15 +208,14 @@ def eval_text_similarity(model, tokenizer, batch, generation_args):
         clean_up_tokenization_spaces=True,
     )
 
-    # cut off stop words at the end
+    # cut off stop words at the end of generated text
     if stopwords is None:
         stopwords = []
-    
     stopwords = [tokenizer.decode([tokenizer.eos_token_id])] + stopwords
     for i in range(len(gen_texts)):
         raw_text = gen_texts[i]
         for word in stopwords:
-            if raw_text.endswith(word):
+            if word and raw_text.endswith(word):
                 raw_text = raw_text[: -len(word)]
         gen_texts[i]
 
