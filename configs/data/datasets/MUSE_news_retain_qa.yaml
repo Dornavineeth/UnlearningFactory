@@ -11,4 +11,4 @@ MUSE_news_retain_qa:
       split: "retain_qa_icl"
     question_key: "question"
     answer_key: "answer"
-    max_length: 32
+    max_length: 512

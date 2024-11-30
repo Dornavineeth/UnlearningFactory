@@ -6,7 +6,7 @@ defaults:
 handler: rouge
 batch_size: 32
 datasets: # override as needed
-  MUSE_news_forget_qa:
+  MUSE_news_retain_qa:
     args:
       predict_with_generate: True
 collators:
@@ -14,4 +14,5 @@ collators:
     args:
       padding_side: left
 generation_args:
+  max_new_tokens: 32
   stopwords: ["\n\n", "\nQuestion", "Question:"]
