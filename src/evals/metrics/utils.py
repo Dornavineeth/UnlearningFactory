@@ -208,16 +208,17 @@ def eval_text_similarity(model, tokenizer, batch, generation_args):
         clean_up_tokenization_spaces=True,
     )
 
-    # cut off stop words at the end of generated text
+    # cut off at stopwords
     if stopwords is None:
         stopwords = []
     stopwords = [tokenizer.decode([tokenizer.eos_token_id])] + stopwords
     for i in range(len(gen_texts)):
         raw_text = gen_texts[i]
         for word in stopwords:
-            if word and raw_text.endswith(word):
-                raw_text = raw_text[: -len(word)]
-        gen_texts[i]
+            if word and word in raw_text:
+                raw_text = raw_text.split(word)[0]
+        raw_text = raw_text.strip()
+        gen_texts[i] = raw_text
 
     scores = eval_rouge_recall_batch(gen_texts, ground_truths)
     scores = [
