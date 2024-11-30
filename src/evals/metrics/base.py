@@ -4,6 +4,7 @@ from data import get_datasets, get_collators
 
 logger = logging.getLogger("metrics")
 
+
 class UnlearningMetric:
     def __init__(
         self,

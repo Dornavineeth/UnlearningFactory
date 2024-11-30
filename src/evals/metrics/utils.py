@@ -8,6 +8,7 @@ from torch import nn
 import torch
 from transformers import StoppingCriteria, StoppingCriteriaList, PreTrainedTokenizer
 
+
 def dict_transpose(evals):
     """Transpose a nested dictionary structure to group statistics by item indices."""
     # evals looks like {iidx0: {idx453: {prob: 0.1, loss: 1}},
@@ -98,8 +99,9 @@ def evaluate_probability(model, batch):
         for prob, avg_loss in zip(normalized_probs, avg_losses)
     ]
 
+
 class MultiTokenEOSCriteria(StoppingCriteria):
-    """Criteria to stop on the specified multi-token sequence. Stopping Criteria forked 
+    """Criteria to stop on the specified multi-token sequence. Stopping Criteria forked
     and modified from [lm-evaluation-harness](https://github.com/EleutherAI/lm-evaluation-harness/blob/27924d77953491f66a038a09892807065e469358/lm_eval/models/utils.py#L208)"""
 
     def __init__(
@@ -155,6 +157,7 @@ def stop_sequences_criteria(
         ]
     )
 
+
 def eval_text_similarity(model, tokenizer, batch, generation_args):
     """Evaluate text similarity between model-generated outputs and ground truth using ROUGE recall scores."""
 
@@ -171,22 +174,24 @@ def eval_text_similarity(model, tokenizer, batch, generation_args):
             )
         return evals
 
-    batch = {k: v.to(model.device)   for k, v in batch.items()}
+    batch = {k: v.to(model.device) for k, v in batch.items()}
     input_ids = batch["input_ids"]
     labels = batch["labels"]
-    input_texts = tokenizer.batch_decode(input_ids, 
-                                         skip_special_tokens=True,
-                                         clean_up_tokenization_spaces=True)
+    input_texts = tokenizer.batch_decode(
+        input_ids, skip_special_tokens=True, clean_up_tokenization_spaces=True
+    )
     tokens = [label[label != -100] for label in labels]
-    ground_truths = tokenizer.batch_decode(tokens, 
-                                           skip_special_tokens=True,
-                                           clean_up_tokenization_spaces=True)
+    ground_truths = tokenizer.batch_decode(
+        tokens, skip_special_tokens=True, clean_up_tokenization_spaces=True
+    )
     attention_mask = batch["attention_mask"]
 
     stopwords = generation_args.pop("stopwords", None)
     if stopwords is not None:
-        sc = stop_sequences_criteria(tokenizer, stopwords, input_ids.shape[1], input_ids.shape[0])
-        generation_args['stopping_criteria'] = sc
+        sc = stop_sequences_criteria(
+            tokenizer, stopwords, input_ids.shape[1], input_ids.shape[0]
+        )
+        generation_args["stopping_criteria"] = sc
     output = model.generate(
         input_ids,
         attention_mask=attention_mask,
@@ -194,11 +199,11 @@ def eval_text_similarity(model, tokenizer, batch, generation_args):
         pad_token_id=tokenizer.eos_token_id,
     )
     gen_texts = tokenizer.batch_decode(
-        output[:, input_ids.shape[-1] :], 
+        output[:, input_ids.shape[-1] :],
         skip_special_tokens=True,
-        clean_up_tokenization_spaces=True
+        clean_up_tokenization_spaces=True,
     )
-    
+
     # cut off stop words at the end
     if stopwords is None:
         stopwords = []
@@ -208,9 +213,9 @@ def eval_text_similarity(model, tokenizer, batch, generation_args):
         raw_text = gen_texts[i]
         for word in stopwords:
             if raw_text.endswith(word):
-                gen_texts[i] = raw_text[:-len(word)]
+                gen_texts[i] = raw_text[: -len(word)]
                 break
-    
+
     scores = eval_rouge_recall_batch(gen_texts, ground_truths)
     scores = [
         {

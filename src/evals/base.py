@@ -4,6 +4,8 @@ import logging
 from evals.metrics import get_metrics
 
 logger = logging.getLogger("evaluator")
+
+
 class Evaluator:
     def __init__(self, name, eval_cfg, **kwargs):
         self.name = name
