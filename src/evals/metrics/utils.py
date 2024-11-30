@@ -188,6 +188,7 @@ def eval_text_similarity(model, tokenizer, batch, generation_args):
 
     stopwords = generation_args.pop("stopwords", None)
     if stopwords is not None:
+        assert isinstance(stopwords, list)
         sc = stop_sequences_criteria(
             tokenizer, stopwords, input_ids.shape[1], input_ids.shape[0]
         )
@@ -207,14 +208,14 @@ def eval_text_similarity(model, tokenizer, batch, generation_args):
     # cut off stop words at the end
     if stopwords is None:
         stopwords = []
-    else:
-        stopwords.append(tokenizer.decode([tokenizer.eos_token_id]))
+    
+    stopwords = [tokenizer.decode([tokenizer.eos_token_id])] + stopwords
     for i in range(len(gen_texts)):
         raw_text = gen_texts[i]
         for word in stopwords:
             if raw_text.endswith(word):
-                gen_texts[i] = raw_text[: -len(word)]
-                break
+                raw_text = raw_text[: -len(word)]
+        gen_texts[i]
 
     scores = eval_rouge_recall_batch(gen_texts, ground_truths)
     scores = [
