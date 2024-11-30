@@ -91,8 +91,6 @@ def package_prompt_response(
     for idx in range(prompt_len - 1, -1, -1):
         if chat_ids[idx] == prompt_ids[idx]:
             matched_until_idx = idx
-            if matched_until_idx == prompt_len - 2:  # remove from code
-                print("matched prefix only")
             break
     len_matched = matched_until_idx + 1
     assert len_matched in [prompt_len, prompt_len - 1], ValueError(
@@ -113,7 +111,6 @@ def package_prompt_response(
 
 
 def package_prefix_cont(
-    template_config,
     tokenizer,
     prefix,
     continuation,

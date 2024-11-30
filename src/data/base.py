@@ -7,6 +7,7 @@ class ContinuationDataset(Dataset):
     def __init__(
         self,
         hf_args,
+        template_args,
         tokenizer,
         prefix_key="prompt",
         continuation_key="gt",
