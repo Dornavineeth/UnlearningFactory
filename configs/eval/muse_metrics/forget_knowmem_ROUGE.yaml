@@ -2,7 +2,7 @@
 defaults:
   - ../../data/datasets@datasets: MUSE_news_forget_qa
   - ../../collator@collators: DataCollatorForSupervisedDatasetwithIndex
-  - ../../generation@generation_args: qa_stopwords
+  - ../../generation@generation_args: default
 handler: rouge
 batch_size: 32
 datasets: # override as needed
@@ -13,3 +13,5 @@ collators:
   DataCollatorForSupervisedDataset: 
     args:
       padding_side: left
+generation_args:
+  stopwords: ["\n\n", "\nQuestion", "Question:"]
