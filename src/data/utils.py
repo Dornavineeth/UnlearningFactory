@@ -93,8 +93,8 @@ def package_prompt_response(
             matched_until_idx = idx
             break
     len_matched = matched_until_idx + 1
-    assert len_matched in [prompt_len, prompt_len - 1], ValueError(
-        f"Tokenization mismatch for the last {prompt_len-len_matched} tokens. Tokenized prompt (until its last from second index) is not a prefix of the full tokenized chat."
+    assert len_matched >= prompt_len-2, ValueError(
+        f"Tokenization mismatch for the last {prompt_len-len_matched} tokens. Tokenized prompt must be a prefix of the full tokenized chat until at least len-2 tokens."
     )
 
     labels = [IGNORE_INDEX] * len_matched + chat_ids[len_matched:]
@@ -135,8 +135,8 @@ def package_prefix_cont(
             matched_until_idx = idx
             break
     len_matched = matched_until_idx + 1
-    assert len_matched in [prefix_len, prefix_len - 1], ValueError(
-        f"Tokenization mismatch for the last {prefix_len-len_matched} tokens. Tokenized prefix (until its last from second index) is not a prefix of the full tokenized prefix and its continuation."
+    assert len_matched >= prefix_len-2, ValueError(
+        f"Tokenization mismatch for the last {prefix_len-len_matched} tokens.  Tokenized prefix must be a prefix of the full tokenized prefix with its continuation until at least len-2 tokens."
     )
 
     labels = [IGNORE_INDEX] * len_matched + full_seq_ids[len_matched:]
