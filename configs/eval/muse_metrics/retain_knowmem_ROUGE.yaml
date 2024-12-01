@@ -4,8 +4,9 @@ defaults:
   - ../../collator@collators: DataCollatorForSupervisedDatasetwithIndex
   - ../../generation@generation_args: default
 handler: rouge
+rouge_type: rougeL_f1
 batch_size: 32
-datasets: # override as needed
+datasets:
   MUSE_news_retain_qa:
     args:
       predict_with_generate: True
