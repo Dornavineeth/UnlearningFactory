@@ -160,7 +160,7 @@ def stop_sequences_criteria(
 
 
 def eval_text_similarity(model, tokenizer, batch, generation_args):
-    """Evaluate text similarity between model-generated outputs and ground truth using ROUGE recall scores."""
+    """Evaluate text similarity between model-generated outputs and ground truth using ROUGE scores."""
 
     def eval_rouge_recall_batch(gen_outputs, ground_truths):
         scorer = rouge_scorer.RougeScorer(["rouge1", "rougeL"], use_stemmer=True)
@@ -170,6 +170,7 @@ def eval_text_similarity(model, tokenizer, batch, generation_args):
             evals.append(
                 {
                     "rouge1_recall": rouge_scores["rouge1"].recall,
+                    'rougeL_f1': rouge_scores['rougeL'].fmeasure,
                     "rougeL_recall": rouge_scores["rougeL"].recall,
                 }
             )

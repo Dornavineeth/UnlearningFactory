@@ -58,9 +58,7 @@ def probability_w_options(model, **kwargs):
 
 @unlearning_metric(name="rouge")
 def rouge(model, **kwargs):
-    """Calculate ROUGE metrics (rouge1_recall, rougeL_recall, input, ground_truth,
-    generation), aggregate the rougeL_recall values, and return the aggregated value
-    along with per-index scores."""
+    """Calculate ROUGE metrics and return the aggregated value along with per-index scores."""
     tokenizer = kwargs["tokenizer"]
     data = kwargs["data"]
     collator = kwargs["collators"]
@@ -76,12 +74,12 @@ def rouge(model, **kwargs):
         fun_args,
         "Calculating text similarity",
     )
-    rougeL_recall_values = np.array(
-        [evals["rougeL_recall"] for evals in scores_by_index.values()]
+    rouge_values = np.array(
+        [evals[kwargs["rouge_type"]] for evals in scores_by_index.values()]
     )
-    rougeL_recall_values = aggregate_to_1D(rougeL_recall_values)
+    rouge_values = aggregate_to_1D(rouge_values)
     return {
-        "agg_value": np.mean(rougeL_recall_values),
+        "agg_value": np.mean(rouge_values),
         "value_by_index": scores_by_index,
     }
 
