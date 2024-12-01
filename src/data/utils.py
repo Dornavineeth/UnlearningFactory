@@ -93,7 +93,7 @@ def package_prompt_response(
             matched_until_idx = idx
             break
     len_matched = matched_until_idx + 1
-    assert len_matched >= prompt_len-2, ValueError(
+    assert len_matched >= prompt_len - 2, ValueError(
         f"Tokenization mismatch for the last {prompt_len-len_matched} tokens. Tokenized prompt must be a prefix of the full tokenized chat until at least len-2 tokens."
     )
 
@@ -119,12 +119,18 @@ def package_prefix_cont(
 ):
     """Language modelling dataset pre-processing"""
     full_seq_ids = tokenizer(
-        prefix + continuation, add_special_tokens=True, truncation=True
+        prefix + continuation,
+        add_special_tokens=True,
+        truncation=True,
+        max_length=2 * max_cont_len,
     )["input_ids"]
     # we don't predict eos at the end
-    prefix_ids = tokenizer(prefix, add_special_tokens=True, truncation=True)[
-        "input_ids"
-    ]
+    prefix_ids = tokenizer(
+        prefix,
+        add_special_tokens=True,
+        truncation=True,
+        max_length=2 * max_cont_len,
+    )["input_ids"]
     prefix_len = len(prefix_ids)
     full_seq_ids = full_seq_ids[: prefix_len + max_cont_len]
 
@@ -135,7 +141,7 @@ def package_prefix_cont(
             matched_until_idx = idx
             break
     len_matched = matched_until_idx + 1
-    assert len_matched >= prefix_len-2, ValueError(
+    assert len_matched >= prefix_len - 2, ValueError(
         f"Tokenization mismatch for the last {prefix_len-len_matched} tokens.  Tokenized prefix must be a prefix of the full tokenized prefix with its continuation until at least len-2 tokens."
     )
 

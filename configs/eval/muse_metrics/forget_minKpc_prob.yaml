@@ -1,0 +1,7 @@
+# @package eval.muse.metrics.forget_minKpc_prob
+defaults:
+  - ../../data/datasets@datasets: MUSE_news_forget_privleak
+  - ../../collator@collators: DataCollatorForSupervisedDatasetwithIndex
+handler: minKpc_probability
+batch_size: 16
+percentile: 40

@@ -6,6 +6,7 @@ defaults:
     - forget_knowmem_ROUGE
     - retain_knowmem_ROUGE
     - forget_verbmem_ROUGE
+    - privleak
 
 handler: MUSEEvaluator
 device: cuda

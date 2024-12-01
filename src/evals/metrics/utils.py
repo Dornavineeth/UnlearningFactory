@@ -8,6 +8,7 @@ import scipy as sc
 from torch import nn
 import torch
 from transformers import StoppingCriteria, StoppingCriteriaList, PreTrainedTokenizer
+from data.utils import IGNORE_INDEX
 
 
 def dict_transpose(evals):
@@ -86,10 +87,10 @@ def evaluate_probability(model, batch):
     labels = batch["labels"]
     shifted_labels = labels[..., 1:].contiguous()
     logits = logits[..., :-1, :].contiguous()
-    loss_function = nn.CrossEntropyLoss(ignore_index=-100, reduction="none")
+    loss_function = nn.CrossEntropyLoss(ignore_index=IGNORE_INDEX, reduction="none")
     # agg loss across tokens
     losses = loss_function(logits.transpose(-1, -2), shifted_labels).sum(dim=-1)
-    num_token_gt = (batch["labels"] != -100).sum(-1)
+    num_token_gt = (batch["labels"] != IGNORE_INDEX).sum(-1)
     avg_losses = losses / num_token_gt
     normalized_probs = torch.exp(-avg_losses)
 
@@ -99,6 +100,35 @@ def evaluate_probability(model, batch):
         {"prob": prob, "avg_loss": avg_loss}
         for prob, avg_loss in zip(normalized_probs, avg_losses)
     ]
+
+
+def eval_mink_prob(model, batch, fraction):
+    """Evaluate model probabilities and average token-level loss for a given batch."""
+    batch = {k: v.to(model.device) for k, v in batch.items()}
+    with torch.no_grad():
+        output = model(**batch)
+    logits = output.logits
+    bsz, seq_len, V = logits.shape
+    probabilities = torch.nn.functional.log_softmax(logits, dim=-1)
+    target_probabilities = torch.gather(
+        probabilities, dim=2, index=batch["input_ids"].unsqueeze(-1)
+    ).squeeze(-1)
+    mink_means = []
+    for i in range(bsz):
+        loss_indices = (batch["labels"][i] != IGNORE_INDEX).nonzero(as_tuple=True)[0]
+        if loss_indices.numel() == 0:
+            mink_means.append(0)
+            continue
+        start_idx, end_idx = loss_indices[0].item(), loss_indices[-1].item()
+        loss_probs = target_probabilities[
+            i, start_idx + 1 : end_idx + 1
+        ]  # ignore the first index from prediction
+        sorted_probs, _ = torch.sort(loss_probs)
+        top_k = max(1, int(fraction * loss_probs.numel()))
+        mink_mean = sorted_probs[:top_k].mean()
+        mink_means.append(mink_mean.cpu().numpy() * -1)
+
+    return [{"min_k_pc_prob": prob} for prob in mink_means]
 
 
 class MultiTokenEOSCriteria(StoppingCriteria):
@@ -170,7 +200,7 @@ def eval_text_similarity(model, tokenizer, batch, generation_args):
             evals.append(
                 {
                     "rouge1_recall": rouge_scores["rouge1"].recall,
-                    'rougeL_f1': rouge_scores['rougeL'].fmeasure,
+                    "rougeL_f1": rouge_scores["rougeL"].fmeasure,
                     "rougeL_recall": rouge_scores["rougeL"].recall,
                 }
             )
@@ -182,7 +212,7 @@ def eval_text_similarity(model, tokenizer, batch, generation_args):
     input_texts = tokenizer.batch_decode(
         input_ids, skip_special_tokens=True, clean_up_tokenization_spaces=True
     )
-    tokens = [label[label != -100] for label in labels]
+    tokens = [label[label != IGNORE_INDEX] for label in labels]
     ground_truths = tokenizer.batch_decode(
         tokens, skip_special_tokens=True, clean_up_tokenization_spaces=True
     )

@@ -2,10 +2,12 @@ import logging
 import numpy as np
 import scipy as sc
 from torch.utils.data import DataLoader
+from sklearn.metrics import auc as get_auc, roc_curve as get_roc_curve
 
 from evals.metrics.utils import (
     aggregate_to_1D,
     evaluate_probability,
+    eval_mink_prob,
     eval_text_similarity,
     run_batchwise_evals,
 )
@@ -137,3 +139,54 @@ def truth_ratio(model, **kwargs):
 def hm_aggregate(model, **kwargs):
     values = [result["agg_value"] for _, result in kwargs["pre_compute"].items()]
     return {"agg_value": sc.stats.hmean(values)}
+
+
+@unlearning_metric(name="minKpc_probability")
+def minKpc_probability(model, **kwargs):
+    """Compute the min-k percentile average of token-wise model probabilities by data points"""
+    data = kwargs["data"]
+    collator = kwargs["collators"]
+    batch_size = kwargs["batch_size"]
+
+    dataloader = DataLoader(data, batch_size=batch_size, collate_fn=collator)
+
+    fun_args = {"fraction": kwargs["percentile"] / 100}
+    return {
+        "value_by_index": run_batchwise_evals(
+            model,
+            dataloader,
+            eval_mink_prob,
+            fun_args,
+            "Calculating token-wise lowest probabilities",
+        )
+    }
+
+
+@unlearning_metric(name="auc")
+def auc(model, **kwargs):
+    """Compute the auc score of an MIA attack wrt model scores on a victim and holdout set"""
+
+    def sweep(ppl, y):
+        fpr, tpr, _ = get_roc_curve(y, -ppl)
+        acc = np.max(1 - (fpr + (1 - tpr)) / 2)
+        return fpr, tpr, get_auc(fpr, tpr), acc
+
+    forget_scores = kwargs["pre_compute"]["forget_minKpc_prob"]["value_by_index"].values()
+    forget_scores =  [elem['min_k_pc_prob'] for elem in forget_scores]
+    holdout_scores = kwargs["pre_compute"]["holdout_minKpc_prob"]["value_by_index"].values()
+    holdout_scores =  [elem['min_k_pc_prob'] for elem in holdout_scores]
+    scores = np.array(forget_scores + holdout_scores)
+    # in MUSE the scores are -mean(min k% log-probs) for some reason so flip the 1 and 0
+    labels = np.array([0] * len(forget_scores) + [1] * len(holdout_scores))
+
+    fpr, tpr, auc_score, acc = sweep(scores, labels)
+
+    return {
+        "agg_value": auc_score,
+        "extra_info": {
+            "fpr": fpr.tolist(),
+            "tpr": tpr.tolist(),
+            "acc": acc,
+            "auc": auc_score,
+        },
+    }

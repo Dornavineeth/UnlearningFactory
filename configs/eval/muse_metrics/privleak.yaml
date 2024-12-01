@@ -1,0 +1,6 @@
+# @package eval.muse.metrics.privleak
+defaults:
+  - .@pre_compute.forget_minKpc_prob: forget_minKpc_prob
+  - .@pre_compute.holdout_minKpc_prob: holdout_minKpc_prob
+
+handler: auc

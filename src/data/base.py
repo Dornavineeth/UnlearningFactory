@@ -11,7 +11,7 @@ class ContinuationDataset(Dataset):
         tokenizer,
         prefix_key="prompt",
         continuation_key="gt",
-        max_cont_len=128,
+        max_cont_len=1024,
         predict_with_generate=False,
     ):
         super(ContinuationDataset, self).__init__()
@@ -19,6 +19,7 @@ class ContinuationDataset(Dataset):
         self.max_cont_len = max_cont_len
         self.data = load_hf_dataset(**hf_args)
         self.data = add_dataset_index(self.data)
+        # if either key does not exist in dataset, it is taken as ""
         self.prefix_key = prefix_key
         self.continuation_key = continuation_key
         self.predict_with_generate = predict_with_generate
@@ -43,8 +44,8 @@ class ContinuationDataset(Dataset):
         return item_dct
 
     def __getitem__(self, idx):
-        pref = self.data[idx][self.prefix_key]
-        cont = self.data[idx][self.continuation_key]
+        pref = self.data[idx].get(self.prefix_key, "")
+        cont = self.data[idx].get(self.continuation_key, "")
         index = self.data[idx]["index"]
         item = self._process_sample(pref, cont, index)
         return item
