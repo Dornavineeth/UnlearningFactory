@@ -8,3 +8,4 @@ MUSE_news_forget_snippets:
     prefix_key: "prompt"
     continuation_key: "gt"
     max_cont_len: 128
+    insert_space: True

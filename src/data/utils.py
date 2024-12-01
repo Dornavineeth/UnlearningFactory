@@ -116,21 +116,17 @@ def package_prefix_cont(
     continuation,
     max_cont_len,
     predict_with_generate=False,
+    insert_space=False,
 ):
     """Language modelling dataset pre-processing"""
     full_seq_ids = tokenizer(
-        prefix + continuation,
+        prefix + ("" if not insert_space else " ") + continuation,
         add_special_tokens=True,
         truncation=True,
-        max_length=2 * max_cont_len,
     )["input_ids"]
-    # we don't predict eos at the end
-    prefix_ids = tokenizer(
-        prefix,
-        add_special_tokens=True,
-        truncation=True,
-        max_length=2 * max_cont_len,
-    )["input_ids"]
+    prefix_ids = tokenizer(prefix, add_special_tokens=True, truncation=True)[
+        "input_ids"
+    ]
     prefix_len = len(prefix_ids)
     full_seq_ids = full_seq_ids[: prefix_len + max_cont_len]
 
@@ -144,7 +140,6 @@ def package_prefix_cont(
     assert len_matched >= prefix_len - 2, ValueError(
         f"Tokenization mismatch for the last {prefix_len-len_matched} tokens.  Tokenized prefix must be a prefix of the full tokenized prefix with its continuation until at least len-2 tokens."
     )
-
     labels = [IGNORE_INDEX] * len_matched + full_seq_ids[len_matched:]
     item = {}
     if predict_with_generate:

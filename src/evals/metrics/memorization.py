@@ -162,8 +162,8 @@ def minKpc_probability(model, **kwargs):
     }
 
 
-@unlearning_metric(name="auc")
-def auc(model, **kwargs):
+@unlearning_metric(name="rel_auc")
+def rel_auc(model, **kwargs):
     """Compute the auc score of an MIA attack wrt model scores on a victim and holdout set"""
 
     def sweep(ppl, y):
@@ -171,10 +171,14 @@ def auc(model, **kwargs):
         acc = np.max(1 - (fpr + (1 - tpr)) / 2)
         return fpr, tpr, get_auc(fpr, tpr), acc
 
-    forget_scores = kwargs["pre_compute"]["forget_minKpc_prob"]["value_by_index"].values()
-    forget_scores =  [elem['min_k_pc_prob'] for elem in forget_scores]
-    holdout_scores = kwargs["pre_compute"]["holdout_minKpc_prob"]["value_by_index"].values()
-    holdout_scores =  [elem['min_k_pc_prob'] for elem in holdout_scores]
+    forget_scores = kwargs["pre_compute"]["forget_minKpc_prob"][
+        "value_by_index"
+    ].values()
+    forget_scores = [elem["min_k_pc_prob"] for elem in forget_scores]
+    holdout_scores = kwargs["pre_compute"]["holdout_minKpc_prob"][
+        "value_by_index"
+    ].values()
+    holdout_scores = [elem["min_k_pc_prob"] for elem in holdout_scores]
     scores = np.array(forget_scores + holdout_scores)
     # in MUSE the scores are -mean(min k% log-probs) for some reason so flip the 1 and 0
     labels = np.array([0] * len(forget_scores) + [1] * len(holdout_scores))
@@ -182,10 +186,10 @@ def auc(model, **kwargs):
     fpr, tpr, auc_score, acc = sweep(scores, labels)
 
     return {
-        "agg_value": auc_score,
+        "agg_value": (auc_score - kwargs["default_auc_value"])
+        / kwargs["default_auc_value"]
+        * 100,
         "extra_info": {
-            "fpr": fpr.tolist(),
-            "tpr": tpr.tolist(),
             "acc": acc,
             "auc": auc_score,
         },

@@ -3,4 +3,5 @@ defaults:
   - .@pre_compute.forget_minKpc_prob: forget_minKpc_prob
   - .@pre_compute.holdout_minKpc_prob: holdout_minKpc_prob
 
-handler: auc
+handler: rel_auc
+default_auc_value:  0.4771

@@ -11,8 +11,9 @@ class ContinuationDataset(Dataset):
         tokenizer,
         prefix_key="prompt",
         continuation_key="gt",
-        max_cont_len=1024,
+        max_cont_len=128,
         predict_with_generate=False,
+        insert_space=False,
     ):
         super(ContinuationDataset, self).__init__()
         self.tokenizer = tokenizer
@@ -23,6 +24,7 @@ class ContinuationDataset(Dataset):
         self.prefix_key = prefix_key
         self.continuation_key = continuation_key
         self.predict_with_generate = predict_with_generate
+        self.insert_space = insert_space
 
     def __len__(self):
         return len(self.data)
@@ -34,6 +36,7 @@ class ContinuationDataset(Dataset):
             continuation,
             self.max_cont_len,
             self.predict_with_generate,
+            self.insert_space,
         )
         item_dct = {
             "input_ids": tokenized_data["input_ids"],
