@@ -9,7 +9,7 @@ from torch import nn
 import torch
 from transformers import StoppingCriteria, StoppingCriteriaList, PreTrainedTokenizer
 from data.utils import IGNORE_INDEX
-
+import warnings
 
 def dict_transpose(evals):
     """Transpose a nested dictionary structure to group statistics by item indices."""
@@ -123,8 +123,9 @@ def eval_mink_negative_logprob(model, batch, fraction):
             mink_means.append(0)
             continue
         start_idx, end_idx = actual_indices[0].item(), actual_indices[-1].item()
-        # ignore the first index from prediction
-        actual_seq_log_probs = target_log_probs[i, start_idx : end_idx + 1].cpu().numpy()
+        if start_idx == 0:
+            warnings.warn("Index 0 in a datapoint's input_ids must not have loss (unignored labels) on it", UserWarning)
+        actual_seq_log_probs = target_log_probs[i, start_idx-1:end_idx].cpu().numpy()
         sorted_probs = np.sort(actual_seq_log_probs)
         top_k = max(1, int(fraction * len(actual_seq_log_probs)))
         mink_mean = -1 * np.mean(sorted_probs[:top_k])

@@ -124,12 +124,9 @@ def package_prefix_cont(
         add_special_tokens=True,
         truncation=True,
     )["input_ids"]
-    if not prefix:
-        prefix_ids = []
-    else:
-        prefix_ids = tokenizer(prefix, add_special_tokens=True, truncation=True)[
-            "input_ids"
-        ]
+    prefix_ids = tokenizer(prefix, add_special_tokens=True, truncation=True)[
+        "input_ids"
+    ]
     prefix_len = len(prefix_ids)
     full_seq_ids = full_seq_ids[: prefix_len + max_cont_len]
 
@@ -143,6 +140,8 @@ def package_prefix_cont(
     assert len_matched >= prefix_len - 2, ValueError(
         f"Tokenization mismatch for the last {prefix_len-len_matched} tokens.  Tokenized prefix must be a prefix of the full tokenized prefix with its continuation until at least len-2 tokens."
     )
+    if len_matched == 0: # never give loss on index 0, when prefix is empty
+        len_matched = 1 
     labels = [IGNORE_INDEX] * len_matched + full_seq_ids[len_matched:]
     item = {}
     if predict_with_generate:
