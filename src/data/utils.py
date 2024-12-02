@@ -124,9 +124,12 @@ def package_prefix_cont(
         add_special_tokens=True,
         truncation=True,
     )["input_ids"]
-    prefix_ids = tokenizer(prefix, add_special_tokens=True, truncation=True)[
-        "input_ids"
-    ]
+    if not prefix:
+        prefix_ids = []
+    else:
+        prefix_ids = tokenizer(prefix, add_special_tokens=True, truncation=True)[
+            "input_ids"
+        ]
     prefix_len = len(prefix_ids)
     full_seq_ids = full_seq_ids[: prefix_len + max_cont_len]
 
@@ -150,6 +153,7 @@ def package_prefix_cont(
     item["attention_mask"] = [1] * len(item["input_ids"])
     for attr in item:
         item[attr] = torch.tensor(item[attr])
+    import pdb; pdb.set_trace()
     return item
 
 
