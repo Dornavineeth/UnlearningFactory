@@ -7,7 +7,7 @@ from evals.metrics.memorization import (
     rouge,
     truth_ratio,
     hm_aggregate,
-    minKpc_probability,
+    minKpc_negative_logprob,
     rel_auc,
 )
 
@@ -45,5 +45,5 @@ _register_metric(probability_w_options)
 _register_metric(rouge)
 _register_metric(truth_ratio)
 _register_metric(hm_aggregate)
-_register_metric(minKpc_probability)
+_register_metric(minKpc_negative_logprob)
 _register_metric(rel_auc)

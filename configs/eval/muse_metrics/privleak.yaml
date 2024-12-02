@@ -1,7 +1,12 @@
 # @package eval.muse.metrics.privleak
 defaults:
-  - .@pre_compute.forget_minKpc_prob: forget_minKpc_prob
-  - .@pre_compute.holdout_minKpc_prob: holdout_minKpc_prob
+  - .@pre_compute.forget_minKpc_neg_logprob: forget_minKpc_neg_logprob
+  - .@pre_compute.holdout_minKpc_neg_logprob: holdout_minKpc_neg_logprob
 
+pre_compute:
+  forget_minKpc_neg_logprob:
+    access_key: forget
+  holdout_minKpc_neg_logprob:
+    access_key: holdout
 handler: rel_auc
-default_auc_value:  0.4771
+ref_value:  0.5

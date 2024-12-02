@@ -102,33 +102,34 @@ def evaluate_probability(model, batch):
     ]
 
 
-def eval_mink_prob(model, batch, fraction):
+def eval_mink_negative_logprob(model, batch, fraction):
     """Evaluate model probabilities and average token-level loss for a given batch."""
     batch = {k: v.to(model.device) for k, v in batch.items()}
     with torch.no_grad():
         output = model(**batch)
     logits = output.logits
     bsz, seq_len, V = logits.shape
-    probabilities = torch.nn.functional.log_softmax(logits, dim=-1)
-    target_probabilities = torch.gather(
-        probabilities, dim=2, index=batch["input_ids"].unsqueeze(-1)
-    ).squeeze(-1)
+    log_probs = torch.nn.functional.log_softmax(logits, dim=-1)[:, :-1, :]
+    # ^ we don't predict next token for last token, bsz x seq_len-1 x V
+    next_tokens = batch["input_ids"][:, 1:].unsqueeze(-1) # bsz x seq_len-1 x 1
+    target_log_probs = torch.gather(log_probs, dim=2, index=next_tokens).squeeze(-1)
     mink_means = []
     for i in range(bsz):
-        loss_indices = (batch["labels"][i] != IGNORE_INDEX).nonzero(as_tuple=True)[0]
-        if loss_indices.numel() == 0:
+        labels = batch["labels"][i][:-1]
+        # only focus on tokens which have loss on them (i.e. used in labels)
+        actual_indices = (labels != IGNORE_INDEX).nonzero(as_tuple=True)[0]
+        num_actual_tokens = actual_indices.numel()
+        if num_actual_tokens == 0:
             mink_means.append(0)
             continue
-        start_idx, end_idx = loss_indices[0].item(), loss_indices[-1].item()
-        loss_probs = target_probabilities[
-            i, start_idx + 1 : end_idx + 1
-        ]  # ignore the first index from prediction
-        sorted_probs, _ = torch.sort(loss_probs)
-        top_k = max(1, int(fraction * loss_probs.numel()))
-        mink_mean = sorted_probs[:top_k].mean()
-        mink_means.append(mink_mean.cpu().numpy() * -1)
-
-    return [{"min_k_pc_prob": prob} for prob in mink_means]
+        start_idx, end_idx = actual_indices[0].item(), actual_indices[-1].item()
+        # ignore the first index from prediction
+        actual_seq_log_probs = target_log_probs[i, start_idx : end_idx + 1].cpu().numpy()
+        sorted_probs = np.sort(actual_seq_log_probs)
+        top_k = max(1, int(fraction * len(actual_seq_log_probs)))
+        mink_mean = -1 * np.mean(sorted_probs[:top_k])
+        mink_means.append(mink_mean)
+    return [{"score": neglogprob} for neglogprob in mink_means]
 
 
 class MultiTokenEOSCriteria(StoppingCriteria):

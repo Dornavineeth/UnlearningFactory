@@ -153,7 +153,6 @@ def package_prefix_cont(
     item["attention_mask"] = [1] * len(item["input_ids"])
     for attr in item:
         item[attr] = torch.tensor(item[attr])
-    import pdb; pdb.set_trace()
     return item
 
 
