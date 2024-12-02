@@ -94,5 +94,8 @@ class Evaluator:
             )
             if "agg_value" in result:
                 logger.info(f"Result for metric {metric_name}:\t{result['agg_value']}")
-            self.save_logs(logs, logs_file_path)
+            try:
+                self.save_logs(logs, logs_file_path)
+            except Exception as e:
+                raise RuntimeError(f"Failed to save logs: {e}")
         return logs
