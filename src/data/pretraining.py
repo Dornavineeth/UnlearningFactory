@@ -11,13 +11,13 @@ class PretrainingDataset(Dataset):
         tokenizer,
         prefix_key="prompt",
         text_key="text",
-        max_cont_len=128,
+        max_length=128,
         predict_with_generate=False,
         insert_space=False,
     ):
         super(PretrainingDataset, self).__init__()
         self.tokenizer = tokenizer
-        self.max_cont_len = max_cont_len
+        self.max_length = max_length
         self.data = load_hf_dataset(**hf_args)
         self.data = add_dataset_index(self.data)
         # if either key does not exist in dataset, it is taken as ""
@@ -34,7 +34,7 @@ class PretrainingDataset(Dataset):
             self.tokenizer,
             prefix,
             text_content,
-            self.max_cont_len,
+            self.max_length,
             self.predict_with_generate,
             self.insert_space,
         )

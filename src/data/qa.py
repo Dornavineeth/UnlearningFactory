@@ -42,8 +42,8 @@ class QADataset(Dataset):
             prompt_msgs = self.fs_data[self.question_key] + [question]
             response_msgs = self.fs_data[self.answer_key] + [answer]
         tokenized_data = preprocess_chat_instance(
-            self.template_args,
             self.tokenizer,
+            self.template_args,
             prompt_msgs,
             response_msgs,
             self.max_length,

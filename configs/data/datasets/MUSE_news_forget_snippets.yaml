@@ -7,5 +7,5 @@ MUSE_news_forget_snippets:
       split: "forget"
     prefix_key: "prompt"
     text_key: "gt"
-    max_cont_len: 128
+    max_length: 128
     insert_space: True
