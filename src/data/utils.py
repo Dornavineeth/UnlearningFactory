@@ -10,7 +10,7 @@ def load_hf_dataset(path, **kwargs):
     return dataset
 
 
-def package_prompt_response(
+def preprocess_chat_instance(
     template_config,
     tokenizer,
     prompt_msgs,
@@ -110,17 +110,16 @@ def package_prompt_response(
     return item
 
 
-def package_prefix_cont(
+def preprocess_pretraining_instance(
     tokenizer,
     prefix,
-    continuation,
+    text_content,
     max_cont_len,
     predict_with_generate=False,
     insert_space=False,
 ):
-    """Language modelling dataset pre-processing"""
     full_seq_ids = tokenizer(
-        prefix + ("" if not insert_space else " ") + continuation,
+        prefix + (" " if insert_space else "") + text_content,
         add_special_tokens=True,
         truncation=True,
     )["input_ids"]
@@ -138,10 +137,10 @@ def package_prefix_cont(
             break
     len_matched = matched_until_idx + 1
     assert len_matched >= prefix_len - 2, ValueError(
-        f"Tokenization mismatch for the last {prefix_len-len_matched} tokens.  Tokenized prefix must be a prefix of the full tokenized prefix with its continuation until at least len-2 tokens."
+        f"Tokenization mismatch for the last {prefix_len-len_matched} tokens.  Tokenized prefix must be a prefix of the full tokenized prefix with its text_content until at least len-2 tokens."
     )
-    if len_matched == 0: # never give loss on index 0, when prefix is empty
-        len_matched = 1 
+    if len_matched == 0:  # never give loss on index 0, when prefix is empty
+        len_matched = 1
     labels = [IGNORE_INDEX] * len_matched + full_seq_ids[len_matched:]
     item = {}
     if predict_with_generate:

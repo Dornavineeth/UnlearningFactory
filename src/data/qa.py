@@ -1,7 +1,7 @@
 import torch
 from torch.utils.data import Dataset
 
-from data.utils import load_hf_dataset, package_prompt_response, add_dataset_index
+from data.utils import load_hf_dataset, preprocess_chat_instance, add_dataset_index
 
 
 class QADataset(Dataset):
@@ -41,7 +41,7 @@ class QADataset(Dataset):
         else:
             prompt_msgs = self.fs_data[self.question_key] + [question]
             response_msgs = self.fs_data[self.answer_key] + [answer]
-        tokenized_data = package_prompt_response(
+        tokenized_data = preprocess_chat_instance(
             self.template_args,
             self.tokenizer,
             prompt_msgs,

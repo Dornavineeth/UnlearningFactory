@@ -11,6 +11,7 @@ from transformers import StoppingCriteria, StoppingCriteriaList, PreTrainedToken
 from data.utils import IGNORE_INDEX
 import warnings
 
+
 def dict_transpose(evals):
     """Transpose a nested dictionary structure to group statistics by item indices."""
     # evals looks like {iidx0: {idx453: {prob: 0.1, loss: 1}},
@@ -102,8 +103,8 @@ def evaluate_probability(model, batch):
     ]
 
 
-def eval_mink_negative_logprob(model, batch, fraction):
-    """Evaluate model probabilities and average token-level loss for a given batch."""
+def eval_minKpc_neg_logprob(model, batch, percentile):
+    """Compute minK% attack score for each sample in a batch."""
     batch = {k: v.to(model.device) for k, v in batch.items()}
     with torch.no_grad():
         output = model(**batch)
@@ -111,7 +112,7 @@ def eval_mink_negative_logprob(model, batch, fraction):
     bsz, seq_len, V = logits.shape
     log_probs = torch.nn.functional.log_softmax(logits, dim=-1)[:, :-1, :]
     # ^ we don't predict next token for last token, bsz x seq_len-1 x V
-    next_tokens = batch["input_ids"][:, 1:].unsqueeze(-1) # bsz x seq_len-1 x 1
+    next_tokens = batch["input_ids"][:, 1:].unsqueeze(-1)  # bsz x seq_len-1 x 1
     target_log_probs = torch.gather(log_probs, dim=2, index=next_tokens).squeeze(-1)
     mink_means = []
     for i in range(bsz):
@@ -124,10 +125,15 @@ def eval_mink_negative_logprob(model, batch, fraction):
             continue
         start_idx, end_idx = actual_indices[0].item(), actual_indices[-1].item()
         if start_idx == 0:
-            warnings.warn("Index 0 in a datapoint's input_ids must not have loss (unignored labels) on it", UserWarning)
-        actual_seq_log_probs = target_log_probs[i, start_idx-1:end_idx].cpu().numpy()
+            warnings.warn(
+                "Index 0 in a datapoint's input_ids must not have loss (unignored labels) on it",
+                UserWarning,
+            )
+        actual_seq_log_probs = (
+            target_log_probs[i, start_idx - 1 : end_idx].cpu().numpy()
+        )
         sorted_probs = np.sort(actual_seq_log_probs)
-        top_k = max(1, int(fraction * len(actual_seq_log_probs)))
+        top_k = max(1, int(percentile / 100 * len(actual_seq_log_probs)))
         mink_mean = -1 * np.mean(sorted_probs[:top_k])
         mink_means.append(mink_mean)
     return [{"score": neglogprob} for neglogprob in mink_means]

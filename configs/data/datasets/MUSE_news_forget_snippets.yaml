@@ -1,11 +1,11 @@
 MUSE_news_forget_snippets:
-  handler: ContinuationDataset
+  handler: PretrainingDataset
   args:
     hf_args:
       path: "muse-bench/MUSE-News"
       name: "verbmem"
       split: "forget"
     prefix_key: "prompt"
-    continuation_key: "gt"
+    text_key: "gt"
     max_cont_len: 128
     insert_space: True

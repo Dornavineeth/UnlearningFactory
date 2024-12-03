@@ -4,4 +4,4 @@ defaults:
   - ../../collator@collators: DataCollatorForSupervisedDatasetwithIndex
 handler: minKpc_negative_logprob
 batch_size: 16
-percentile: 40
+percentile_K: 40

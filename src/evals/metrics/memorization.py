@@ -7,7 +7,7 @@ from sklearn.metrics import auc as get_auc, roc_curve as get_roc_curve
 from evals.metrics.utils import (
     aggregate_to_1D,
     evaluate_probability,
-    eval_mink_negative_logprob,
+    eval_minKpc_neg_logprob,
     eval_text_similarity,
     run_batchwise_evals,
 )
@@ -150,14 +150,14 @@ def minKpc_negative_logprob(model, **kwargs):
 
     dataloader = DataLoader(data, batch_size=batch_size, collate_fn=collator)
 
-    fun_args = {"fraction": kwargs["percentile"] / 100}
+    fun_args = {"percentile": kwargs["percentile_K"]}
     return {
         "value_by_index": run_batchwise_evals(
             model,
             dataloader,
-            eval_mink_negative_logprob,
+            eval_minKpc_neg_logprob,
             fun_args,
-            "Calculating token-wise lowest probabilities",
+            "Calculating avg token-wise lowest K% percentile logprobs across batches",
         )
     }
 
@@ -182,6 +182,9 @@ def rel_auc(model, **kwargs):
     fpr, tpr, auc_score, acc = sweep(scores, labels)
 
     return {
-        "agg_value": (auc_score - kwargs["ref_value"]) / kwargs["ref_value"]* 100,
-        "extra_info": {"acc": acc, "auc": auc_score, },
+        "agg_value": (auc_score - kwargs["ref_value"]) / kwargs["ref_value"] * 100,
+        "extra_info": {
+            "acc": acc,
+            "auc": auc_score,
+        },
     }
