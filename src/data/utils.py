@@ -1,6 +1,7 @@
 import torch
 import datasets
 import numpy as np
+from typing import List, Dict, Any, Union
 
 IGNORE_INDEX = -100  # TODO put in common constants
 
@@ -9,18 +10,35 @@ def load_hf_dataset(path, **kwargs):
     dataset = datasets.load_dataset(path, **kwargs)
     return dataset
 
-
 def preprocess_chat_instance(
-    template_config,
     tokenizer,
-    prompt_msgs,
-    response_msgs,
-    max_length,
-    predict_with_generate=False,
-):
-    """prompt_msgs and response_msgs are lists where except the last pair, all
+    template_config: Dict[str, Any],
+    prompt_msgs: Union[List[str], str],
+    response_msgs: Union[List[str], str],
+    max_length: int,
+    predict_with_generate: bool = False,
+) -> Dict[str, torch.Tensor]:
+    """Preprocesses a chat instance for training or generation.
+    When in training, both the returned `input_ids` and `labels` cover the entire conversation.
+    `input_ids` has no padding, and `labels` assign `IGNORE_INDEX` to tokens where loss is not computed (i.e. all tokens except the final response message).
+    When in generation, `input_ids` are returned only up to the last user prompt, excluding the assistant's response. The `labels` returned are the same as during training.
+    `attention_mask` is always 1 over the full `input_ids` token sequence.
+
+    `prompt_msgs` and `response_msgs` are lists where, except for the last pair, all
     corresponding pairs are in-context examples. When they are a string and not
-    a list, there are no in-context examples."""
+    a list, there are no in-context examples.
+
+    Args:
+        tokenizer: Tokenizer to apply on text
+        template_config (Dict[str, Any]): Configuration for the chat template (comes from model-specific config).
+        prompt_msgs (Union[List[str], str]): List of prompt messages or a single prompt message string.
+        response_msgs (Union[List[str], str]): List of response messages or a single response message string.
+        max_length (int): Maximum sequence length after tokenization.
+        predict_with_generate (bool, optional): Whether to prepare inputs for generation.
+
+    Returns:
+        Dict[str, torch.Tensor]: A dictionary containing 'input_ids', 'labels', and 'attention_mask' tensors for model input.
+    """
     assert len(prompt_msgs) == len(response_msgs)
     if isinstance(prompt_msgs, str):
         assert isinstance(response_msgs, str)
@@ -112,12 +130,27 @@ def preprocess_chat_instance(
 
 def preprocess_pretraining_instance(
     tokenizer,
-    prefix,
-    text_content,
-    max_cont_len,
-    predict_with_generate=False,
-    insert_space=False,
-):
+    prefix: str,
+    text_content: str,
+    max_length: int,
+    predict_with_generate: bool = False,
+    insert_space: bool = False,
+) -> Dict[str, torch.Tensor]:
+    """Preprocesses a pretraining instance for training or generation. 
+    When in training, both the returned `input_ids` and `labels` are over the entire token sequence. `input_ids` has no padding, `labels` assigns `IGNORE_INDEX` to ignore all tokens that we don't compute loss over (i.e. the the 0th index token, all prefix tokens)
+    When in generation, `input_ids` are returned only until the prefix portion. The `labels` returned are the same as during training.
+    `attention_mask` is always 1 over the full input token sequence.
+    Args:
+        tokenizer: Tokenizer to apply on text
+        prefix (str): The prefix string to prepend to the content.
+        text_content (str): The main text content (following the prefix) to be tokenized.
+        max_length (int): Maximum text content length after tokenization.
+        predict_with_generate (bool, optional): Whether to prepare inputs for generation.
+        insert_space (bool, optional): Whether to insert a space between prefix and content.
+
+    Returns:
+        Dict[str, torch.Tensor]: A dictionary containing 'input_ids', 'labels', and 'attention_mask' tensors for model input.
+    """
     full_seq_ids = tokenizer(
         prefix + (" " if insert_space else "") + text_content,
         add_special_tokens=True,
@@ -127,7 +160,7 @@ def preprocess_pretraining_instance(
         "input_ids"
     ]
     prefix_len = len(prefix_ids)
-    full_seq_ids = full_seq_ids[: prefix_len + max_cont_len]
+    full_seq_ids = full_seq_ids[: prefix_len + max_length]
 
     # finding last common token between prefix and full seq to decide after which loss is computed through labels
     matched_until_idx = -1
