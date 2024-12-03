@@ -153,14 +153,13 @@ def preprocess_pretraining_instance(
     """
     full_seq_ids = tokenizer(
         prefix + (" " if insert_space else "") + text_content,
-        add_special_tokens=True,
-        truncation=True,
+        add_special_tokens=True
     )["input_ids"]
-    prefix_ids = tokenizer(prefix, add_special_tokens=True, truncation=True)[
+    prefix_ids = tokenizer(prefix, add_special_tokens=True)[
         "input_ids"
     ]
     prefix_len = len(prefix_ids)
-    full_seq_ids = full_seq_ids[: prefix_len + max_length]
+    full_seq_ids = full_seq_ids[: prefix_len + max_length] # manual truncation
 
     # finding last common token between prefix and full seq to decide after which loss is computed through labels
     matched_until_idx = -1
