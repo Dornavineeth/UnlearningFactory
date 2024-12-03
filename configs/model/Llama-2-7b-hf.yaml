@@ -4,7 +4,7 @@ model_args:
   torch_dtype: bfloat16
 tokenizer_args:
   pretrained_model_name_or_path: "meta-llama/Llama-2-7b-hf"
-template_args:
+template_args:  # Used in creating prompts for the dataset. See src/data/utils.py#preprocess_chat_instance.
   apply_chat_template: False
   user_start_tag: "Question: "
   user_end_tag: "\n"
