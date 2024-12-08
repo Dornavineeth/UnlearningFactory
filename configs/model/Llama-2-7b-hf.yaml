@@ -8,5 +8,5 @@ template_args:  # Used in creating prompts for the dataset. See src/data/utils.p
   apply_chat_template: False
   user_start_tag: "Question: "
   user_end_tag: "\n"
-  asst_tag: "Answer: "
-  example_separator: "\n\n"
+  asst_start_tag: "Answer: "
+  asst_end_tag: "\n\n"
