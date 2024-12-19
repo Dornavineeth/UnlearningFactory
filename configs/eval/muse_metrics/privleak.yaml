@@ -1,0 +1,22 @@
+# @package eval.muse.metrics.privleak
+defaults:
+  - .@pre_compute.forget_minKpc_neg_logprob: forget_minKpc_neg_logprob
+  - .@pre_compute.holdout_minKpc_neg_logprob: holdout_minKpc_neg_logprob
+
+pre_compute:
+  forget_minKpc_neg_logprob:
+    access_key: forget
+  holdout_minKpc_neg_logprob:
+    access_key: holdout
+
+reference_logs:
+  retain_model_logs:
+    path: ${eval.muse.retain_logs_path}
+    include: 
+      forget_minKpc_neg_logprob:
+        access_key: retain
+      holdout_minKpc_neg_logprob:
+        access_key: holdout
+
+handler: relative_auc
+ref_value:  0.5

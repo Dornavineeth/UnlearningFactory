@@ -14,4 +14,4 @@ trainer:
     remove_unused_columns: False
 
 mode: unlearn
-task_name: llama-3.2-8B_tofu_forget10
+task_name: ???

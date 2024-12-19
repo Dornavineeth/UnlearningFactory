@@ -5,7 +5,10 @@ model_args:
 tokenizer_args:
   pretrained_model_name_or_path: "microsoft/Phi-3.5-mini-instruct"
 template_args:
-  apply_chat_template: False
-  user_start_tag: "<|system|>\nYou are a helpful assistant.<|end|>\n<|user|>"
+  apply_chat_template: True
+  system_prompt: You are a helpful assistant.
+  system_prompt_with_special_tokens: "<|system|>\nYou are a helpful assistant.<|end|>\n"
+  user_start_tag: "<|user|>\n"
   user_end_tag: "<|end|>\n"
-  asst_tag: "<|assistant|>\n"
+  asst_start_tag: "<|assistant|>\n"
+  asst_end_tag: "<|end|>\n"
