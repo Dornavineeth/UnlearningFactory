@@ -37,7 +37,7 @@ class QADataset(Dataset):
 
     def _process_sample(self, question, answer, index=-1):
         if self.fs_data is None:
-            prompt_msgs, response_msgs = question, answer
+            prompt_msgs, response_msgs = [question], [answer]
         else:
             prompt_msgs = self.fs_data[self.question_key] + [question]
             response_msgs = self.fs_data[self.answer_key] + [answer]
