@@ -10,7 +10,7 @@ class ForgetRetainDataset(Dataset):
         Args:
             forget (Dataset): Forget Dataset
             retain (Dataset): Retain Dataset
-            anchor (str, optional): Specifies which dataset to anchor while randomly sampling from the other dataset. Defaults to 'forget'.
+            anchor (str, optional): Specifies which dataset to anchor while randomly sampling from the other dataset. Defaults to 'forget'. 
         """
         self.forget = forget
         self.retain = retain

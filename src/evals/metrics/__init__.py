@@ -8,11 +8,6 @@ from evals.metrics.memorization import (
     truth_ratio,
     hm_aggregate,
 )
-from evals.metrics.privacy import (
-    forget_quality,
-    minKpc_negative_logprob,
-    relative_auc,
-)
 
 METRICS_REGISTRY: Dict[str, UnlearningMetric] = {}
 
@@ -47,7 +42,4 @@ _register_metric(probability)
 _register_metric(probability_w_options)
 _register_metric(rouge)
 _register_metric(truth_ratio)
-_register_metric(forget_quality)
 _register_metric(hm_aggregate)
-_register_metric(minKpc_negative_logprob)
-_register_metric(relative_auc)

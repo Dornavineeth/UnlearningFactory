@@ -1,7 +1,7 @@
 from typing import Dict, Any, Union
 from omegaconf import DictConfig
 
-from data.qa import (
+from data.tofu import (
     QADataset,
     QAwithIdkDataset,
 )
@@ -9,7 +9,7 @@ from data.collators import (
     DataCollatorForSupervisedDataset,
 )
 from data.unlearn import ForgetRetainDataset
-from data.pretraining import PretrainingDataset
+
 
 DATASET_REGISTRY: Dict[str, Any] = {}
 COLLATOR_REGISTRY: Dict[str, Any] = {}
@@ -97,7 +97,7 @@ def get_collators(collator_cfgs, **kwargs):
 # Register datasets
 _register_data(QADataset)
 _register_data(QAwithIdkDataset)
-_register_data(PretrainingDataset)
+
 
 # Register composite datasets used in unlearning
 # groups: unlearn

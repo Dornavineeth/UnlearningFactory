@@ -1,15 +1,10 @@
-from typing import List
 from tqdm import tqdm
 from rouge_score import rouge_scorer
 from collections import defaultdict
-from omegaconf import OmegaConf
 import numpy as np
 import scipy as sc
 from torch import nn
 import torch
-from transformers import StoppingCriteria, StoppingCriteriaList, PreTrainedTokenizer
-from data.utils import IGNORE_INDEX
-import warnings
 
 
 def dict_transpose(evals):
@@ -88,10 +83,10 @@ def evaluate_probability(model, batch):
     labels = batch["labels"]
     shifted_labels = labels[..., 1:].contiguous()
     logits = logits[..., :-1, :].contiguous()
-    loss_function = nn.CrossEntropyLoss(ignore_index=IGNORE_INDEX, reduction="none")
+    loss_function = nn.CrossEntropyLoss(ignore_index=-100, reduction="none")
     # agg loss across tokens
     losses = loss_function(logits.transpose(-1, -2), shifted_labels).sum(dim=-1)
-    num_token_gt = (batch["labels"] != IGNORE_INDEX).sum(-1)
+    num_token_gt = (batch["labels"] != -100).sum(-1)
     avg_losses = losses / num_token_gt
     normalized_probs = torch.exp(-avg_losses)
 
@@ -103,102 +98,8 @@ def evaluate_probability(model, batch):
     ]
 
 
-def eval_minKpc_neg_logprob(model, batch, percentile):
-    """Compute minK% attack score for each sample in a batch."""
-    batch = {k: v.to(model.device) for k, v in batch.items()}
-    with torch.no_grad():
-        output = model(**batch)
-    logits = output.logits
-    bsz, seq_len, V = logits.shape
-    log_probs = torch.nn.functional.log_softmax(logits, dim=-1)[:, :-1, :]
-    # ^ we don't predict next token for last token, bsz x seq_len-1 x V
-    next_tokens = batch["input_ids"][:, 1:].unsqueeze(-1)  # bsz x seq_len-1 x 1
-    target_log_probs = torch.gather(log_probs, dim=2, index=next_tokens).squeeze(-1)
-    mink_means = []
-    for i in range(bsz):
-        labels = batch["labels"][i][:-1]
-        # only focus on tokens which have loss on them (i.e. used in labels)
-        actual_indices = (labels != IGNORE_INDEX).nonzero(as_tuple=True)[0]
-        num_actual_tokens = actual_indices.numel()
-        if num_actual_tokens == 0:
-            mink_means.append(0)
-            continue
-        start_idx, end_idx = actual_indices[0].item(), actual_indices[-1].item()
-        if start_idx == 0:
-            warnings.warn(
-                "Index 0 in a datapoint's input_ids must not have loss (unignored labels) on it",
-                UserWarning,
-            )
-        actual_seq_log_probs = (
-            target_log_probs[i, start_idx - 1 : end_idx].cpu().numpy()
-        )
-        sorted_probs = np.sort(actual_seq_log_probs)
-        top_k = max(1, int(percentile / 100 * len(actual_seq_log_probs)))
-        mink_mean = -1 * np.mean(sorted_probs[:top_k])
-        mink_means.append(mink_mean)
-    return [{"score": float(neglogprob)} for neglogprob in mink_means]
-
-
-class MultiTokenEOSCriteria(StoppingCriteria):
-    """Criteria to stop on the specified multi-token sequence. Stopping Criteria forked
-    and modified from [lm-evaluation-harness](https://github.com/EleutherAI/lm-evaluation-harness/blob/27924d77953491f66a038a09892807065e469358/lm_eval/models/utils.py#L208)"""
-
-    def __init__(
-        self,
-        sequence: str,
-        tokenizer: PreTrainedTokenizer,
-        initial_decoder_input_length: int,
-        batch_size: int,
-    ) -> None:
-        self.initial_decoder_input_length = initial_decoder_input_length
-        self.done_tracker = [False] * batch_size
-        self.sequence = sequence
-        self.sequence_ids = tokenizer.encode(sequence, add_special_tokens=False)
-        # we look back for 2 more tokens than it takes to encode our stop sequence
-        # because tokenizers suck, and a model might generate `['\n', '\n']` but our `sequence` is `['\n\n']`
-        # and we don't want to mistakenly not stop a generation because our
-        # (string) stop sequence was output in a different tokenization
-
-        # NOTE: there is a minor danger that this will end up looking back 2 tokens into the past, into the inputs to the model,
-        # and stopping generation immediately as a result. With only 2 extra tokens of lookback, this risk is minimized
-        # Additionally, in lookback_ids_batch we should prevent ever looking back into the inputs as described.
-        self.sequence_id_len = len(self.sequence_ids) + 2
-        self.tokenizer = tokenizer
-
-    def __call__(self, input_ids, scores, **kwargs) -> bool:
-        # For efficiency, we compare the last n tokens where n is the number of tokens in the stop_sequence
-        lookback_ids_batch = input_ids[:, self.initial_decoder_input_length :]
-
-        lookback_ids_batch = lookback_ids_batch[:, -self.sequence_id_len :]
-
-        lookback_tokens_batch = self.tokenizer.batch_decode(lookback_ids_batch)
-
-        for i, done in enumerate(self.done_tracker):
-            if not done:
-                self.done_tracker[i] = self.sequence in lookback_tokens_batch[i]
-        return False not in self.done_tracker
-
-
-def stop_sequences_criteria(
-    tokenizer: PreTrainedTokenizer,
-    stop_sequences: List[str],
-    initial_decoder_input_length: int,
-    batch_size: int,
-) -> StoppingCriteriaList:
-    return StoppingCriteriaList(
-        [
-            *[
-                MultiTokenEOSCriteria(
-                    sequence, tokenizer, initial_decoder_input_length, batch_size
-                )
-                for sequence in stop_sequences
-            ],
-        ]
-    )
-
-
 def eval_text_similarity(model, tokenizer, batch, generation_args):
-    """Evaluate text similarity between model-generated outputs and ground truth using ROUGE scores."""
+    """Evaluate text similarity between model-generated outputs and ground truth using ROUGE recall scores."""
 
     def eval_rouge_recall_batch(gen_outputs, ground_truths):
         scorer = rouge_scorer.RougeScorer(["rouge1", "rougeL"], use_stemmer=True)
@@ -208,7 +109,6 @@ def eval_text_similarity(model, tokenizer, batch, generation_args):
             evals.append(
                 {
                     "rouge1_recall": rouge_scores["rouge1"].recall,
-                    "rougeL_f1": rouge_scores["rougeL"].fmeasure,
                     "rougeL_recall": rouge_scores["rougeL"].recall,
                 }
             )
@@ -217,24 +117,11 @@ def eval_text_similarity(model, tokenizer, batch, generation_args):
     batch = {k: v.to(model.device) for k, v in batch.items()}
     input_ids = batch["input_ids"]
     labels = batch["labels"]
-    input_texts = tokenizer.batch_decode(
-        input_ids, skip_special_tokens=True, clean_up_tokenization_spaces=True
-    )
-    tokens = [label[label != IGNORE_INDEX] for label in labels]
-    ground_truths = tokenizer.batch_decode(
-        tokens, skip_special_tokens=True, clean_up_tokenization_spaces=True
-    )
+    input_texts = tokenizer.batch_decode(input_ids, skip_special_tokens=True)
+    tokens = [label[label != -100] for label in labels]
+    ground_truths = tokenizer.batch_decode(tokens, skip_special_tokens=True)
     attention_mask = batch["attention_mask"]
 
-    # convert to a simple dict from DictConfig
-    generation_args = OmegaConf.to_container(generation_args, resolve=True)
-    stopwords = generation_args.pop("stopwords", None)
-    if stopwords is not None:
-        assert isinstance(stopwords, list)
-        sc = stop_sequences_criteria(
-            tokenizer, stopwords, input_ids.shape[1], input_ids.shape[0]
-        )
-        generation_args["stopping_criteria"] = sc
     output = model.generate(
         input_ids,
         attention_mask=attention_mask,
@@ -242,23 +129,8 @@ def eval_text_similarity(model, tokenizer, batch, generation_args):
         pad_token_id=tokenizer.eos_token_id,
     )
     gen_texts = tokenizer.batch_decode(
-        output[:, input_ids.shape[-1] :],
-        skip_special_tokens=True,
-        clean_up_tokenization_spaces=True,
+        output[:, input_ids.shape[-1] :], skip_special_tokens=True
     )
-
-    # cut off at stopwords
-    if stopwords is None:
-        stopwords = []
-    stopwords = [tokenizer.decode([tokenizer.eos_token_id])] + stopwords
-    for i in range(len(gen_texts)):
-        raw_text = gen_texts[i]
-        for word in stopwords:
-            if word and word in raw_text:
-                raw_text = raw_text.split(word)[0]
-        raw_text = raw_text.strip()
-        gen_texts[i] = raw_text
-
     scores = eval_rouge_recall_batch(gen_texts, ground_truths)
     scores = [
         {
