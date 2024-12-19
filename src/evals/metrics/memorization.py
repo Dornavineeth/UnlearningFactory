@@ -3,6 +3,7 @@ import numpy as np
 import scipy as sc
 from torch.utils.data import DataLoader
 
+
 from evals.metrics.utils import (
     aggregate_to_1D,
     evaluate_probability,
@@ -17,8 +18,7 @@ logging.getLogger("absl").setLevel(logging.WARNING)
 
 @unlearning_metric(name="probability")
 def probability(model, **kwargs):
-    # returns the prob and avg_loss in scores
-    # aggregate the prob values
+    """Compute the probabilities by data points and report aggregated average"""
     data = kwargs["data"]
     collator = kwargs["collators"]
     batch_size = kwargs["batch_size"]
@@ -59,9 +59,7 @@ def probability_w_options(model, **kwargs):
 
 @unlearning_metric(name="rouge")
 def rouge(model, **kwargs):
-    """Calculate ROUGE metrics (rouge1_recall, rougeL_recall, input, ground_truth,
-    generation), aggregate the rougeL_recall values, and return the aggregated value
-    along with per-index scores."""
+    """Calculate ROUGE metrics and return the aggregated value along with per-index scores."""
     tokenizer = kwargs["tokenizer"]
     data = kwargs["data"]
     collator = kwargs["collators"]
@@ -77,12 +75,12 @@ def rouge(model, **kwargs):
         fun_args,
         "Calculating text similarity",
     )
-    rougeL_recall_values = np.array(
-        [evals["rougeL_recall"] for evals in scores_by_index.values()]
+    rouge_values = np.array(
+        [evals[kwargs["rouge_type"]] for evals in scores_by_index.values()]
     )
-    rougeL_recall_values = aggregate_to_1D(rougeL_recall_values)
+    rouge_values = aggregate_to_1D(rouge_values)
     return {
-        "agg_value": np.mean(rougeL_recall_values),
+        "agg_value": np.mean(rouge_values),
         "value_by_index": scores_by_index,
     }
 
@@ -127,11 +125,9 @@ def truth_ratio(model, **kwargs):
 
     truth_ratios = wrong_prob / (correct_prob + 1e-10)
     value_by_index = dict(
-        zip(correct_indices, [{"truth_ratio": val} for val in truth_ratios])
+        zip(correct_indices, [{"score": val} for val in truth_ratios])
     )
-    truth_ratio_stats = np.array(
-        [evals["truth_ratio"] for evals in value_by_index.values()]
-    )
+    truth_ratio_stats = np.array([evals["score"] for evals in value_by_index.values()])
     forget_tr_avg = aggregator(truth_ratio_stats)
     return {"agg_value": forget_tr_avg, "value_by_index": value_by_index}
 

@@ -9,6 +9,7 @@ defaults: # include all defined metrics files
     # - forget_Q_PARA_A_PARA_ROUGE
     # - forget_Q_A_PARA_ROUGE
     # - forget_Q_A_PERT_ROUGE
+    - forget_quality
     - forget_Q_A_Prob
     - forget_Q_A_ROUGE
     - forget_Truth_Ratio
@@ -32,3 +33,5 @@ output_dir: ${paths.output_dir} # set to default eval directory
 metrics: {} # lists a mapping from each evaluation metric to its config 
 # populated through the first (@package) line in each metric config
 overwrite: false
+forget_split: forget10
+retain_logs_path: null

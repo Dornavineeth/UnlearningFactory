@@ -1,6 +1,7 @@
 from typing import Dict, Any
 from omegaconf import DictConfig
 from evals.tofu import TOFUEvaluator
+from evals.muse import MUSEEvaluator
 
 EVALUATOR_REGISTRY: Dict[str, Any] = {}
 
@@ -29,3 +30,4 @@ def get_evaluators(eval_cfgs: DictConfig, **kwargs):
 
 # Register Your benchmark evaluators
 _register_evaluator(TOFUEvaluator)
+_register_evaluator(MUSEEvaluator)

@@ -1,7 +1,7 @@
 import torch
 from torch.utils.data import Dataset
 
-from data.utils import load_hf_dataset, package_prompt_response, add_dataset_index
+from data.utils import load_hf_dataset, preprocess_chat_instance, add_dataset_index
 
 
 class QADataset(Dataset):
@@ -12,6 +12,7 @@ class QADataset(Dataset):
         tokenizer,
         question_key="question",
         answer_key="answer",
+        few_shot_dataset_hf_args=None,
         max_length=512,
         predict_with_generate=False,
     ):
@@ -20,6 +21,12 @@ class QADataset(Dataset):
         self.max_length = max_length
         self.data = load_hf_dataset(**hf_args)
         self.data = add_dataset_index(self.data)
+        self.fs_data = None
+        if few_shot_dataset_hf_args is not None:
+            raw_data = load_hf_dataset(**few_shot_dataset_hf_args)
+            self.fs_data = {}
+            self.fs_data[question_key] = raw_data[question_key]
+            self.fs_data[answer_key] = raw_data[answer_key]
         self.template_args = template_args
         self.question_key = question_key
         self.answer_key = answer_key
@@ -29,11 +36,16 @@ class QADataset(Dataset):
         return len(self.data)
 
     def _process_sample(self, question, answer, index=-1):
-        tokenized_data = package_prompt_response(
-            self.template_args,
+        if self.fs_data is None:
+            prompt_msgs, response_msgs = [question], [answer]
+        else:
+            prompt_msgs = self.fs_data[self.question_key] + [question]
+            response_msgs = self.fs_data[self.answer_key] + [answer]
+        tokenized_data = preprocess_chat_instance(
             self.tokenizer,
-            question,
-            answer,
+            self.template_args,
+            prompt_msgs,
+            response_msgs,
             self.max_length,
             self.predict_with_generate,
         )
