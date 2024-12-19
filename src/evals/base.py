@@ -4,6 +4,8 @@ import logging
 from evals.metrics import get_metrics
 
 logger = logging.getLogger("evaluator")
+
+
 class Evaluator:
     def __init__(self, name, eval_cfg, **kwargs):
         self.name = name
@@ -71,6 +73,10 @@ class Evaluator:
         for metric_name, metric_fn in self.metrics.items():
             if not overwrite and metric_name in logs:
                 logger.info(f"Skipping {metric_name}, already evaluated.")
+                if "agg_value" in logs[metric_name]:
+                    logger.info(
+                        f"Result for metric {metric_name}:\t{logs[metric_name]['agg_value']}"
+                    )
                 continue
             _ = logs.pop(metric_name, None)  # overwriting existing evals if present
             kwargs = {
@@ -88,5 +94,8 @@ class Evaluator:
             )
             if "agg_value" in result:
                 logger.info(f"Result for metric {metric_name}:\t{result['agg_value']}")
-            self.save_logs(logs, logs_file_path)
+            try:
+                self.save_logs(logs, logs_file_path)
+            except Exception as e:
+                raise RuntimeError(f"Failed to save logs: {e}")
         return logs

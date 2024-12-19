@@ -9,6 +9,7 @@ hf_home = os.getenv("HF_HOME", default=None)
 
 logger = logging.getLogger(__name__)
 
+
 def get_dtype(model_args):
     with open_dict(model_args):
         torch_dtype = model_args.pop("torch_dtype", None)
@@ -42,9 +43,13 @@ def get_model(model_cfg: DictConfig):
             torch_dtype=torch_dtype, **model_args, cache_dir=hf_home
         )
     except Exception as e:
-        logger.warning(f"Model {model_args.pretrained_model_name_or_path} requested with")
+        logger.warning(
+            f"Model {model_args.pretrained_model_name_or_path} requested with"
+        )
         logger.warning(model_cfg.model_args)
-        raise ValueError(f"Error {e} while fetching model using AutoModelForCausalLM.from_pretrained().")
+        raise ValueError(
+            f"Error {e} while fetching model using AutoModelForCausalLM.from_pretrained()."
+        )
     tokenizer = get_tokenizer(tokenizer_args)
     return model, tokenizer
 

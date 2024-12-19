@@ -170,10 +170,13 @@ tokenizer_args: # AutoTokenizer
   pretrained_model_name_or_path: "meta-llama/Llama-3.1-8B-Instruct"
 
 template_args:
-  apply_chat_template: False
-  user_start_tag: "<|start_header_id|>system<|end_header_id|>\n\nYou are a helpful assistant.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\n"
+  apply_chat_template: True
+  system_prompt: You are a helpful assistant.
+  system_prompt_with_special_tokens: "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful assistant.<|eot_id|>"
+  user_start_tag: "<|start_header_id|>user<|end_header_id|>\n\n"
   user_end_tag: "<|eot_id|>"
-  asst_tag: "<|start_header_id|>assistant<|end_header_id|>\n\n"
+  asst_start_tag: "<|start_header_id|>assistant<|end_header_id|>\n\n"
+  asst_end_tag: "<|eot_id|>"
 ```
 
 - `model_args` include arguments for the [AutoModelForCausalLM](https://huggingface.co/docs/transformers/en/model_doc/auto#transformers.AutoModelForCausalLM).
