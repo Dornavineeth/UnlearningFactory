@@ -1,25 +1,31 @@
-import logging
 import numpy as np
 from scipy.stats import ks_2samp
 from torch.utils.data import DataLoader
 from sklearn.metrics import auc as get_auc, roc_curve as get_roc_curve
 
 from evals.metrics.base import unlearning_metric
-from evals.metrics.utils import (
-    run_batchwise_evals,
-    eval_minKpc_neg_logprob
-)
+from evals.metrics.utils import run_batchwise_evals, eval_minKpc_neg_logprob
+
 
 @unlearning_metric(name="forget_quality")
 def forget_quality(model, **kwargs):
     forget_tr_stats = np.array(
-        [evals["score"] for evals in kwargs['pre_compute']['forget']['value_by_index'].values()]
+        [
+            evals["score"]
+            for evals in kwargs["pre_compute"]["forget"]["value_by_index"].values()
+        ]
     )
-    retain_tr_stats =  np.array(
-        [evals["score"] for evals in kwargs['reference_logs']['retain_model_logs']['retain']['value_by_index'].values()]
+    retain_tr_stats = np.array(
+        [
+            evals["score"]
+            for evals in kwargs["reference_logs"]["retain_model_logs"]["retain"][
+                "value_by_index"
+            ].values()
+        ]
     )
     fq = ks_2samp(forget_tr_stats, retain_tr_stats)
     return {"agg_value": fq.pvalue}
+
 
 @unlearning_metric(name="minKpc_negative_logprob")
 def minKpc_negative_logprob(model, **kwargs):
@@ -66,24 +72,27 @@ def relative_auc(model, **kwargs):
         "auc": auc_score,
     }
     retain_auc_score = kwargs["ref_value"]
-    
+
     reference_logs = kwargs.get("reference_logs", None)
     if reference_logs:
-        retain_scores = reference_logs["retain_model_logs"]["retain"]["value_by_index"].values()
+        retain_scores = reference_logs["retain_model_logs"]["retain"][
+            "value_by_index"
+        ].values()
         retain_scores = [elem["score"] for elem in retain_scores]
-        retain_holdout_scores = reference_logs["retain_model_logs"]["holdout"]["value_by_index"].values()
+        retain_holdout_scores = reference_logs["retain_model_logs"]["holdout"][
+            "value_by_index"
+        ].values()
         retain_holdout_scores = [elem["score"] for elem in retain_holdout_scores]
         scores = np.array(retain_scores + retain_holdout_scores)
         labels = np.array([0] * len(retain_scores) + [1] * len(retain_holdout_scores))
         _, _, retain_auc_score, retain_acc = sweep(scores, labels)
-        output.update({
-            "retain_acc": retain_acc,
-            "retain_auc_score": retain_auc_score
-        })
-    
+        output.update({"retain_acc": retain_acc, "retain_auc_score": retain_auc_score})
+
     output.update(
         {
-            "agg_value": (auc_score-retain_auc_score)/(retain_auc_score)*100 # privleak score in muse
+            "agg_value": (auc_score - retain_auc_score)
+            / (retain_auc_score)
+            * 100  # privleak score in muse
         }
     )
     return output

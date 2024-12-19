@@ -10,6 +10,7 @@ def load_hf_dataset(path, **kwargs):
     dataset = datasets.load_dataset(path, **kwargs)
     return dataset
 
+
 def preprocess_chat_instance(
     tokenizer,
     template_config: Dict[str, Any],
@@ -136,7 +137,7 @@ def preprocess_pretraining_instance(
     predict_with_generate: bool = False,
     insert_space: bool = False,
 ) -> Dict[str, torch.Tensor]:
-    """Preprocesses a pretraining instance for training or generation. 
+    """Preprocesses a pretraining instance for training or generation.
     When in training, both the returned `input_ids` and `labels` are over the entire token sequence. `input_ids` has no padding, `labels` assigns `IGNORE_INDEX` to ignore all tokens that we don't compute loss over (i.e. the the 0th index token, all prefix tokens)
     When in generation, `input_ids` are returned only until the prefix portion. The `labels` returned are the same as during training.
     `attention_mask` is always 1 over the full input token sequence.
@@ -152,14 +153,11 @@ def preprocess_pretraining_instance(
         Dict[str, torch.Tensor]: A dictionary containing 'input_ids', 'labels', and 'attention_mask' tensors for model input.
     """
     full_seq_ids = tokenizer(
-        prefix + (" " if insert_space else "") + text_content,
-        add_special_tokens=True
+        prefix + (" " if insert_space else "") + text_content, add_special_tokens=True
     )["input_ids"]
-    prefix_ids = tokenizer(prefix, add_special_tokens=True)[
-        "input_ids"
-    ]
+    prefix_ids = tokenizer(prefix, add_special_tokens=True)["input_ids"]
     prefix_len = len(prefix_ids)
-    full_seq_ids = full_seq_ids[: prefix_len + max_length] # manual truncation
+    full_seq_ids = full_seq_ids[: prefix_len + max_length]  # manual truncation
 
     # finding last common token between prefix and full seq to decide after which loss is computed through labels
     matched_until_idx = -1

@@ -127,9 +127,7 @@ def truth_ratio(model, **kwargs):
     value_by_index = dict(
         zip(correct_indices, [{"score": val} for val in truth_ratios])
     )
-    truth_ratio_stats = np.array(
-        [evals["score"] for evals in value_by_index.values()]
-    )
+    truth_ratio_stats = np.array([evals["score"] for evals in value_by_index.values()])
     forget_tr_avg = aggregator(truth_ratio_stats)
     return {"agg_value": forget_tr_avg, "value_by_index": value_by_index}
 
@@ -138,4 +136,3 @@ def truth_ratio(model, **kwargs):
 def hm_aggregate(model, **kwargs):
     values = [result["agg_value"] for _, result in kwargs["pre_compute"].items()]
     return {"agg_value": sc.stats.hmean(values)}
-

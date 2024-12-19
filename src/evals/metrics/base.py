@@ -56,7 +56,6 @@ class UnlearningMetric:
                 logs = json.load(f)
         return logs
 
-
     def prepare_kwargs_evaluate_metric(self, model, metric_name, cache={}, **kwargs):
         """Prepare the kwargs required to call the metric_fn defined by user.
         - Loads datasets, collators, results for pre_compute metrics
@@ -68,7 +67,7 @@ class UnlearningMetric:
         if dataset_cfgs is not None:
             data = self.get_datasets(dataset_cfgs=dataset_cfgs, **kwargs)
             kwargs.update({"data": data})
-        
+
         # Load collators
         collator_cfgs = kwargs.pop("collators", None)
         if collator_cfgs is not None:
@@ -99,7 +98,7 @@ class UnlearningMetric:
             pre_metric_results.update({access_name: _results})
         if pre_metric_results:
             kwargs.update({"pre_compute": pre_metric_results})
-        
+
         # Load reference logs
         reference_logs_cfgs = kwargs.pop("reference_logs", {})
         reference_logs = {}
@@ -107,8 +106,10 @@ class UnlearningMetric:
             path = reference_log_cfg.get("path", None)
             if path is None:
                 continue
-            include_cfgs = reference_log_cfg.get("include", None) 
-            assert path is not None, ValueError("path not specified for {reference_log_name} in {metric_name}")
+            include_cfgs = reference_log_cfg.get("include", None)
+            assert path is not None, ValueError(
+                "path not specified for {reference_log_name} in {metric_name}"
+            )
             _logs = self.load_logs_from_file(path)
             reference_logs[reference_log_name] = {}
             for key, include_cfg in include_cfgs.items():
@@ -116,7 +117,9 @@ class UnlearningMetric:
                 _results = _logs.get(key, None)
                 reference_logs[reference_log_name][access_name] = _results
                 if _results is None:
-                    logger.warning(f"{key} not present in the {path}, setting it to None!")
+                    logger.warning(
+                        f"{key} not present in the {path}, setting it to None!"
+                    )
         if reference_logs:
             kwargs.update({"reference_logs": reference_logs})
 
