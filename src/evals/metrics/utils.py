@@ -136,7 +136,7 @@ def eval_minKpc_neg_logprob(model, batch, percentile):
         top_k = max(1, int(percentile / 100 * len(actual_seq_log_probs)))
         mink_mean = -1 * np.mean(sorted_probs[:top_k])
         mink_means.append(mink_mean)
-    return [{"score": neglogprob} for neglogprob in mink_means]
+    return [{"score": float(neglogprob)} for neglogprob in mink_means]
 
 
 class MultiTokenEOSCriteria(StoppingCriteria):

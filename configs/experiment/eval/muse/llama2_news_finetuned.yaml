@@ -1,9 +1,0 @@
-# @package _global_
-
-defaults:
-  - override /model: Llama-2-7b-hf
-  - override /eval: muse
-
-model:
-  model_args:
-    pretrained_model_name_or_path: muse-bench/MUSE-News_target

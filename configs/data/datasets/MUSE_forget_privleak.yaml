@@ -1,9 +1,9 @@
-MUSE_news_holdout_privleak:
+MUSE_forget_privleak:
   handler: PretrainingDataset
   args:
     hf_args:
       path: "muse-bench/MUSE-News"
       name: "privleak"
-      split: "holdout"
+      split: "forget"
     prefix_key: "prompt" # doesn't exist in dataset
     text_key: "text"

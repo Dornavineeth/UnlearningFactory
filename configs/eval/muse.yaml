@@ -13,3 +13,5 @@ device: cuda
 output_dir: ${paths.output_dir} # set to default eval directory
 metrics: {}
 overwrite: false
+data_split: News
+retain_logs_path: null
