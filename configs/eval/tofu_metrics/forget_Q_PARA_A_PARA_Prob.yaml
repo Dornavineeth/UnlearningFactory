@@ -9,8 +9,6 @@ handler: probability
 datasets:
   TOFU_QA_forget_para:
     args:
-      hf_args:
-        name: ${eval.tofu.forget_split}_perturbed
       question_key: paraphrased_question
 
 
