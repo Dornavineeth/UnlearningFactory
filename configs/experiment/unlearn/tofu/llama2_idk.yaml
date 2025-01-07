@@ -13,10 +13,12 @@ model:
 
 forget_split: forget10
 retain_split: retain90
+retain_logs_path: null
 
 eval:
   tofu:
     forget_split: ${forget_split}
+    retain_logs_path: ${retain_logs_path}
 
 data:
   anchor: retain
@@ -37,7 +39,7 @@ trainer:
     learning_rate: 5e-5
     weight_decay: 0.01
     num_train_epochs: 10
-    save_strategy: steps
-    save_steps: 0.5
+    # save_strategy: steps
+    # save_steps: 0.5
 
 override task_name: llama2_unlearn

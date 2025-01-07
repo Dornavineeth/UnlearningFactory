@@ -40,7 +40,7 @@ trainer:
     learning_rate: 5e-5
     weight_decay: 0.01
     num_train_epochs: 10
-    save_strategy: steps
-    save_steps: 0.5
+    # save_strategy: steps
+    # save_steps: 0.5
 
 override task_name: llama2_unlearn

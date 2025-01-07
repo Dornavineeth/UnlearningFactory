@@ -1,4 +1,5 @@
 defaults:
+  - _self_
   - model: Llama-3.2-3B-Instruct
   - trainer: finetune
   - data: finetune
@@ -7,7 +8,6 @@ defaults:
   - hydra: default
   - paths: default
   - experiment: null
-  - _self_
 
 mode: train
 task_name: llama-3.2-8B_tofu_full

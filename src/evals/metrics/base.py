@@ -54,6 +54,8 @@ class UnlearningMetric:
             logger.info(f"Loading evaluations from {file}")
             with open(file, "r") as f:
                 logs = json.load(f)
+        else:
+            raise ValueError(f"{file} doesn't exist!")
         return logs
 
     def prepare_kwargs_evaluate_metric(self, model, metric_name, cache={}, **kwargs):
