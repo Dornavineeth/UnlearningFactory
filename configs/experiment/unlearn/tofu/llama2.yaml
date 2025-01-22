@@ -11,6 +11,8 @@ defaults:
 model:
   model_args:
     pretrained_model_name_or_path: locuslab/tofu_ft_llama2-7b
+  tokenizer_args:
+    pretrained_model_name_or_path: locuslab/tofu_ft_llama2-7b
 
 forget_split: forget10
 retain_split: retain90
@@ -22,7 +24,7 @@ eval:
     retain_logs_path: ${retain_logs_path}
     
 data:
-  anchor: retain
+  anchor: forget
   forget:
     TOFU_QA_forget: 
       args:
@@ -32,7 +34,7 @@ data:
     TOFU_QA_retain:
       args:
         hf_args:
-          name: ${forget_split}
+          name: ${retain_split}
 
 trainer:
   args:
