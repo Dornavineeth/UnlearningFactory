@@ -24,7 +24,7 @@ class FinetuneTrainer(Trainer):
         metric_key_prefix: str = "eval",
     ) -> Dict[str, float]:
         if eval_dataset is None:
-            return super()._evaluate(trial=None, ignore_keys_for_eval=None, skip_scheduler=False)
+            return self._evaluate(trial=None, ignore_keys_for_eval=None, skip_scheduler=False)
         else:
             super().evaluate(eval_dataset, ignore_keys, metric_key_prefix)
 
