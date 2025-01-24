@@ -25,7 +25,6 @@ class FinetuneTrainer(Trainer):
         metric_key_prefix: str = "eval",
         trial: Dict[str, Any] = None,
     ) -> Dict[str, float]:
-        
         if eval_dataset is None:
             # Run a custom evaluator and save results
             if self.evaluator:
@@ -51,6 +50,6 @@ class FinetuneTrainer(Trainer):
                             "Custom evaluator can be run with this Trainer only on a single GPU"
                         )
             return eval_metrics
-        
+
         # Run the default HF Trainer evaluate method when eval dataset is provided
         return super().evaluate(eval_dataset, ignore_keys, metric_key_prefix)

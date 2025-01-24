@@ -10,7 +10,7 @@ class DPO(GradDiff):
         if hasattr(self, "target_model"):
             self.target_model = copy.deepcopy(self.model).to("cuda")
             self.target_model.eval()
-    
+
     def compute_loss(self, model, inputs, return_outputs=False):
         forget_inputs = inputs["forget"]["original"]
         alternate_inputs = inputs["forget"]["alternate"]
