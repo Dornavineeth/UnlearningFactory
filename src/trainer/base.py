@@ -23,7 +23,7 @@ class FinetuneTrainer(Trainer):
         eval_dataset: Optional[Union[Dataset, Dict[str, Dataset]]] = None,
         ignore_keys: Optional[List[str]] = None,
         metric_key_prefix: str = "eval",
-        trial: Union["optuna.Trial", Dict[str, Any]] = None,
+        trial: Dict[str, Any] = None,
     ) -> Dict[str, float]:
         
         if eval_dataset is None:
