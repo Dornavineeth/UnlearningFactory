@@ -70,6 +70,7 @@ def run_batchwise_evals(model, dataloader, batch_eval_fn, batch_eval_fn_args, ev
     # evals looks like {iidx0: {idx453: {prob: 0.1, loss: 1}},
     #                   iidx1: {idx453: {prob: 0.2, loss: 2}}}
     if len(evals) == 1:  # normal single answer dataset, no need for list
+        
         evals = next(iter(evals.values()))
     else:
         # for each index return a dict with all intra_item_idx values in list
