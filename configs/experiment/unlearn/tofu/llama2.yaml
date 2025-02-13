@@ -39,7 +39,7 @@ data:
 trainer:
   args:
     warmup_epochs: 1.0 # custom parameter
-    learning_rate: 5e-5
+    learning_rate: 2e-5
     weight_decay: 0.01
     num_train_epochs: 10
     # save_strategy: steps
