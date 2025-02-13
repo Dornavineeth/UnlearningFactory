@@ -29,9 +29,9 @@ def forget_quality(model, **kwargs):
         pvalue = fq.pvalue
     else:
         logger.warning(
-            "retain_model_logs provided in reference_logs, setting forget_quality to 0."
+            "retain_model_logs not provided in reference_logs, setting forget_quality to None"
         )
-        pvalue = 1.0
+        pvalue = None
     return {"agg_value": pvalue}
 
 
