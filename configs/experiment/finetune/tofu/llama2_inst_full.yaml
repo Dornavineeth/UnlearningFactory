@@ -6,6 +6,10 @@ defaults:
   - override /data/datasets@data.train: TOFU_QA_full
   - override /data/datasets@data.eval: TOFU_QA_forget_para
 
+model:
+  template_args:
+    asst_start_tag: "" # To be consistent with TOFU models
+
 mode: finetune
 trainer:
   args:

@@ -13,6 +13,8 @@ model:
     pretrained_model_name_or_path: locuslab/tofu_ft_llama2-7b
   tokenizer_args:
     pretrained_model_name_or_path: locuslab/tofu_ft_llama2-7b
+  template_args:
+    asst_start_tag: "" # To be consistent with TOFU models
 
 forget_split: forget10
 retain_split: retain90
