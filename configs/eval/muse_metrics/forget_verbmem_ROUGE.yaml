@@ -5,7 +5,7 @@ defaults:
   - ../../generation@generation_args: default
 handler: rouge
 rouge_type: rougeL_f1
-batch_size: 16
+batch_size: 8
 datasets:
   MUSE_forget_verbmem:
     args:

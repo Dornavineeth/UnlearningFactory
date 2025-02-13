@@ -16,6 +16,7 @@ args:
   weight_decay: 0.00
   do_train: True
   do_eval: True
+  eval_on_start: True
   eval_strategy: epoch
   num_train_epochs: 10
   seed: 0

@@ -65,7 +65,9 @@ def preprocess_chat_instance(
         )
     else:
         wrapped_prompt = ""
-        system_prompt_with_special_tokens = template_config.get("system_prompt_with_special_tokens", None)
+        system_prompt_with_special_tokens = template_config.get(
+            "system_prompt_with_special_tokens", None
+        )
         if system_prompt_with_special_tokens:
             wrapped_prompt += system_prompt_with_special_tokens
         # add in-context examples

@@ -28,7 +28,9 @@ def forget_quality(model, **kwargs):
         fq = ks_2samp(forget_tr_stats, retain_tr_stats)
         pvalue = fq.pvalue
     else:
-        logger.warning("retain_model_logs provided in reference_logs, setting forget_quality to 0.")
+        logger.warning(
+            "retain_model_logs provided in reference_logs, setting forget_quality to 0."
+        )
         pvalue = 1.0
     return {"agg_value": pvalue}
 

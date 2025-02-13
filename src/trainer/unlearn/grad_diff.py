@@ -12,6 +12,7 @@ class GradDiff(UnlearnTrainer):
         self.target_model = None
         if retain_loss_type == "KL":
             self.target_model = copy.deepcopy(self.model).to("cuda")
+            self.target_model.eval()
 
     def compute_retain_loss(self, model, retain_inputs):
         retain_outputs = model(**retain_inputs)
