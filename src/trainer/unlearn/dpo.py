@@ -18,8 +18,8 @@ class DPO(GradDiff):
         forget_loss, forget_outputs = compute_dpo_loss(
             model=model,
             ref_model=self.target_model,
-            win_inputs=forget_inputs,
-            lose_inputs=alternate_inputs,
+            win_inputs=alternate_inputs,
+            lose_inputs=forget_inputs,
             beta=self.beta,
         )
 
