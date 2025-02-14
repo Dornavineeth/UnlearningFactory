@@ -1,7 +1,7 @@
 # @package _global_
 
 defaults:
-  - override /model: Llama-2-7b-chat-hf
+  - override /model: Llama-2-7b-chat-hf-tofu
   - override /trainer: GradDiff
   - override /data: unlearn
   - override /data/datasets@data.forget: TOFU_QA_forget_idk
