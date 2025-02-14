@@ -65,7 +65,9 @@ def preprocess_chat_instance(
         )
     else:
         wrapped_prompt = ""
-        system_prompt_with_special_tokens = template_config.get("system_prompt_with_special_tokens", None)
+        system_prompt_with_special_tokens = template_config.get(
+            "system_prompt_with_special_tokens", None
+        )
         if system_prompt_with_special_tokens:
             wrapped_prompt += system_prompt_with_special_tokens
         # add in-context examples
@@ -106,17 +108,7 @@ def preprocess_chat_instance(
     if chat_ids[-1] != tokenizer.eos_token_id:
         chat_ids += [tokenizer.eos_token_id]
 
-    # finding last common token between prompt and chat to decide after which loss is computed through labels
-    prompt_len = len(prompt_ids)
-    matched_until_idx = -1
-    for idx in range(prompt_len - 1, -1, -1):
-        if chat_ids[idx] == prompt_ids[idx]:
-            matched_until_idx = idx
-            break
-    len_matched = matched_until_idx + 1
-    assert len_matched >= prompt_len - 2, ValueError(
-        f"Tokenization mismatch for the last {prompt_len-len_matched} tokens. Tokenized prompt must be a prefix of the full tokenized chat until at least len-2 tokens."
-    )
+    len_matched = len(prompt_ids)
 
     labels = [IGNORE_INDEX] * len_matched + chat_ids[len_matched:]
     item = {}
@@ -161,16 +153,7 @@ def preprocess_pretraining_instance(
     prefix_len = len(prefix_ids)
     full_seq_ids = full_seq_ids[: prefix_len + max_length]  # manual truncation
 
-    # finding last common token between prefix and full seq to decide after which loss is computed through labels
-    matched_until_idx = -1
-    for idx in range(prefix_len - 1, -1, -1):
-        if full_seq_ids[idx] == prefix_ids[idx]:
-            matched_until_idx = idx
-            break
-    len_matched = matched_until_idx + 1
-    assert len_matched >= prefix_len - 2, ValueError(
-        f"Tokenization mismatch for the last {prefix_len-len_matched} tokens.  Tokenized prefix must be a prefix of the full tokenized prefix with its text_content until at least len-2 tokens."
-    )
+    len_matched = prefix_len
     if len_matched == 0:  # never give loss on index 0, when prefix is empty
         len_matched = 1
     labels = [IGNORE_INDEX] * len_matched + full_seq_ids[len_matched:]

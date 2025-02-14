@@ -8,7 +8,7 @@ defaults:
   - override /data/datasets@data.retain: TOFU_QA_retain
 
 data:
-  anchor: retain
+  anchor: forget
 
 trainer:
   args:

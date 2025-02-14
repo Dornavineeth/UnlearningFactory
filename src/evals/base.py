@@ -12,6 +12,7 @@ class Evaluator:
         self.eval_cfg = eval_cfg
         self.metrics_cfg = self.eval_cfg.metrics
         self.metrics = self.load_metrics(self.metrics_cfg)
+        logger.info(f"Output directory {self.eval_cfg.output_dir}")
 
     def get_logs_file_path(self, output_dir):
         """Returns the path to json file to store results"""

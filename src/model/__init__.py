@@ -72,11 +72,11 @@ def get_tokenizer(tokenizer_cfg: DictConfig):
         tokenizer = AutoTokenizer.from_pretrained(**tokenizer_cfg, cache_dir=hf_home)
     except Exception as e:
         error_message = (
-            f"{'--'*40}\n"
+            f"{'--' * 40}\n"
             f"Error {e} fetching tokenizer using AutoTokenizer.\n"
             f"Tokenizer requested from path: {tokenizer_cfg.get('pretrained_model_name_or_path', None)}\n"
             f"Full tokenizer config: {tokenizer_cfg}\n"
-            f"{'--'*40}"
+            f"{'--' * 40}"
         )
         raise RuntimeError(error_message)
 

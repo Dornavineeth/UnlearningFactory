@@ -1,13 +1,16 @@
 # @package _global_
 
 defaults:
-  - override /model: Llama-2-7b-chat-hf-tofu
+  - override /model: Llama-3.2-3B-Instruct
   - override /trainer: GradAscent
   - override /data: unlearn
   - override /data/datasets@data.forget: TOFU_QA_forget
   - override /data/datasets@data.retain: TOFU_QA_retain
   - override /eval: tofu
 
+model:
+  model_args:
+    pretrained_model_name_or_path: ???
 
 forget_split: forget10
 retain_split: retain90
@@ -34,7 +37,7 @@ data:
 trainer:
   args:
     warmup_epochs: 1.0 # custom parameter
-    learning_rate: 2e-5
+    learning_rate: 5e-5
     weight_decay: 0.01
     num_train_epochs: 10
     # save_strategy: steps

@@ -10,6 +10,7 @@ logs/
 hf_cache/
 cache*/
 saves*/
+notebooks/
 output*/
 wandb/
 data/

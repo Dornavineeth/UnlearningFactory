@@ -8,6 +8,7 @@ from trainer.unlearn.grad_ascent import GradAscent
 from trainer.unlearn.grad_diff import GradDiff
 from trainer.unlearn.npo import NPO
 from trainer.unlearn.dpo import DPO
+from trainer.unlearn.simnpo import SimNPO
 
 TRAINER_REGISTRY: Dict[str, Any] = {}
 
@@ -77,3 +78,4 @@ _register_trainer(GradAscent)
 _register_trainer(GradDiff)
 _register_trainer(NPO)
 _register_trainer(DPO)
+_register_trainer(SimNPO)

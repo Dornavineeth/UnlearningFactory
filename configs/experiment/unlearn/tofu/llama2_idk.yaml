@@ -1,7 +1,7 @@
 # @package _global_
 
 defaults:
-  - override /model: Llama-2-7b-chat-hf
+  - override /model: Llama-2-7b-chat-hf-tofu
   - override /trainer: GradDiff
   - override /data: unlearn
   - override /data/datasets@data.forget: TOFU_QA_forget_idk
@@ -10,16 +10,22 @@ defaults:
 model:
   model_args:
     pretrained_model_name_or_path: locuslab/tofu_ft_llama2-7b
+  tokenizer_args:
+    pretrained_model_name_or_path: locuslab/tofu_ft_llama2-7b
+  template_args:
+    asst_start_tag: "" # To be consistent with TOFU models
 
 forget_split: forget10
 retain_split: retain90
+retain_logs_path: null
 
 eval:
   tofu:
     forget_split: ${forget_split}
+    retain_logs_path: ${retain_logs_path}
 
 data:
-  anchor: retain
+  anchor: forget
   forget:
     TOFU_QA_forget_idk: 
       args:
@@ -29,7 +35,7 @@ data:
     TOFU_QA_retain:
       args:
         hf_args:
-          name: ${forget_split}
+          name: ${retain_split}
 
 trainer:
   args:
@@ -37,7 +43,7 @@ trainer:
     learning_rate: 5e-5
     weight_decay: 0.01
     num_train_epochs: 10
-    save_strategy: steps
-    save_steps: 0.5
+    # save_strategy: steps
+    # save_steps: 0.5
 
 override task_name: llama2_unlearn

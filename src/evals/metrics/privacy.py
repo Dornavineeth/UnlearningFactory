@@ -3,7 +3,7 @@ from scipy.stats import ks_2samp
 from torch.utils.data import DataLoader
 from sklearn.metrics import auc as get_auc, roc_curve as get_roc_curve
 
-from evals.metrics.base import unlearning_metric
+from evals.metrics.base import unlearning_metric, logger
 from evals.metrics.utils import run_batchwise_evals, eval_minKpc_neg_logprob
 
 
@@ -15,16 +15,24 @@ def forget_quality(model, **kwargs):
             for evals in kwargs["pre_compute"]["forget"]["value_by_index"].values()
         ]
     )
-    retain_tr_stats = np.array(
-        [
-            evals["score"]
-            for evals in kwargs["reference_logs"]["retain_model_logs"]["retain"][
-                "value_by_index"
-            ].values()
-        ]
-    )
-    fq = ks_2samp(forget_tr_stats, retain_tr_stats)
-    return {"agg_value": fq.pvalue}
+    reference_logs = kwargs.get("reference_logs", None)
+    if reference_logs:
+        retain_tr_stats = np.array(
+            [
+                evals["score"]
+                for evals in kwargs["reference_logs"]["retain_model_logs"]["retain"][
+                    "value_by_index"
+                ].values()
+            ]
+        )
+        fq = ks_2samp(forget_tr_stats, retain_tr_stats)
+        pvalue = fq.pvalue
+    else:
+        logger.warning(
+            "retain_model_logs not provided in reference_logs, setting forget_quality to None"
+        )
+        pvalue = None
+    return {"agg_value": pvalue}
 
 
 @unlearning_metric(name="minKpc_negative_logprob")

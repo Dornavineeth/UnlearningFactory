@@ -1,26 +1,23 @@
-import copy
-from trainer.utils import compute_dpo_loss
+import torch.nn.functional as F
+
+from trainer.utils import compute_batch_nll
 from trainer.unlearn.grad_diff import GradDiff
 
 
-class NPO(GradDiff):
-    def __init__(self, beta=1.0, *args, **kwargs):
+class SimNPO(GradDiff):
+    def __init__(self, delta=0.0, beta=1.0, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.delta = delta
         self.beta = beta
-        if hasattr(self, "target_model"):
-            self.target_model = copy.deepcopy(self.model).to("cuda")
-            self.target_model.eval()
 
     def compute_loss(self, model, inputs, return_outputs=False):
         forget_inputs = inputs["forget"]
 
-        forget_loss, forget_outputs = compute_dpo_loss(
-            model=model,
-            ref_model=self.target_model,
-            win_inputs=None,
-            lose_inputs=forget_inputs,
-            beta=self.beta,
-        )
+        forget_labels = forget_inputs["labels"]
+        loss_mask = forget_labels != -100
+        forget_loss, forget_outputs = compute_batch_nll(model, forget_inputs)
+        forget_loss = forget_loss / loss_mask.sum(-1) - self.delta
+        forget_loss = -F.logsigmoid(self.beta * forget_loss).mean() * 2 / self.beta
 
         retain_inputs = inputs["retain"]
         retain_inputs = {

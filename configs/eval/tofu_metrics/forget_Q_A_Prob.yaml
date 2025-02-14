@@ -5,7 +5,7 @@ defaults:
   # ^ get default dataset and generation config information
 
 handler: probability
-batch_size: 128
+batch_size: 32
 
 datasets:
   TOFU_QA_forget:

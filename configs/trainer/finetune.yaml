@@ -13,9 +13,10 @@ args:
   optim: paged_adamw_32bit
   save_strategy: 'no'
   save_only_model: True
-  weight_decay: 0.01
+  weight_decay: 0.00
   do_train: True
   do_eval: True
+  eval_on_start: True
   eval_strategy: epoch
   num_train_epochs: 10
   seed: 0

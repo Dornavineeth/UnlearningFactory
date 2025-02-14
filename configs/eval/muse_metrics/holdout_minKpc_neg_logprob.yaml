@@ -3,7 +3,7 @@ defaults:
   - ../../data/datasets@datasets: MUSE_holdout_privleak
   - ../../collator@collators: DataCollatorForSupervisedDatasetwithIndex
 handler: minKpc_negative_logprob
-batch_size: 16
+batch_size: 8
 percentile_K: 40
 
 datasets:

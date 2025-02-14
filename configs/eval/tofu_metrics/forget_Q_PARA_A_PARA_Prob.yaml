@@ -14,4 +14,4 @@ datasets:
       question_key: paraphrased_question
 
 
-batch_size: 128
+batch_size: 32
