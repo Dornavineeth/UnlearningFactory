@@ -5,5 +5,5 @@ MUSE_retain_privleak:
       path: "muse-bench/MUSE-News"
       name: "privleak"
       split: "retain"
-    prefix_key: "prompt" # doesn't exist in dataset
     text_key: "text"
+    max_length: 2048

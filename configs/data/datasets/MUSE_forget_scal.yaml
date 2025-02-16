@@ -6,5 +6,4 @@ MUSE_forget_scal:
       name: "scal"
       split: "forget_4"
     text_key: "text"
-    max_length: 128
-    insert_space: True
+    max_length: 2048

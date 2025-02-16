@@ -59,7 +59,7 @@ class CompletionDataset(Dataset):
         return item
 
 
-class PretrainingDataset(CompletionDataset):
+class PretrainingDataset(Dataset):
     def __init__(
         self, hf_args, template_args, tokenizer, text_key="text", max_length=2048
     ):
@@ -84,8 +84,9 @@ class PretrainingDataset(CompletionDataset):
         return chunks
 
     def __len__(self):
-        return len(self.data)
+        return len(self.chunks)
 
     def __getitem__(self, idx):
-        item = self._process_sample("", self.chunks[idx])
-        return item
+        return preprocess_pretraining_instance(
+            self.tokenizer, "", self.chunks[idx], self.max_length
+        )

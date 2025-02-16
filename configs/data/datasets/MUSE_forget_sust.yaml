@@ -6,5 +6,4 @@ MUSE_forget_sust:
       name: "sust"
       split: "forget_1"
     text_key: "text"
-    max_length: 128
-    insert_space: True
+    max_length: 2048
