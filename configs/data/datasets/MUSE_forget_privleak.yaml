@@ -1,5 +1,5 @@
 MUSE_forget_privleak:
-  handler: PretrainingDataset
+  handler: CompletionDataset
   args:
     hf_args:
       path: "muse-bench/MUSE-News"
@@ -7,3 +7,4 @@ MUSE_forget_privleak:
       split: "forget"
     prefix_key: "prompt" # doesn't exist in dataset
     text_key: "text"
+    max_length: 2048

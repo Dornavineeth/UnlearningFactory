@@ -9,7 +9,7 @@ from data.collators import (
     DataCollatorForSupervisedDataset,
 )
 from data.unlearn import ForgetRetainDataset
-from data.pretraining import PretrainingDataset
+from data.pretraining import PretrainingDataset, CompletionDataset
 
 DATASET_REGISTRY: Dict[str, Any] = {}
 COLLATOR_REGISTRY: Dict[str, Any] = {}
@@ -98,6 +98,7 @@ def get_collators(collator_cfgs, **kwargs):
 _register_data(QADataset)
 _register_data(QAwithIdkDataset)
 _register_data(PretrainingDataset)
+_register_data(CompletionDataset)
 
 # Register composite datasets used in unlearning
 # groups: unlearn
