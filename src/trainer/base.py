@@ -25,31 +25,33 @@ class FinetuneTrainer(Trainer):
         metric_key_prefix: str = "eval",
         trial: Dict[str, Any] = None,
     ) -> Dict[str, float]:
-        if eval_dataset is None:
-            # Run a custom evaluator and save results
-            if self.evaluator:
-                if self.accelerator.is_local_main_process:
-                    if self.accelerator.num_processes == 1:
-                        run_dir = self._get_output_dir(trial=trial)
-                        checkpoint_folder = (
-                            f"{PREFIX_CHECKPOINT_DIR}-{self.state.global_step}"
-                        )
-                        output_dir = os.path.join(run_dir, checkpoint_folder, "evals")
-                        os.makedirs(output_dir, exist_ok=True)
-                        eval_args = {
-                            "output_dir": output_dir,
-                            "template_args": self.template_args,
-                            "model": self.model,
-                            "tokenizer": self.tokenizer,
-                        }
-                        eval_metrics = self.evaluator.evaluate(**eval_args)
-                        eval_metrics = self.evaluator.summarize(eval_metrics)
-                        self.log(eval_metrics)
-                    else:
-                        logger.warning(
-                            "Custom evaluator can be run with this Trainer only on a single GPU"
-                        )
-            return eval_metrics
+        # Run a custom evaluator and save results
+        if self.evaluator:
+            if self.accelerator.is_local_main_process:
+                eval_metrics = {}
+                if self.accelerator.num_processes == 1:
+                    run_dir = self._get_output_dir(trial=trial)
+                    checkpoint_folder = (
+                        f"{PREFIX_CHECKPOINT_DIR}-{self.state.global_step}"
+                    )
+                    output_dir = os.path.join(run_dir, checkpoint_folder, "evals")
+                    os.makedirs(output_dir, exist_ok=True)
+                    eval_args = {
+                        "output_dir": output_dir,
+                        "template_args": self.template_args,
+                        "model": self.model,
+                        "tokenizer": self.tokenizer,
+                    }
+                    eval_metrics = self.evaluator.evaluate(**eval_args)
+                    eval_metrics = self.evaluator.summarize(eval_metrics)
+                    self.log(eval_metrics)
+                else:
+                    logger.warning(
+                        "Custom evaluator can be run with this Trainer only on a single GPU"
+                    )
+                return eval_metrics
 
+        if eval_dataset is None:
+            return {}
         # Run the default HF Trainer evaluate method when eval dataset is provided
         return super().evaluate(eval_dataset, ignore_keys, metric_key_prefix)
