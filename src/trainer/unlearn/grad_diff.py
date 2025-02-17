@@ -9,10 +9,18 @@ class GradDiff(UnlearnTrainer):
         self.gamma = gamma
         self.alpha = alpha
         self.retain_loss_type = retain_loss_type
-        self.target_model = None
+        self.ref_model = None
         if retain_loss_type == "KL":
-            self.target_model = copy.deepcopy(self.model).to("cuda")
-            self.target_model.eval()
+            self.ref_model = self._prepare_ref_model(self.model)
+
+    def _prepare_ref_model(self, model):
+        ref_model = copy.deepcopy(model).to("cuda")
+        ref_model.eval()
+        if self.is_deepspeed_enabled:
+            ref_model = self._prepare_deepspeed(ref_model)
+        else:
+            ref_model = self.accelerator.prepare_model(ref_model, evaluation_mode=True)
+        return ref_model
 
     def compute_retain_loss(self, model, retain_inputs):
         retain_outputs = model(**retain_inputs)
@@ -21,7 +29,7 @@ class GradDiff(UnlearnTrainer):
             retain_loss += retain_outputs.loss
         elif self.retain_loss_type == "KL":
             kl_loss, retain_outputs = compute_kl_divergence(
-                self.model, self.target_model, retain_inputs
+                self.model, self.ref_model, retain_inputs
             )
             retain_loss += kl_loss
         else:
