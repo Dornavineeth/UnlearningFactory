@@ -37,8 +37,6 @@ class Evaluator:
 
     def prepare_model(self, model):
         """Prepare model for evaluation"""
-        self.device = self.eval_cfg.device
-        model.to(self.device)
         model.eval()
         return model
 

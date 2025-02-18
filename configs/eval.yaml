@@ -8,5 +8,9 @@ defaults:
   - hydra: eval
   - experiment: null
 
+model:
+  model_args:
+    device_map: auto
+
 mode: eval
 task_name: eval
