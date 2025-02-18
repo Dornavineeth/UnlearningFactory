@@ -28,7 +28,6 @@ defaults: # include all defined metrics files
     # - full_BIO_ROUGE
 
 handler: TOFUEvaluator
-device: cuda
 output_dir: ${paths.output_dir} # set to default eval directory
 metrics: {} # lists a mapping from each evaluation metric to its config 
 # populated through the first (@package) line in each metric config

@@ -9,7 +9,6 @@ defaults:
     - privleak
 
 handler: MUSEEvaluator
-device: cuda
 output_dir: ${paths.output_dir} # set to default eval directory
 metrics: {}
 overwrite: false
