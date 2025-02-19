@@ -13,7 +13,7 @@
 <!-- Conference -->
    
 </div>
- 
+
 ## Overview
 A framework unifying LLM unlearning benchmarks.
 
@@ -37,31 +37,39 @@ We provide efficient and streamlined implementations of the TOFU, MUSE unlearnin
 <!-- (can we mention hp tuning?).   -->
 - **Efficient Evaluation**: Supports batched evaluation and metric aggregation for streamlined tracking.  
 
+
+## Table of Contents
+- [Quickstart](#quickstart)
+  - [Environment Setup](#environment-setup)
+  - [Running Baseline Experiments](#running-baseline-experiments)
+  - [Running an Experiment](#running-an-experiment)
+  - [Run Evaluation](#run-evaluation)
+  - [Run Finetuning](#run-finetuning)
+- [How to Add New Components](#how-to-add-new-components)
+- [Acknowledgement](#acknowledgement)
+
+
 ## Quickstart
 
 We provide detailed scripts to run multiple baselines for unlearning and evaluation in the [`scripts`](/scripts/) directory.
 
-Environment setup
+### Environment Setup
 
 ```bash
-pip install -r requirements.txt
-
 conda create -n unlearning python=3.11
 conda activate unlearning
 pip install -r requirements.txt
 pip install flash-attn==2.6.3 --no-build-isolation
 ```
 
-
-Running standard baseline experiments on TOFU and MUSE
-
+### Running Baseline Experiments
+The below scripts contain the standard baseline unlearning experiments on the TOFU and MUSE, evaluated in the corresponding benchmarks.
 ```bash
 bash scripts/tofu_unlearn.sh
 bash scripts/muse_unlearn.sh
 ```
-</details>
 
-### Running an experiment
+### Running an Experiment
 
 **Note:** We defined some default experimental configs in the [`configs/experiment`](configs/experiment) directory and used them below.
 
@@ -74,27 +82,35 @@ python src/train.py --config-name=unlearn.yaml experiment=unlearn/muse/llama2 \
 ```
 - `experiment`: path to the Hydra config file [`configs/experiment/unlearn/muse/llama2.yaml`](configs/experiment/unlearn/muse/llama2.yaml) with default experimental settings for Llama2 MUSE unlearning, which are used to populate the Hydra config for this experimental run. These can be overriden (see next).
 - `data_split`: overrides the dataset split to use the MUSE News dataset. Check the [experiment config](configs/experiment/unlearn/muse/llama2.yaml) to see how this argument is used.
-- `trainer`: overrides the unlearning algorithm to use the HuggingFace Trainer from [`src/trainer/unlearn/grad_ascent.py`](src/trainer/unlearn/grad_ascent.py). `trainer.args.num_train_epochs=10` overrides specific training arguments.
+- `trainer`: overrides the unlearning algorithm to use the Trainer defined in [`src/trainer/unlearn/grad_ascent.py`](src/trainer/unlearn/grad_ascent.py). `trainer.args.num_train_epochs=10` overrides a specific training argument.
 
-2. **Run evaluation**: A example command for launching a TOFU evaluation process on a saved model checkpoint.
+More documentation on unlearning algorithms: [`docs/unlearning.md`](docs/unlearning.md).
+
+### Run Evaluation
+
+An example command for launching a TOFU evaluation process:
 
 ```bash
 python src/eval.py --config-name=eval.yaml experiment=eval/tofu/llama2 \
   model.model_args.pretrained_model_name_or_path=<LOCAL_MODEL_PATH>
 ```
-- `experiment`: [`configs/experiment/eval/tofu/llama2.yaml`](configs/experiment/eval/tofu/llama2.yaml) is the experiment config.
-- `model.model_args.pretrained_model_name_or_path`: overrides the default experiment config to evaluate a model from a specific local path.
 
-3. **Run finetuning**
+- `experiment`: [`configs/experiment/eval/tofu/llama2.yaml`](configs/experiment/eval/tofu/llama2.yaml) contains the experiment configuration.
+- `model.model_args.pretrained_model_name_or_path`: overrides the default experiment config to evaluate model stored in a specific path.
 
-We provide for simple LLM finetuning on datasets, which can be used to prepare models for a benchmark before unlearning. For example, to train a model on the TOFU dataset:
+More documentation on evaluations: [`docs/evaluation.md`](docs/evaluation.md).
+
+### Run Finetuning
+
+To perform simple training of a model on the TOFU dataset:
+
 ```bash
 python src/train.py --config-name=finetune.yaml experiment=finetune/tofu/llama2_inst_full
 ```
 
-## Adding new components
+## How to Add New Components
 
-Adding a new component, such as a trainer (for finetuning or unlearning), evaluation metric, benchmark or dataset requires adding a new class, registering it to a name and creating a config with the name. This procedure is documented in the links below.
+Adding a new component (trainer, evaluation metric, benchmark, model, dataset) requires defining a new class, registering it, and creating a config. This procedure is documented below.
 
 | Tasks | Link |
 |-----------|------------------------------------------------|
@@ -102,18 +118,18 @@ Adding a new component, such as a trainer (for finetuning or unlearning), evalua
 | Adding unlearning methods | [`docs/unlearning.md`](docs/unlearning.md) |
 | Adding unlearning evaluations | [`docs/evaluation.md`](docs/evaluation.md) |
 
-
-### Acknowledgement
-This repo is inspired from [LLaMA-Factory](https://github.com/hiyouga/LLaMA-Factory) which unifies LLM finetuning. We also acknowledge the [TOFU](https://github.com/locuslab/tofu) and [MUSE](https://github.com/jaechan-repo/muse_bench) benchmarks, which served as the foundation for our re-implementation.
+## Acknowledgement
+This repo is inspired from [LLaMA-Factory](https://github.com/hiyouga/LLaMA-Factory). We acknowledge the [TOFU](https://github.com/locuslab/tofu) and [MUSE](https://github.com/jaechan-repo/muse_bench) benchmarks, which served as the foundation for our re-implementation.
 
 <!-- ##
-## 
-### Citation   
-```
+ 
+## Citation   
+```bash
 @article{YourName,
   title={Your Title},
   author={Your team},
   journal={Location},
   year={Year}
 }
-```    -->
+```
+-->
