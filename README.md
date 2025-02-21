@@ -30,10 +30,10 @@ We provide efficient and streamlined implementations of the TOFU, MUSE unlearnin
 | **Model families**             | LLaMA-2, LLaMA 3.1, LLaMA 3.2, Phi-1.5, Phi-3.5, Gemma |
 
 ## ⚙️ Engineering Features
-
-- **Multi-GPU Training**: Supported via DeepSpeed and Accelerate.  
+<!-- should we have this section at all? -->
 - **Extensibility**: Allows for easy addition and evaluation of new unlearning methods, datasets, and benchmark tasks.  
 - **Experiment Management**: Uses Hydra for streamlined experiment configuration. 
+- **Multi-GPU Training**: Supported via DeepSpeed and Accelerate.  
 - **Efficient Evaluation**: Supports batched evaluation and metric aggregation for streamlined tracking.  
 <!-- (can we mention hp tuning in hydra?).   --> 
 ---
@@ -79,17 +79,17 @@ bash scripts/muse_unlearn.sh
 
 ## 🧪 Running Experiments
 
-We provide standardized processes for running experiments in OpenUnlearning. This includes **Performing Unlearning** and **Performing Evaluation**, which are described below.  
+We provide standardized processes for running experiments in OpenUnlearning. This includes performing unlearning and evaluations, which are described below.  
 
-For a **detailed breakdown of running experiments**, refer to [`RunExperiments.md`](docs/experiments.md).
+
+<!-- # TODO
+For a more detailed documentation of running experiments using the Hydra configs, refer [`docs/experiments.md`](docs/experiments.md). -->
 
 ---
 
 ### 🚀 Perform Unlearning
 
-**Note:** We defined some default experimental configs in the [`configs/experiment`](configs/experiment) directory and used them below.
-
-1. **Unlearning:** An example command for launching an unlearning process with `GradAscent` on the MUSE News dataset:
+An example command for launching an unlearning process with `GradAscent` on the MUSE News dataset:
 
 ```bash
 python src/train.py --config-name=unlearn.yaml experiment=unlearn/muse/llama2 \
@@ -114,7 +114,8 @@ python src/eval.py --config-name=eval.yaml experiment=eval/tofu/llama2 \
 - `experiment`: [`configs/experiment/eval/tofu/llama2.yaml`](configs/experiment/eval/tofu/llama2.yaml) contains the experiment configuration.
 - `model.model_args.pretrained_model_name_or_path`: overrides the default experiment config to evaluate a model stored in a specific path.
 
-More documentation on evaluations: [`docs/evaluation.md`](docs/evaluation.md).
+<!-- # TODO
+For more details about creating metrics and evaluating them, refer [`docs/evaluation.md`](docs/evaluation.md). -->
 
 ---
 
@@ -141,6 +142,8 @@ If you run into any difficulties, please create an issue 🛠️.
 ## Acknowledgement
 This repo is inspired from [LLaMA-Factory](https://github.com/hiyouga/LLaMA-Factory). We acknowledge the [TOFU](https://github.com/locuslab/tofu) and [MUSE](https://github.com/jaechan-repo/muse_bench) benchmarks, which served as the foundation for our re-implementation.
 
+# TODO
+license
 <!-- ##
  
 ## Citation   
