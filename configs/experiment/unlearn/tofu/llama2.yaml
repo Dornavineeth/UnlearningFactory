@@ -1,15 +1,15 @@
 # @package _global_
 
 defaults:
-  - override /model: Llama-2-7b-chat-hf-tofu
+  - override /model: Llama-2-7b-chat-hf
   - override /trainer: GradAscent
   - override /data: unlearn
   - override /data/datasets@data.forget: TOFU_QA_forget
   - override /data/datasets@data.retain: TOFU_QA_retain
   - override /eval: tofu
 
-
-forget_split: forget10
+# define variables here to populate multiple fields
+forget_split: forget10 
 retain_split: retain90
 retain_logs_path: null
 
