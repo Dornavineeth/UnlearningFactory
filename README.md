@@ -1,14 +1,11 @@
 <div align="center">    
 
 ![*Open*Unlearning](assets/banner_dark.png#gh-dark-mode-only)
-<!-- ![OpenUnlearning Banner](assets/banner_gray.png#gh-dark-mode-only) -->
 ![*Open*Unlearning](assets/banner_light.png#gh-light-mode-only)
 <h3><strong>An easily extensible framework unifying LLM unlearning evaluation benchmarks.</strong></h3>
 <!-- [![Paper]()]() -->
 <!-- [![Conference](url)]() -->
 <!-- ![CI testing](url) -->
-
-   
 </div>
 
 ---
