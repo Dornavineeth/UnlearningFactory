@@ -8,7 +8,7 @@ defaults: # include all defined metrics files
     - forget_quality
     - forget_Q_A_Prob
     - forget_Q_A_ROUGE
-    - model_utility
+    - model_utility # populated in the metrics key as metrics.model_utility
 
 handler: TOFUEvaluator
 output_dir: ${paths.output_dir} # set to default eval directory
