@@ -10,4 +10,4 @@ defaults:
   - experiment: null
 
 mode: train
-task_name: llama-3.2-8B_tofu_full
+task_name: ???

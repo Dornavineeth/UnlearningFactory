@@ -9,5 +9,5 @@ template_args: # Used in creating prompts for the dataset. See src/data/utils.py
   apply_chat_template: False
   user_start_tag: "[INST] "
   user_end_tag: " [/INST]"
-  asst_start_tag: " "
-  asst_end_tag: " "
+  asst_start_tag: "" # Abusing prompt format of llama2 which has " ", As having this leads to issue of seperating prompt and label tokens
+  asst_end_tag: ""

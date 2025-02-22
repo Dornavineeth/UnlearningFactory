@@ -10,6 +10,8 @@ retain_logs_path: null
 model:
   model_args:
     pretrained_model_name_or_path: muse-bench/MUSE-${data_split}_target
+  tokenizer_args:
+    pretrained_model_name_or_path: muse-bench/MUSE-${data_split}_target
 
 eval:
   muse:

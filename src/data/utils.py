@@ -110,12 +110,13 @@ def preprocess_chat_instance(
 
     len_matched = len(prompt_ids)
 
-    labels = [IGNORE_INDEX] * len_matched + chat_ids[len_matched:]
     item = {}
     if predict_with_generate:
         item["input_ids"] = prompt_ids
+        labels = chat_ids  # contains the entire conversation
     else:
         item["input_ids"] = chat_ids
+        labels = [IGNORE_INDEX] * len_matched + chat_ids[len_matched:]
     item["labels"] = labels
     item["attention_mask"] = [1] * len(item["input_ids"])
     for attr in item:

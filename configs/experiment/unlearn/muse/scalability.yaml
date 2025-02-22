@@ -4,7 +4,7 @@ defaults:
   - override /model: Llama-2-7b-hf
   - override /trainer: GradAscent
   - override /data: unlearn
-  - override /data/datasets@data.forget: MUSE_forget_sust
+  - override /data/datasets@data.forget: MUSE_forget_scal
   - override /data/datasets@data.retain: MUSE_retain
   - override /eval: muse
 
@@ -16,11 +16,13 @@ retain_logs_path: null
 model:
   model_args:
     pretrained_model_name_or_path: muse-bench/MUSE-${data_split}_target
+  tokenizer_args:
+    pretrained_model_name_or_path: muse-bench/MUSE-${data_split}_target
 
 data:
   anchor: forget
   forget:
-    MUSE_forget_sust: 
+    MUSE_forget_scal: 
       args:
         hf_args:
           split: ${forget_split}
@@ -47,3 +49,4 @@ trainer:
     # optim: paged_adamw_32bit
     # optim: adamw_torch
 
+task_name: ???

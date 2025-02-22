@@ -221,9 +221,14 @@ def eval_text_similarity(model, tokenizer, batch, generation_args):
         input_ids, skip_special_tokens=True, clean_up_tokenization_spaces=True
     )
     tokens = [label[label != IGNORE_INDEX] for label in labels]
-    ground_truths = tokenizer.batch_decode(
+    full_texts = tokenizer.batch_decode(
         tokens, skip_special_tokens=True, clean_up_tokenization_spaces=True
     )
+    ground_truths = [
+        full_text.replace(input_text, "").strip()
+        for input_text, full_text in zip(input_texts, full_texts)
+    ]
+
     attention_mask = batch["attention_mask"]
 
     # convert to a simple dict from DictConfig
