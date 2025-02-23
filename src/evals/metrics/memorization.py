@@ -51,7 +51,7 @@ def probability_w_options(model, **kwargs):
     all_wrong = np.array(all_wrong)
     wrong = np.sum(all_wrong, axis=tuple(range(1, all_wrong.ndim)))
 
-    probs = correct / (correct + wrong)
+    probs = correct / (correct + wrong + 1e-10)
 
     value_by_index = dict(zip(correct_indices, [{"prob": val} for val in probs]))
     return {"agg_value": np.mean(probs), "value_by_index": value_by_index}
