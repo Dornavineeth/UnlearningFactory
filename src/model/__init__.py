@@ -44,9 +44,8 @@ def get_model(model_cfg: DictConfig):
         )
     except Exception as e:
         logger.warning(
-            f"Model {model_args.pretrained_model_name_or_path} requested with"
+            f"Model {model_args.pretrained_model_name_or_path} requested with {model_cfg.model_args}"
         )
-        logger.warning(model_cfg.model_args)
         raise ValueError(
             f"Error {e} while fetching model using AutoModelForCausalLM.from_pretrained()."
         )

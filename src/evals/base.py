@@ -14,9 +14,9 @@ class Evaluator:
         self.metrics = self.load_metrics(self.metrics_cfg)
         logger.info(f"Output directory {self.eval_cfg.output_dir}")
 
-    def get_logs_file_path(self, output_dir):
+    def get_logs_file_path(self, output_dir, suffix="EVAL"):
         """Returns the path to json file to store results"""
-        logs_filename = os.path.join(output_dir, f"{self.name}_EVAL.json")
+        logs_filename = os.path.join(output_dir, f"{self.name}_{suffix}.json")
         return logs_filename
 
     def load_logs_from_file(self, file):
@@ -50,7 +50,7 @@ class Evaluator:
         metric_summary = {}
         for metric_name, metric_results in logs.items():
             agg_value = metric_results.get("agg_value", None)
-            if agg_value:
+            if agg_value is not None:
                 metric_summary[metric_name] = agg_value
         return metric_summary
 
@@ -64,13 +64,14 @@ class Evaluator:
         # Set output_dir and file to store results
         output_dir = output_dir if output_dir else self.eval_cfg.output_dir
         logs_file_path = self.get_logs_file_path(output_dir)
+        summary_file_path = self.get_logs_file_path(output_dir, suffix="SUMMARY")
 
         # Load exisiting results from file if any.
-        logs = self.load_logs_from_file(logs_file_path)
+        logs = self.load_logs_from_file(logs_file_path) if not overwrite else {}
 
         logger.info(f"***** Running {self.name} evaluation suite *****")
         for metric_name, metric_fn in self.metrics.items():
-            if not overwrite and metric_name in logs:
+            if not overwrite and metric_name in logs and logs[metric_name]:
                 logger.info(f"Skipping {metric_name}, already evaluated.")
                 if "agg_value" in logs[metric_name]:
                     logger.info(
@@ -97,4 +98,8 @@ class Evaluator:
                 self.save_logs(logs, logs_file_path)
             except Exception as e:
                 raise RuntimeError(f"Failed to save logs: {e}")
+            try:
+                self.save_logs(self.summarize(logs), summary_file_path)
+            except Exception as e:
+                raise RuntimeError(f"Failed to save summary: {e}")
         return logs

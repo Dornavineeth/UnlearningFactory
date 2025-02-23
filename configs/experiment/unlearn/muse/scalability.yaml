@@ -47,3 +47,4 @@ trainer:
     # optim: paged_adamw_32bit
     # optim: adamw_torch
 
+task_name: ???

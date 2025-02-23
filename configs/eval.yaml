@@ -10,7 +10,7 @@ defaults:
 
 model:
   model_args:
-    device_map: auto
+    device_map: cuda
 
 mode: eval
-task_name: eval
+task_name: ???

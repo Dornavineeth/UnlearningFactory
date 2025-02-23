@@ -1,6 +1,6 @@
-.PHONY: quality style test
+.PHONY: quality style
 
-check_dirs := scripts src tests #setup.py
+check_dirs := scripts src #setup.py
 
 quality:
 	ruff check $(check_dirs)
