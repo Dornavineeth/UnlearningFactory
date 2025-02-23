@@ -41,14 +41,13 @@ We provide several variants for each of the components in the unlearning pipelin
   - [🚀 Perform Unlearning](#-run-unlearning)
   - [📊 Perform an Evaluation](#-run-evaluation)
 - [➕ How to Add New Components](#-how-to-add)
+- [📄 Further Documentation](#-further-documentation)
 - [🔗 Support & Contributors](#-support)
 - [Citation](#-citation)
 
 ---
 
 ## ⚡ Quickstart
-
-We provide detailed scripts to run multiple baselines for unlearning and evaluation in the [`scripts`](/scripts/) directory.
 
 ### 🛠️ Environment Setup
 
@@ -60,7 +59,7 @@ pip install flash-attn==2.6.3 --no-build-isolation
 ```
 
 ### 📜 Running Baseline Experiments
-The scripts below execute standard baseline unlearning experiments on the TOFU and MUSE datasets, evaluated using their corresponding benchmarks.
+The scripts below execute standard baseline unlearning experiments on the TOFU and MUSE datasets, evaluated using their corresponding benchmarks. The expected results for these are in [`docs/results.md`](docs/results.md).
 
 ```bash
 bash scripts/tofu_unlearn.sh
@@ -83,9 +82,9 @@ python src/train.py --config-name=unlearn.yaml experiment=unlearn/muse/llama2 \
   trainer.args.num_train_epochs=10 
 ```
 
-- `experiment`: Path to the Hydra config file [`configs/experiment/unlearn/muse/llama2.yaml`](configs/experiment/unlearn/muse/llama2.yaml) with default experimental settings for LLaMA 2 MUSE unlearning.
-- `data_split`: Overrides the dataset split to use the MUSE News dataset.
-- `trainer`: Overrides the unlearning algorithm using the Trainer defined in [`src/trainer/unlearn/grad_ascent.py`](src/trainer/unlearn/grad_ascent.py). `trainer.args.num_train_epochs=10` overrides a specific training argument.
+- `experiment`- Path to the Hydra config file [`configs/experiment/unlearn/muse/default.yaml`](configs/experiment/unlearn/muse/default.yaml) with default experimental settings for MUSE unlearning.
+- `data_split`-Overrides the dataset split to use the MUSE News dataset.
+- `trainer`-Overrides the unlearning algorithm using the Trainer defined in [`src/trainer/unlearn/grad_ascent.py`](src/trainer/unlearn/grad_ascent.py). `trainer.args.num_train_epochs=10` overrides a specific training argument.
 
 ### 📊 Perform an Evaluation
 
@@ -96,10 +95,10 @@ python src/eval.py --config-name=eval.yaml experiment=eval/tofu/llama2 \
   model.model_args.pretrained_model_name_or_path=<LOCAL_MODEL_PATH>
 ```
 
-- `experiment`: Path to the evaluation configuration [`configs/experiment/eval/tofu/llama2.yaml`](configs/experiment/eval/tofu/llama2.yaml).
-- `model.model_args.pretrained_model_name_or_path`: Overrides the default experiment config to evaluate a model from a local path.
+- `experiment`-Path to the evaluation configuration [`configs/experiment/eval/tofu/default.yaml`](configs/experiment/eval/tofu/default.yaml).
+- `model.model_args.pretrained_model_name_or_path` Overrides the default experiment config to evaluate a model from a local path.
 
-For more details about running evaluations, refer [`docs/evaluation.md`](docs/evaluation.md).
+For more details about creating and running evaluations, refer [`docs/evaluation.md`](docs/evaluation.md).
 
 ---
 
@@ -109,11 +108,23 @@ Adding a new component (trainer, evaluation metric, benchmark, model, or dataset
 
 Please feel free to raise a pull request with any features you add!
 
+
+## 📄 Further Documentation
+
+For more in-depth information on specific aspects of the framework, refer to the following documents:
+
+| **Documentation**                              | **Contains**                                                                                                       |
+|------------------------------------------------|--------------------------------------------------------------------------------------------------------------------|
+| [`docs/components.md`](docs/components.md)       | Instructions on how to add new components such as trainers, benchmarks, metrics, models, datasets, etc.              |
+| [`docs/evaluation.md`](docs/evaluation.md)       | Detailed instructions on creating and running evaluation metrics and benchmarks.                                     |
+| [`docs/experiments.md`](docs/experiments.md)     | Guide on running experiments in various configurations and settings, including distributed training, fine-tuning, and overriding arguments. |
+| [`docs/hydra.md`](docs/hydra.md)                 | Explanation of the Hydra features used in configuration management for experiments.                                  |
+| [`docs/results.md`](docs/results.md)             | Reference results from various unlearning methods run using this framework on TOFU and MUSE benchmarks.              |
 ---
 
 ## 🔗 Support & Contributors
 
-Developed and maintained by Vineeth Dorna ([@Dornavineeth](https://github.com/Dornavineeth)) and Anmol Mekala ([@molereddy](https://github.com/molereddy)) .
+Developed and maintained by Vineeth Dorna ([@Dornavineeth](https://github.com/Dornavineeth)) and Anmol Mekala ([@molereddy](https://github.com/molereddy)).
 
 If you encounter any issues or have questions, feel free to raise an issue in the repository 🛠️.
 
@@ -130,7 +141,7 @@ If you use OpenUnlearning in your research, please cite:
   title={OpenUnlearning: A Unified Framework for LLM Unlearning Benchmarks},
   author={Dorna, Vineeth and Mekala, Anmol and Maini, Pratyush},
   year={2024},
-  note={\url{https://github.com/Dornavineeth/OpenUnlearning}}
+  note={\url{https://github.com/locuslab/OpenUnlearning}}
 }
 @inproceedings{maini2024tofu,
   title={TOFU: A Task of Fictitious Unlearning for LLMs},

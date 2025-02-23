@@ -1,0 +1,4 @@
+- [] Point to scripts
+- [] Point to scripts
+- [] Add results tables
+- [] Mention training setup: optim, GPU, deepspeed

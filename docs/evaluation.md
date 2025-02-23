@@ -17,9 +17,9 @@ python src/eval.py --config-name=eval.yaml \
   model=Llama-3.2-3B-Instruct \ 
   model.model_args.pretrained_model_name_or_path=<LOCAL_MODEL_PATH>
 ```
-- `--config-name=eval.yaml`: sets task to be [`configs/eval.yaml`](../configs/eval.yaml)
-- `experiment=eval/tofu/llama2`: set experiment to use [`configs/eval/tofu/llama2.yaml`](../configs/eval/tofu/llama2.yaml)
-- `model=Llama-3.2-3B-Instruct`: override the default LLaMA-2 model config set above to use [`configs/model/Phi-3.5-mini-instruct.yaml`](../configs/model/Phi-3.5-mini-instruct.yaml).
+- `--config-name=eval.yaml`-sets task to be [`configs/eval.yaml`](../configs/eval.yaml)
+- `experiment=eval/tofu/default`-set experiment to use [`configs/eval/tofu/default.yaml`](../configs/eval/tofu/default.yaml)
+- `model=Llama-3.2-3B-Instruct`-override the default LLaMA-2 model config set above to use [`configs/model/Phi-3.5-mini-instruct.yaml`](../configs/model/Phi-3.5-mini-instruct.yaml).
 
 
 Run the MUSE-Books benchmark evaluation on a checkpoint of a Phi-3.5 model:
@@ -30,9 +30,8 @@ python src/eval.py --config-name=eval.yaml \
   model=Phi-3.5-mini-instruct \
   model.model_args.pretrained_model_name_or_path=<LOCAL_MODEL_PATH>
 ```
-- `data_split=Books`: override the default MUSE data split.
-
-To understand the structure of an evaluation config and the available parameters for overriding, refer to this example: [`configs/experiment/examples/tofu_eval.yaml`](../configs/experiment/examples/tofu_eval.yaml).
+- `---config-name=eval.yaml`-this is set by default so can be omitted
+- `data_split=Books`-override the default MUSE data split.
 
 ## Metrics
 
@@ -78,7 +77,7 @@ def forget_quality(model, **kwargs):
   return {"agg_value": pvalue}
 
 ```
-- `@unlearning_metric(name="rouge")`: Defines a `rouge` handler.
+- `@unlearning_metric(name="rouge")`-Defines a `rouge` handler.
 
 #### 2. Register the metric handler
 Register the handler to link the class to the configs via the class name in [`METRIC_REGISTRY`](../src/evals/metrics/__init__.py).

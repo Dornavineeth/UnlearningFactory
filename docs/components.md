@@ -19,6 +19,8 @@ This process involves three main steps:
 6. [Collator](#collator) - Handles data collation logic
 7. [Experiment](#experiment) - Combines components into a final experiment config
 
+__Note:__ adding each component requires Hydra config management features, which are documented in [`docs/hydra.md`](../docs/hydra.md). 
+
 ---
 
 ## Trainer
@@ -217,7 +219,7 @@ More details on how to run and organise experiments are in [`docs/experiment.md`
 ### Add to configs
 Experiment configurations specify the model, dataset, trainer, and evaluation components.
 
-Example: a TOFU unlearning experiment configuration (from [`configs/experiment/unlearn/tofu/llama2.yaml`](../configs/experiment/unlearn/tofu/llama2.yaml)) involves setting the model, the trainer, the dataset, the evaluation benchmark and the various attributes involves in them.
+Example: a TOFU unlearning experiment configuration (from [`configs/experiment/unlearn/tofu/default.yaml`](../configs/experiment/unlearn/tofu/default.yaml)) involves setting the model, the trainer, the dataset, the evaluation benchmark and the various attributes involves in them.
 
 <details>
 <summary>Expand the config below</summary>
