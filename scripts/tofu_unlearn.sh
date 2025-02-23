@@ -1,36 +1,68 @@
+#!/bin/bash
+
+
+export MASTER_PORT=$(python -c "import socket; s=socket.socket(); s.bind(('', 0)); print(s.getsockname()[1]); s.close()")
+echo "Master Port: $MASTER_PORT"
+
+models=(
+    "Llama-3.2-1B-Instruct"
+    "Llama-3.2-3B-Instruct"
+    "Llama-3.1-8B-Instruct"
+)
+trainers_experiments=(
+    "GradAscent unlearn/tofu/default.yaml"
+    "GradDiff unlearn/tofu/default.yaml"
+    "NPO unlearn/tofu/default.yaml"
+    "DPO unlearn/tofu/default.yaml"
+)
+forget_retain_splits=(
+    "forget01" "retain99"
+    "forget05" "retain95"
+    "forget10" "retain90"
+)
+
+per_device_train_batch_size=4 # on two gpus would make effective batch size 32
+gradient_accumulation_steps=4
+
+
 ########################################################################################################################
-########################################### TOFU unlearning forget10 ###################################################
+########################################### Unlearn TOFU models ########################################################
 ########################################################################################################################
 
-python src/train.py --config-name=unlearn.yaml experiment=unlearn/tofu/llama2 trainer=GradAscent task_name=llama2_forget10_GradAscent
-python src/train.py --config-name=unlearn.yaml experiment=unlearn/tofu/llama2 trainer=GradDiff task_name=llama2_forget10_GradDiff
-python src/train.py --config-name=unlearn.yaml experiment=unlearn/tofu/llama2 trainer=GradDiff trainer.method_args.retain_loss_type=KL task_name=llama2_forget10_GradDiff_KL
-python src/train.py --config-name=unlearn.yaml experiment=unlearn/tofu/llama2 trainer=NPO task_name=llama2_forget10_NPO
-python src/train.py --config-name=unlearn.yaml experiment=unlearn/tofu/llama2 trainer=NPO trainer.method_args.retain_loss_type=KL task_name=llama2_forget10_NPO_KL
-python src/train.py --config-name=unlearn.yaml experiment=unlearn/tofu/llama2_idk trainer=DPO data/datasets@data.forget=TOFU_QA_forget_idk task_name=llama2_forget10_IdkDPO
 
+for split in "${forget_retain_splits[@]}"; do
+    forget_split=$(echo $split | cut -d' ' -f1)
+    retain_split=$(echo $split | cut -d' ' -f2)
+    for model in "${models[@]}"; do
+        for trainer_experiment in "${trainers_experiments[@]}"; do
+            trainer=$(echo $trainer_experiment | cut -d' ' -f1)
+            experiment=$(echo $trainer_experiment | cut -d' ' -f2)
+            
+            task_name=${model}_forget10_${trainer} 
 
-########################################################################################################################
-########################################### TOFU unlearning forget05 ###################################################
-########################################################################################################################
+            # Unlearn
+            CUDA_VISIBLE_DEVICES=0,1 accelerate launch --config_file configs/accelerate/default_config.yaml --main_process_port $MASTER_PORT \
+            src/train.py --config-name=unlearn.yaml \
+            experiment=${experiment} \
+            trainer=${trainer} \
+            task_name=${task_name} \
+            model=${model} \
+            forget_split=${forget_split} \
+            retain_split=${retain_split} \
+            model.model_args.pretrained_model_name_or_path=saves/finetune/tofu_${model}_full \
+            retain_logs_path=saves/eval/tofu_${model}_${retain_split}/TOFU_EVAL.json \
+            trainer.args.per_device_train_batch_size=$per_device_train_batch_size \
+            trainer.args.gradient_accumulation_steps=$gradient_accumulation_steps \
+            trainer.args.ddp_find_unused_parameters=true \
+            trainer.args.gradient_checkpointing=true
 
-# # TOFU unlearning forget05
-python src/train.py --config-name=unlearn.yaml experiment=unlearn/tofu/llama2 trainer=GradAscent task_name=llama2_forget05_GradAscent forget_split=forget05 retain_split=retain95
-python src/train.py --config-name=unlearn.yaml experiment=unlearn/tofu/llama2 trainer=GradDiff task_name=llama2_forget05_GradDiff forget_split=forget05 retain_split=retain95
-python src/train.py --config-name=unlearn.yaml experiment=unlearn/tofu/llama2 trainer=GradDiff trainer.method_args.retain_loss_type=KL task_name=llama2_forget05_GradDiff_KL forget_split=forget05 retain_split=retain95
-python src/train.py --config-name=unlearn.yaml experiment=unlearn/tofu/llama2 trainer=NPO task_name=llama2_forget05_NPO forget_split=forget05 retain_split=retain95
-python src/train.py --config-name=unlearn.yaml experiment=unlearn/tofu/llama2 trainer=NPO trainer.method_args.retain_loss_type=KL task_name=llama2_forget05_NPO_KL forget_split=forget05 retain_split=retain95
-python src/train.py --config-name=unlearn.yaml experiment=unlearn/tofu/llama2_idk trainer=DPO data/datasets@data.forget=TOFU_QA_forget_idk task_name=llama2_forget05_IdkDPO forget_split=forget05 retain_split=retain95
-
-
-########################################################################################################################
-########################################### TOFU unlearning forget01 ###################################################
-########################################################################################################################
-
-# # TOFU unlearning forget01
-python src/train.py --config-name=unlearn.yaml experiment=unlearn/tofu/llama2 trainer=GradAscent task_name=llama2_forget01_GradAscent forget_split=forget01 retain_split=retain99
-python src/train.py --config-name=unlearn.yaml experiment=unlearn/tofu/llama2 trainer=GradDiff task_name=llama2_forget01_GradDiff forget_split=forget01 retain_split=retain99
-python src/train.py --config-name=unlearn.yaml experiment=unlearn/tofu/llama2 trainer=GradDiff trainer.method_args.retain_loss_type=KL task_name=llama2_forget01_GradDiff_KL forget_split=forget01 retain_split=retain99
-python src/train.py --config-name=unlearn.yaml experiment=unlearn/tofu/llama2 trainer=NPO task_name=llama2_forget01_NPO forget_split=forget01 retain_split=retain99
-python src/train.py --config-name=unlearn.yaml experiment=unlearn/tofu/llama2 trainer=NPO trainer.method_args.retain_loss_type=KL task_name=llama2_forget01_NPO_KL forget_split=forget01 retain_split=retain99
-python src/train.py --config-name=unlearn.yaml experiment=unlearn/tofu/llama2_idk trainer=DPO data/datasets@data.forget=TOFU_QA_forget_idk task_name=llama2_forget01_IdkDPO forget_split=forget01 retain_split=retain99
+            # Eval
+            CUDA_VISIBLE_DEVICES=0 python src/eval.py \
+            experiment=eval/tofu/default.yaml \
+            forget_split=${forget_split} \
+            model=${model} \
+            task_name=${task_name} \
+            model.model_args.pretrained_model_name_or_path=saves/unlearn/${task_name} \
+            paths.output_dir=saves/unlearn/${task_name}/evals
+        done
+done
