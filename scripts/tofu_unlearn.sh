@@ -38,7 +38,7 @@ for split in "${forget_retain_splits[@]}"; do
             trainer=$(echo $trainer_experiment | cut -d' ' -f1)
             experiment=$(echo $trainer_experiment | cut -d' ' -f2)
             
-            task_name=${model}_forget10_${trainer} 
+            task_name=${model}_${forget_split}_${trainer} 
 
             # Unlearn
             CUDA_VISIBLE_DEVICES=0,1 accelerate launch --config_file configs/accelerate/default_config.yaml --main_process_port $MASTER_PORT \
