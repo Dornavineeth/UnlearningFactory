@@ -71,9 +71,7 @@ bash scripts/muse_unlearn.sh
 
 ## 🧪 Running Experiments
 
-We provide an easily configurable setup for running evaluations by leveraging Hydra configs. For a more detailed documentation of running experiments, including distributed training and simple finetuning of models, refer [`docs/experiments.md`](docs/experiments.md).
-
-<!-- --- -->
+We provide an easily configurable setup for running evaluations by leveraging Hydra configs. For a more detailed documentation of aspects like running experiments, interfacing with configurations, distributed training and simple finetuning of models, refer [`docs/experiments.md`](docs/experiments.md).
 
 ### 🚀 Perform Unlearning
 
