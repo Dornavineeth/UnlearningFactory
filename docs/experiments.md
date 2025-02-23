@@ -153,15 +153,19 @@ The following tables list the most commonly used arguments while running experim
   </tr>
   <tr>
     <td><code>data</code></td>
-    <td>Overall data configuration selection. Example: <code>data=unlearn data.forget=MUSE_forget data.retain=MUSE_retain</code></td>
+    <td>Overall data configuration/format. Example: <code>data=unlearn</code>, <code>data=finetune</code>.</td>
   </tr>
   <tr>
-    <td><code>data_split</code></td>
-    <td>Specifies the overall dataset split or type. Example: <code>data_split=News</code> or <code>data_split=Books</code></td>
+    <td><code>data.forget, data.retain, data.anchor</code> etc.</td>
+    <td>Set sub-datasets in the overall dataset using <code>data.forget=MUSE_forget data.retain=MUSE_retain</code>, set which sub-dataset to index over (others are randomly sampled) using <code>data.anchor=forget</code></td>
   </tr>
   <tr>
-    <td><code>forget_split/retain_split</code></td>
-    <td>Splits used in various sub-parts of the dataset. Example: <code>forget_split=forget01 retain_split=retain99</code></td>
+    <td><code>data_split/forget_split/retain_split</code></td>
+    <td>These arguments are custom to specific datasets and are used to populate dataset paths.
+    <br>
+    <code>data_split</code> specifies the overall dataset split or type. Example: <code>data_split=News</code> or <code>data_split=Books</code>
+    <br>
+    <code>forget_split/retain_split</code> splits are used to use various sub-parts of the dataset. Example: <code>forget_split=forget01 retain_split=retain99</code></td>
   </tr>
 </table>
 
@@ -232,15 +236,8 @@ CUDA_VISIBLE_DEVICES=0,1 accelerate launch --config_file configs/accelerate/defa
   src/train.py --config-name=unlearn.yaml experiment=unlearn/muse/default.yaml
 ```
 
-**Note:** Evaluation runs are designed to work only a single GPU (this includes running evaluation during training). To run an evaluation job, use a command like:
+**Note:** Evaluation runs are designed to work only a single GPU (this includes running evaluation during training). To run an evaluation job, modify your command to make only one GPU visible (assuming one GPU is enough for inference):
 
 ```bash
-CUDA_VISIBLE_DEVICES=0 python src/eval.py \
-  experiment=eval/muse/default.yaml \
-  data_split=${data_split} \
-  task_name=${task_name} \
-  model=${model} \
-  model.model_args.pretrained_model_name_or_path=saves/unlearn/${task_name} \
-  paths.output_dir=saves/unlearn/${trainer}/evals \
-  retain_logs_path=saves/eval/muse_${model}_${data_split}_retrain/MUSE_EVAL.json
+CUDA_VISIBLE_DEVICES=0 python src/eval.py  experiment=eval/muse/default.yaml 
 ```

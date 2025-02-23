@@ -221,21 +221,18 @@ Experiment configurations specify the model, dataset, trainer, and evaluation co
 
 Example: a TOFU unlearning experiment configuration (from [`configs/experiment/unlearn/tofu/default.yaml`](../configs/experiment/unlearn/tofu/default.yaml)) involves setting the model, the trainer, the dataset, the evaluation benchmark and the various attributes involves in them.
 
-<details>
-<summary>Expand the config below</summary>
-
 ```yaml
 # @package _global_
 
-defaults:
-  - override /model: Llama-2-7b-chat-hf
-  - override /trainer: GradAscent
-  - override /data: unlearn
+defaults: # load pre-defined configs for model, trainer, data format, datasets etc.
+  - override /model: Llama-2-7b-chat-hf # from configs/model/Llama-2-7b-chat-hf.yaml
+  - override /trainer: GradAscent # from configs/trainer/GradAscent.yaml
+  - override /data: unlearn # ...
   - override /data/datasets@data.forget: TOFU_QA_forget
   - override /data/datasets@data.retain: TOFU_QA_retain
   - override /eval: tofu
 
-# Now, modify and set specific attributes to configs imported above
+# Now, we have to further modify specific arguments from the defaults imported above
 forget_split: forget10 
 retain_split: retain90
 retain_logs_path: null
@@ -267,4 +264,3 @@ trainer:
 
 override task_name: llama2_unlearn
 ```
-</details>
