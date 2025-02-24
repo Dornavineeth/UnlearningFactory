@@ -15,17 +15,17 @@ data_splits=(
     "Books"
 )
 
-
+trainers=(
+    "GradAscent"
+    "GradDiff"
+    "NPO"
+    "SimNPO"
+)
 
 # #########################################################
 # #################### MUSE Unlearning ####################
 # #########################################################
 
-trainers=(
-    "GradAscent"
-    "GradDiff"
-    "NPO"
-)
 
 for data_split in "${data_splits[@]}"; do
     for trainer in "${trainers[@]}"; do
@@ -38,7 +38,7 @@ for data_split in "${data_splits[@]}"; do
         model=${model} \
         data_split=${data_split} \
         trainer=${trainer} \
-        task_name=${task_name}} \
+        task_name=${task_name} \
         retain_logs_path=saves/eval/muse_${model}_${data_split}_retrain/MUSE_EVAL.json \
         trainer.args.per_device_train_batch_size=${per_device_train_batch_size} \
         trainer.args.gradient_accumulation_steps=${gradient_accumulation_steps} \
@@ -76,7 +76,7 @@ for data_split in "${data_splits[@]}"; do
             data_split=${data_split} \
             forget_split=${scal} \
             trainer=${trainer} \
-            task_name=${task_name}} \
+            task_name=${task_name} \
             retain_logs_path=saves/eval/muse_${model}_${data_split}_retrain/MUSE_EVAL.json \
             trainer.args.per_device_train_batch_size=${per_device_train_batch_size} \
             trainer.args.gradient_accumulation_steps=${gradient_accumulation_steps} \
@@ -116,7 +116,7 @@ for data_split in "${data_splits[@]}"; do
             model.model_args.pretrained_model_name_or_path=${model_path} \
             data_split=${data_split} \
             trainer=${trainer} \
-            task_name=${task_name}} \
+            task_name=${task_name} \
             retain_logs_path=saves/eval/muse_${model}_${data_split}_retrain/MUSE_EVAL.json \
             trainer.args.per_device_train_batch_size=${per_device_train_batch_size} \
             trainer.args.gradient_accumulation_steps=${gradient_accumulation_steps} \

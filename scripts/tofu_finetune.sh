@@ -33,7 +33,7 @@ for split in "${forget_retain_splits[@]}"; do
         task_name=tofu_${model}_${retain_split} \
         model=${model} \
         data/datasets@data.train=TOFU_QA_retain \
-        data.train.TOFU_QA_retain.args.hf_args.name=full \
+        data.train.TOFU_QA_retain.args.hf_args.name=${retain_split} \
         trainer.args.per_device_train_batch_size=4 \
         trainer.args.ddp_find_unused_parameters=true \
         trainer.args.gradient_checkpointing=true
@@ -44,12 +44,13 @@ for split in "${forget_retain_splits[@]}"; do
         task_name=tofu_${model}_${retain_split} \
         model=${model} \
         model.model_args.pretrained_model_name_or_path=saves/finetune/tofu_${model}_${retain_split}
+    done
 done
 
 
-########################################################################################################################
-########################################### FULL Finetuned TOFU models #################################################
-########################################################################################################################
+# ########################################################################################################################
+# ########################################### FULL Finetuned TOFU models #################################################
+# ########################################################################################################################
 
 
 for model in "${models[@]}"; do
