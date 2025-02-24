@@ -31,18 +31,18 @@ We provide several variants for each of the components in the unlearning pipelin
 ---
 
 ## 📌 Table of Contents
-- [📖 Overview](#📖-overview)
-- [🗃️ Available Components](#🗃️-available-components)
-- [⚡ Quickstart](#⚡-quickstart)
-  - [🛠️ Environment Setup](#🛠️-environment-setup)
-  - [📜 Running Baseline Experiments](#📜-running-baseline-experiments)
-- [🧪 Running Experiments](#🧪-running-experiments)
-  - [🚀 Perform Unlearning](#🚀-perform-unlearning)
-  - [📊 Perform an Evaluation](#📊-perform-an-evaluation)
-- [➕ How to Add New Components](#➕-how-to-add-new-components)
-- [📚 Further Documentation](#📚-further-documentation)
-- [🔗 Support & Contributors](#🔗-support--contributors)
-- [📝 Citation](#📝-citation)
+- [📖 Overview](#-overview)
+- [🗃️ Available Components](#-available-components)
+- [⚡ Quickstart](#-quickstart)
+  - [🛠️ Environment Setup](#-environment-setup)
+  - [📜 Running Baseline Experiments](#-running-baseline-experiments)
+- [🧪 Running Experiments](#-running-experiments)
+  - [🚀 Perform Unlearning](#-perform-unlearning)
+  - [📊 Perform an Evaluation](#-perform-an-evaluation)
+- [➕ How to Add New Components](#-how-to-add-new-components)
+- [📚 Further Documentation](#-further-documentation)
+- [🔗 Support & Contributors](#-support--contributors)
+- [📝 Citation](#-citation)
 
 ---
 
