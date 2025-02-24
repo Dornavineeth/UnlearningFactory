@@ -31,19 +31,18 @@ We provide several variants for each of the components in the unlearning pipelin
 ---
 
 ## 📌 Table of Contents
-- [📖 Overview](#-overview)
-- [🗃️ Available Components](#-available)
-- [⚙️ Engineering Features](#-features)
-- [⚡ Quickstart](#-quickstart)
-  - [🛠️ Environment Setup](#-environment-setup)
-  - [📜 Running Baseline Experiments](#-baselines)
-- [🧪 Running Experiments](#-experiments)
-  - [🚀 Perform Unlearning](#-run-unlearning)
-  - [📊 Perform an Evaluation](#-run-evaluation)
-- [➕ How to Add New Components](#-how-to-add)
-- [📄 Further Documentation](#-further-documentation)
-- [🔗 Support & Contributors](#-support)
-- [Citation](#-citation)
+- [📖 Overview](#📖-overview)
+- [🗃️ Available Components](#🗃️-available-components)
+- [⚡ Quickstart](#⚡-quickstart)
+  - [🛠️ Environment Setup](#🛠️-environment-setup)
+  - [📜 Running Baseline Experiments](#📜-running-baseline-experiments)
+- [🧪 Running Experiments](#🧪-running-experiments)
+  - [🚀 Perform Unlearning](#🚀-perform-unlearning)
+  - [📊 Perform an Evaluation](#📊-perform-an-evaluation)
+- [➕ How to Add New Components](#➕-how-to-add-new-components)
+- [📚 Further Documentation](#📚-further-documentation)
+- [🔗 Support & Contributors](#🔗-support--contributors)
+- [📝 Citation](#📝-citation)
 
 ---
 
@@ -70,14 +69,14 @@ bash scripts/muse_unlearn.sh
 
 ## 🧪 Running Experiments
 
-We provide an easily configurable interface for running evaluations by leveraging Hydra configs. For a more detailed documentation of aspects like running experiments, interfacing with configurations, distributed training and simple finetuning of models, refer [`docs/experiments.md`](docs/experiments.md).
+We provide an easily configurable interface for running evaluations by leveraging Hydra configs. For a more detailed documentation of aspects like running experiments, commonly overriden arguments, interfacing with configurations, distributed training and simple finetuning of models, refer [`docs/experiments.md`](docs/experiments.md).
 
 ### 🚀 Perform Unlearning
 
 An example command for launching an unlearning process with `GradAscent` on the MUSE News dataset:
 
 ```bash
-python src/train.py --config-name=unlearn.yaml experiment=unlearn/muse/llama2 \
+python src/train.py --config-name=unlearn.yaml experiment=unlearn/muse/default \
   data_split=News trainer=GradAscent \
   trainer.args.num_train_epochs=10 
 ```
@@ -109,7 +108,7 @@ Adding a new component (trainer, evaluation metric, benchmark, model, or dataset
 Please feel free to raise a pull request with any features you add!
 
 
-## 📄 Further Documentation
+## 📚 Further Documentation
 
 For more in-depth information on specific aspects of the framework, refer to the following documents:
 
@@ -128,7 +127,7 @@ Developed and maintained by Vineeth Dorna ([@Dornavineeth](https://github.com/Do
 
 If you encounter any issues or have questions, feel free to raise an issue in the repository 🛠️.
 
-## Citation
+## 📝 Citation
 
 This repo is inspired from [LLaMA-Factory](https://github.com/hiyouga/LLaMA-Factory). We acknowledge the [TOFU](https://github.com/locuslab/tofu) and [MUSE](https://github.com/jaechan-repo/muse_bench) benchmarks, which served as the foundation for our re-implementation.
 
@@ -137,11 +136,11 @@ This repo is inspired from [LLaMA-Factory](https://github.com/hiyouga/LLaMA-Fact
 If you use OpenUnlearning in your research, please cite:
 
 ```bibtex
-@misc{openunlearning2024,
+@misc{openunlearning2025,
   title={OpenUnlearning: A Unified Framework for LLM Unlearning Benchmarks},
   author={Dorna, Vineeth and Mekala, Anmol and Maini, Pratyush},
-  year={2024},
-  note={\url{https://github.com/locuslab/OpenUnlearning}}
+  year={2025},
+  note={\url{https://github.com/locuslab/open-unlearning}}
 }
 @inproceedings{maini2024tofu,
   title={TOFU: A Task of Fictitious Unlearning for LLMs},
