@@ -25,8 +25,8 @@ We provide several variants for each of the components in the unlearning pipelin
 | **Benchmarks**       | [TOFU](https://arxiv.org/abs/2401.06121), [MUSE](https://muse-bench.github.io/) |
 | **Unlearning Methods** | GradAscent, GradDiff, NPO, SimNPO, DPO |
 | **Evaluation Metrics** | Verbatim Probability, Verbatim ROUGE, QA-Rouge, MIA Attacks, TruthRatio, Model Utility |
-| **Datasets**         | MUSE (News, Books), TOFU (forget01, forget05, forget10) |
-| **Model families**   | LLaMA-2, LLaMA 3.1, LLaMA 3.2, Phi-3.5, ICLM, Phi-1.5, Gemma |
+| **Datasets**         | MUSE-News (BBC), MUSE-Books (Harry Potter), TOFU (different splits) |
+| **Model families**   | LLaMA 3.2, LLaMA 3.1, LLaMA-2, Phi-3.5, ICLM (from MUSE), Phi-1.5, Gemma |
 
 ---
 
@@ -76,26 +76,27 @@ We provide an easily configurable interface for running evaluations by leveragin
 An example command for launching an unlearning process with `GradAscent` on the MUSE News dataset:
 
 ```bash
-python src/train.py --config-name=unlearn.yaml experiment=unlearn/muse/default \
-  data_split=News trainer=GradAscent \
-  trainer.args.num_train_epochs=10 
+python src/train.py --config-name=unlearn.yaml experiment=unlearn/tofu/default \
+  forget_split=forget10 retain_split=retain90 trainer=NPO
 ```
 
-- `experiment`- Path to the Hydra config file [`configs/experiment/unlearn/muse/default.yaml`](configs/experiment/unlearn/muse/default.yaml) with default experimental settings for MUSE unlearning.
-- `data_split`-Overrides the dataset split to use the MUSE News dataset.
-- `trainer`-Overrides the unlearning algorithm using the Trainer defined in [`src/trainer/unlearn/grad_ascent.py`](src/trainer/unlearn/grad_ascent.py). `trainer.args.num_train_epochs=10` overrides a specific training argument.
+- `experiment`- Path to the Hydra config file [`configs/experiment/unlearn/muse/default.yaml`](configs/experiment/unlearn/tofu/default.yaml) with default experimental settings for TOFU unlearning, e.g. train dataset, eval benchmark details, model paths etc..
+- `forget_split/retain_split`- Sets the forget and retain dataset splits.
+- `trainer`- Overrides the unlearning algorithm using the NPO Trainer defined in [`src/trainer/unlearn/npo.py`](src/trainer/unlearn/npo.py).
 
 ### 📊 Perform an Evaluation
 
 An example command for launching a TOFU evaluation process:
 
 ```bash
-python src/eval.py --config-name=eval.yaml experiment=eval/tofu/llama2 \
-  model.model_args.pretrained_model_name_or_path=<LOCAL_MODEL_PATH>
+python src/eval.py --config-name=eval.yaml experiment=eval/tofu/default \
+  model=Llama-3.2-1B-Instruct \
+  model.model_args.pretrained_model_name_or_path=open-unlearning/tofu_Llama-3.2-1B-Instruct_full
 ```
 
 - `experiment`-Path to the evaluation configuration [`configs/experiment/eval/tofu/default.yaml`](configs/experiment/eval/tofu/default.yaml).
-- `model.model_args.pretrained_model_name_or_path` Overrides the default experiment config to evaluate a model from a local path.
+- `model`- Sets up the model and tokenizer configs for the `Llama-3.2-1B-Instruct` model.
+- `model.model_args.pretrained_model_name_or_path`- Overrides the default experiment config to evaluate a model from a HuggingFace ID (can use a local model checkpoint path as well).
 
 For more details about creating and running evaluations, refer [`docs/evaluation.md`](docs/evaluation.md).
 
