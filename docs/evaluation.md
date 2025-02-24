@@ -95,8 +95,8 @@ Metric configurations are in [`configs/eval/tofu_metrics`](../configs/eval/tofu_
 
 Example 1: Creating the config for MUSE's `forget_verbmem_ROUGE` ([`configs/eval/muse_metrics/forget_knowmem_ROUGE.yaml`](../configs/eval/muse_metrics/forget_knowmem_ROUGE.yaml)). 
 
-<details>
-<summary>Expand the config below</summary>
+<!-- <details>
+<summary>Expand the config below</summary> -->
 
 ```yaml
 # @package eval.muse.metrics.forget_verbmem_ROUGE
@@ -125,12 +125,12 @@ collators:
 generation_args:
   max_new_tokens: 128
 ```
-</details>
+<!-- </details> -->
 
 Example 2: Creating the config for TOFU's `forget_quality` ([`configs/eval/tofu_metrics/forget_quality.yaml`](../configs/eval/tofu_metrics/forget_quality.yaml)).
 
-<details>
-<summary>Expand the config below</summary>
+<!-- <details>
+<summary>Expand the config below</summary> -->
 
 ```yaml
 # @package eval.tofu.metrics.forget_quality
@@ -152,7 +152,7 @@ pre_compute:
 
 handler: forget_quality
 ```
-</details>
+<!-- </details> -->
 
 ### Designing metrics that depend on other metrics
 
