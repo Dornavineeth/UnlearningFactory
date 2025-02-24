@@ -24,8 +24,6 @@ For all the experiments below, we used the following setup
 
 __NOTE__: Results may vary even with the same effective hyperparameters when trained on a single GPU. **Please use these numbers only for reproducibility purposes**. Some methods, such as SimNPO, can be significantly improved with careful tuning.
 
-### TOFU  unlearning on `Llama-2-7b-hf-chat`
-
 
 <style>
   table {
@@ -53,7 +51,7 @@ __NOTE__: Results may vary even with the same effective hyperparameters when tra
   }
 </style>
 
-
+### TOFU  unlearning on `Llama-2-7b-hf-chat`
 
 <div style="overflow-x: auto; max-width: 100%;">
 <table class="dataframe">
