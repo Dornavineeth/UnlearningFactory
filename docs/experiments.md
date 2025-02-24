@@ -40,7 +40,7 @@ python src/train.py --config-name=unlearn.yaml experiment=unlearn/tofu/default
 
 ## runs an evaluation using experiment details from configs/eval/muse/default.yaml
 python src/eval.py --config-name=eval.yaml experiment=eval/muse/default
-##NOTE: eval.yaml is the default config set in evsrc/eval.py, so this argument can be omitted
+## Note: eval.yaml is the default config set in src/eval.py, so this argument can be omitted
 
 ## an extensively filled out configuration for an unlearning experiment
 python src/train.py --config-name=unlearn.yaml experiment=unlearn/muse/default data_split=News \
@@ -58,6 +58,9 @@ forget_split=forget05 retain_split=retain95 \
 retain_logs_path=saves/eval/tofu_retain95/TOFU_EVAL.json \
 paths.output_dir=saves/unlearn/NPO/evals
 ```
+
+
+**Note:** The unlearning experiments support evaluation during the unlearning training. But this is supported only on a single GPU, evaluation can be performed during unlearning itself. When multiple GPUs are used to train, checkpoints must be stored and evaluated after training.
 
 ---
 
@@ -244,5 +247,3 @@ CUDA_VISIBLE_DEVICES=0,1 accelerate launch --config_file configs/accelerate/defa
 ```bash
 CUDA_VISIBLE_DEVICES=0 python src/eval.py  experiment=eval/muse/default.yaml 
 ```
-
-**Note:** While unlearning on a single GPU, evaluation can be performed during unlearning itself. Otherwise, checkpoints must be stored and evaluated post hoc.

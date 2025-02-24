@@ -14,7 +14,7 @@
 
 We provide efficient and streamlined implementations of the TOFU, MUSE unlearning benchmarks while supporting 5 unlearning methods, 3+ datasets, 6+ evaluation metrics, and 7+ LLMs. Each of these can be easily extended to incorporate more variants.
 
-We invite the LLM unlearning community to collaborate by adding their new benchmarks, unlearning methods, datasets and evaluation metrics here to expand OpenUnlearning's features, making unlearning more accessible and driving meaningful progress in the field.
+We invite the LLM unlearning community to collaborate by adding new benchmarks, unlearning methods, datasets and evaluation metrics here to expand OpenUnlearning's features, gain feedback from wider usage and drive progress in the field.
 
 ## 🗃️ Available Components
 
@@ -59,7 +59,7 @@ pip install .[flash-attn]
 ```
 
 ### 💾 Data Setup
-Download the data containing logs and metric results from fine-tuned and retain models. This might be helpfull for evaluating the effectiveness of your unlearning approach.
+Download the log files containing metric results from the models used in the supported benchmarks (including the retain model logs used to compare the unlearned models against).
 
 ```bash
 TODO

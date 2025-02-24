@@ -30,8 +30,8 @@ python src/eval.py --config-name=eval.yaml \
   model=Llama-2-7b-hf.yaml \
   model.model_args.pretrained_model_name_or_path=<LOCAL_MODEL_PATH>
 ```
-- `---config-name=eval.yaml`-this is set by default so can be omitted
-- `data_split=Books`-override the default MUSE data split(News). See [`configs/experiment/eval/muse/default.yaml`](../configs/experiment/eval/muse/default.yaml)
+- `---config-name=eval.yaml`- this is set by default so can be omitted
+- `data_split=Books`- overrides the default MUSE data split (News). See [`configs/experiment/eval/muse/default.yaml`](../configs/experiment/eval/muse/default.yaml)
 
 ## Metrics
 

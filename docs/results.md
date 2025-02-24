@@ -22,7 +22,7 @@ For all the experiments below, we used the following setup
 | **Distributed Computing** | [DeepSpeed ZeRO Stage 3 (Accelerate)](https://huggingface.co/docs/accelerate/en/usage_guides/deepspeed) |
 | **Hyperparameters**    | Learning Rate (lr) = 1e-5 <br> α = 1, γ = 1, β = 0.1 (where applicable) <br> Number of Epochs = 10 <br> Optimizer: [paged_adamw_32bit](https://huggingface.co/docs/bitsandbytes/main/en/reference/optim/adamw#bitsandbytes.optim.PagedAdamW) |
 
-__NOTE__: Results may vary even with the same effective hyperparameters when trained on a single GPU. **Please use these numbers only for reproducibility purposes**. Some methods, such as SimNPO, can be significantly improved with careful tuning.
+__Note:__ Results may vary even with the same effective hyperparameters when trained on a single GPU. **Please use these numbers only for reproducibility purposes**. Some methods, such as SimNPO, can be significantly improved with careful tuning.
 
 
 ### TOFU  unlearning on `Llama-2-7b-hf-chat`

@@ -3,7 +3,7 @@
 The OpenUnlearning framework requires a structured approach for adding new components in the unlearning pipeline.
 
 This process involves three main steps:
-1. __Implementing a handler__: Define the core logic for the component (usually a python `class` or `function`). A single handler can be reused across multiple components. For example, a handler that computes the ROUGE score can support various evaluation metrics across multiple datasets.
+1. __Implementing a handler__: Define the core logic for the component (usually a python class or function). A single handler can be reused across multiple components. For example, a handler that computes the ROUGE score can support various evaluation metrics across multiple datasets.
 2. __Registering the handler__: Add the handler to a registry that links it to a key, allowing access during execution through the config files.
 3. __Adding a config file__: Set up a configuration using Hydra that specifies the handler and relevant parameters. These configurations can then be passed directly as arguments when running Python scripts.
 
