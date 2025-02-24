@@ -20,7 +20,7 @@ For all the experiments below, we used the following setup
 |-------------------------|------------|
 | **Hardware**           | 2 × L40s GPUs (48GB each) |
 | **Distributed Computing** | [DeepSpeed ZeRO Stage 3 (Accelerate)](https://huggingface.co/docs/accelerate/en/usage_guides/deepspeed) |
-| **Hyperparameters**    | Learning Rate (lr) = 1e-5 <br> α = 1, γ = 1, β = 0.1 (where applicable) <br> Number of Epochs = 10 |
+| **Hyperparameters**    | Learning Rate (lr) = 1e-5 <br> α = 1, γ = 1, β = 0.1 (where applicable) <br> Number of Epochs = 10 <br> Optimizer: [paged_adamw_32bit](https://huggingface.co/docs/bitsandbytes/main/en/reference/optim/adamw#bitsandbytes.optim.PagedAdamW) |
 
 __NOTE__: Results may vary even with the same effective hyperparameters when trained on a single GPU. **Please use these numbers only for reproducibility purposes**. Some methods, such as SimNPO, can be significantly improved with careful tuning.
 
@@ -53,8 +53,10 @@ __NOTE__: Results may vary even with the same effective hyperparameters when tra
   }
 </style>
 
+
+
 <div style="overflow-x: auto; max-width: 100%;">
-<table border="1" class="dataframe">
+<table class="dataframe">
   <thead>
     <tr>
       <th>Method</th>
@@ -171,7 +173,7 @@ __NOTE__: Results may vary even with the same effective hyperparameters when tra
 ### TOFU  unlearning on `Llama-3.2-1B-Instruct`
 
 <div style="overflow-x: auto; max-width: 100%;">
-<table border="1" class="dataframe">
+<table class="dataframe">
   <thead>
     <tr>
       <th>Method</th>
@@ -288,7 +290,7 @@ __NOTE__: Results may vary even with the same effective hyperparameters when tra
 ### MUSE  unlearning on `Llama-2-7b-hf`
 
 <div style="overflow-x: auto; max-width: 100%;">
-<table border="1" class="dataframe">
+<table class="dataframe">
   <thead>
     <tr>
       <th>Method</th>
