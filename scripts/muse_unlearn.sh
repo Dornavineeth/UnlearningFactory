@@ -15,17 +15,17 @@ data_splits=(
     "Books"
 )
 
-
+trainers=(
+    "GradAscent"
+    "GradDiff"
+    "NPO"
+    "SimNPO"
+)
 
 # #########################################################
 # #################### MUSE Unlearning ####################
 # #########################################################
 
-trainers=(
-    "GradAscent"
-    "GradDiff"
-    "NPO"
-)
 
 for data_split in "${data_splits[@]}"; do
     for trainer in "${trainers[@]}"; do
