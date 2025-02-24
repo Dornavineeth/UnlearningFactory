@@ -14,35 +14,37 @@
 
 We provide efficient and streamlined implementations of the TOFU, MUSE unlearning benchmarks while supporting 5 unlearning methods, 3+ datasets, 6+ evaluation metrics, and 7+ LLMs. Each of these can be easily extended to incorporate more variants.
 
-We invite the LLM unlearning community to collaborate by adding their new unlearning methods, datasets and evaluation metrics here to expand OpenUnlearning's features and get feedback from wider usage.
+We invite the LLM unlearning community to collaborate by adding new benchmarks, unlearning methods, datasets and evaluation metrics here to expand OpenUnlearning's features, gain feedback from wider usage and drive progress in the field.
 
 ## 🗃️ Available Components
 
 We provide several variants for each of the components in the unlearning pipeline.
 
 | **Component**          | **Available Options** |
-|----------------------|----------------------|
-| **Benchmarks**       | [TOFU](https://arxiv.org/abs/2401.06121), [MUSE](https://muse-bench.github.io/) |
-| **Unlearning Methods** | GradAscent, GradDiff, NPO, SimNPO, DPO |
-| **Evaluation Metrics** | Verbatim Probability, Verbatim ROUGE, QA-Rouge, MIA Attacks, TruthRatio, Model Utility |
-| **Datasets**         | MUSE-News (BBC), MUSE-Books (Harry Potter), TOFU (different splits) |
-| **Model families**   | LLaMA 3.2, LLaMA 3.1, LLaMA-2, Phi-3.5, ICLM (from MUSE), Phi-1.5, Gemma |
+|------------------------|----------------------|
+| **Benchmarks**        | [TOFU](https://arxiv.org/abs/2401.06121), [MUSE](https://muse-bench.github.io/) |
+| **Unlearning Methods** | `GradAscent`, `GradDiff`, `NPO`, `SimNPO`, `DPO` |
+| **Evaluation Metrics** | `Verbatim Probability`, `Verbatim ROUGE`, `QA-ROUGE`, `MIA Attacks`, `TruthRatio`, `Model Utility` |
+| **Datasets**          | `MUSE-News (BBC)`, `MUSE-Books (Harry Potter)`, `TOFU (different splits)` |
+| **Model Families**    | `LLaMA 3.2`, `LLaMA 3.1`, `LLaMA-2`, `Phi-3.5`, `ICLM (from MUSE)`, `Phi-1.5`, `Gemma` |
+
 
 ---
 
 ## 📌 Table of Contents
-- [📖 Overview](#-overview)
-- [🗃️ Available Components](#-available-components)
-- [⚡ Quickstart](#-quickstart)
-  - [🛠️ Environment Setup](#-environment-setup)
-  - [📜 Running Baseline Experiments](#-running-baseline-experiments)
-- [🧪 Running Experiments](#-running-experiments)
-  - [🚀 Perform Unlearning](#-perform-unlearning)
-  - [📊 Perform an Evaluation](#-perform-an-evaluation)
-- [➕ How to Add New Components](#-how-to-add-new-components)
-- [📚 Further Documentation](#-further-documentation)
-- [🔗 Support & Contributors](#-support--contributors)
-- [📝 Citation](#-citation)
+- 📖 [Overview](#-overview)
+- 🗃️ [Available Components](#-available-components)
+- ⚡ [Quickstart](#-quickstart)
+  - 🛠️ [Environment Setup](#-environment-setup)
+  - 💾 [Data Setup](#-data-setup)
+  - 📜 [Running Baseline Experiments](#-running-baseline-experiments)
+- 🧪 [Running Experiments](#-running-experiments)
+  - 🚀 [Perform Unlearning](#-perform-unlearning)
+  - 📊 [Perform an Evaluation](#-perform-an-evaluation)
+- ➕ [How to Add New Components](#-how-to-add-new-components)
+- 📚 [Further Documentation](#-further-documentation)
+- 🔗 [Support & Contributors](#-support--contributors)
+- 📝 [Citation](#-citation)
 
 ---
 
@@ -53,16 +55,14 @@ We provide several variants for each of the components in the unlearning pipelin
 ```bash
 conda create -n unlearning python=3.11
 conda activate unlearning
-pip install -r requirements.txt
-pip install flash-attn==2.6.3 --no-build-isolation
+pip install .[flash-attn]
 ```
 
-### 📜 Running Baseline Experiments
-The scripts below execute standard baseline unlearning experiments on the TOFU and MUSE datasets, evaluated using their corresponding benchmarks. The expected results for these are in [`docs/results.md`](docs/results.md).
+### 💾 Data Setup
+Download the log files containing metric results from the models used in the supported benchmarks (including the retain model logs used to compare the unlearned models against).
 
 ```bash
-bash scripts/tofu_unlearn.sh
-bash scripts/muse_unlearn.sh
+TODO
 ```
 
 ---
@@ -73,20 +73,20 @@ We provide an easily configurable interface for running evaluations by leveragin
 
 ### 🚀 Perform Unlearning
 
-An example command for launching an unlearning process with `GradAscent` on the MUSE News dataset:
+An example command for launching an unlearning process with `GradAscent` on the TOFU `forget10` split:
 
 ```bash
 python src/train.py --config-name=unlearn.yaml experiment=unlearn/tofu/default \
-  forget_split=forget10 retain_split=retain90 trainer=NPO
+  forget_split=forget10 retain_split=retain90 trainer=GradAscent
 ```
 
 - `experiment`- Path to the Hydra config file [`configs/experiment/unlearn/muse/default.yaml`](configs/experiment/unlearn/tofu/default.yaml) with default experimental settings for TOFU unlearning, e.g. train dataset, eval benchmark details, model paths etc..
 - `forget_split/retain_split`- Sets the forget and retain dataset splits.
-- `trainer`- Overrides the unlearning algorithm using the NPO Trainer defined in [`src/trainer/unlearn/npo.py`](src/trainer/unlearn/npo.py).
+- `trainer`- Load [`configs/trainer/GradAscent.yaml`](configs/trainer/GradAscent.yaml) and override the unlearning method with the handler (see config) implemented in [`src/trainer/unlearn/grad_ascent.py`](src/trainer/unlearn/grad_ascent.py).
 
 ### 📊 Perform an Evaluation
 
-An example command for launching a TOFU evaluation process:
+An example command for launching a TOFU evaluation process on `forget10` split:
 
 ```bash
 python src/eval.py --config-name=eval.yaml experiment=eval/tofu/default \
@@ -100,14 +100,25 @@ python src/eval.py --config-name=eval.yaml experiment=eval/tofu/default \
 
 For more details about creating and running evaluations, refer [`docs/evaluation.md`](docs/evaluation.md).
 
+### 📜 Running Baseline Experiments
+The scripts below execute standard baseline unlearning experiments on the TOFU and MUSE datasets, evaluated using their corresponding benchmarks. The expected results for these are in [`docs/results.md`](docs/results.md).
+
+```bash
+bash scripts/tofu_unlearn.sh
+bash scripts/muse_unlearn.sh
+```
+
 ---
 
 ## ➕ How to Add New Components
 
 Adding a new component (trainer, evaluation metric, benchmark, model, or dataset) requires defining a new class, registering it, and creating a configuration file. Learn more about adding new components in [`docs/components.md`](docs/components.md).
 
-Please feel free to raise a pull request with any features you add!
+Please feel free to raise a pull request for any new features after setting up the environment in development mode.
 
+```bash
+pip install .[flash-attn, dev]
+```
 
 ## 📚 Further Documentation
 

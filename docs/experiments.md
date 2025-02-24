@@ -14,36 +14,40 @@ At the core, three main Hydra configs—`train.yaml` (generic training), `eval.y
 ---
 
 ### Table of Contents
-1. [Overview](#overview)
-2. [Example Commands](#example-commands)
-3. [Commonly Overridden Arguments](#commonly-overridden-arguments)
-   - [Model Settings](#model-settings)
-   - [Trainer Settings](#trainer-settings)
-   - [Data Settings](#data-settings)
-   - [Experiment Settings](#experiment-settings)
-4. [Simple Finetuning](#simple-finetuning)
-5. [Distributed Training](#distributed-training)
+- [Configuring and running experiments](#configuring-and-running-experiments)
+  - [Overview](#overview)
+    - [Table of Contents](#table-of-contents)
+  - [Example Commands](#example-commands)
+  - [Commonly Overridden Arguments](#commonly-overridden-arguments)
+    - [Model Settings](#model-settings)
+    - [Trainer Settings](#trainer-settings)
+    - [Data Settings](#data-settings)
+    - [Experiment Settings](#experiment-settings)
+  - [Simple Finetuning](#simple-finetuning)
+  - [Distributed Training](#distributed-training)
 
 ---
 
 ## Example Commands
 
 ```bash
-python src/train.py --config-name=train.yaml experiment=finetune/tofu/llama2_inst_full
-# ^ runs a finetuning training using experiment details from configs/finetune/tofu/llama2_inst_full.yaml
+## runs a finetuning using experiment details from configs/finetune/tofu/default.yaml
+python src/train.py --config-name=train.yaml experiment=finetune/tofu/default
 
-python src/train.py --config-name=unlearn.yaml experiment=unlearn/tofu/llama2
-# ^ runs an unlearning training using experiment details from configs/unlearn/tofu/llama2.yaml
+## runs an unlearning training using experiment details from configs/unlearn/tofu/default.yaml
+python src/train.py --config-name=unlearn.yaml experiment=unlearn/tofu/default
 
-python src/eval.py --config-name=eval.yaml experiment=eval/muse/llama2
-# ^ runs an evaluation using experiment details from configs/eval/muse/llama2.yaml
-# eval.yaml is the default config so this argument can be omitted
 
-python src/train.py --config-name=unlearn.yaml experiment=unlearn/muse/llama2 data_split=News \
+## runs an evaluation using experiment details from configs/eval/muse/default.yaml
+python src/eval.py --config-name=eval.yaml experiment=eval/muse/default
+## Note: eval.yaml is the default config set in src/eval.py, so this argument can be omitted
+
+## an extensively filled out configuration for an unlearning experiment
+python src/train.py --config-name=unlearn.yaml experiment=unlearn/muse/default data_split=News \
 trainer=NPO trainer.method_args.retain_loss_type=KL task_name=llama2_books_NPO_KL \
 retain_logs_path=saves/eval/muse_books_retain/MUSE_EVAL.json
-# ^an extensively filled out configuration for an unlearning experiment
 
+## an even more extensively filled out configuration for an unlearning experiment
 python src/train.py --config-name=unlearn.yaml \
 experiment=unlearn/tofu/default.yaml \
 task_name=NPO_unlearn_tofu_llama_8 \
@@ -52,9 +56,11 @@ model.model_args.pretrained_model_name_or_path=saves/finetune/path_model_llama \
 trainer=NPO trainer.args.per_device_train_batch_size=4 \
 forget_split=forget05 retain_split=retain95 \
 retain_logs_path=saves/eval/tofu_retain95/TOFU_EVAL.json \
-paths.output_dir=saves/unlearn/NPO/evals \
-# ^an even more extensively filled out configuration for an unlearning experiment
+paths.output_dir=saves/unlearn/NPO/evals
 ```
+
+
+**Note:** The unlearning experiments support evaluation during the unlearning training. But this is supported only on a single GPU, evaluation can be performed during unlearning itself. When multiple GPUs are used to train, checkpoints must be stored and evaluated after training.
 
 ---
 
@@ -221,8 +227,8 @@ These use [`src/train.py`](../src/train.py) with the [`train.yaml`](../train.yam
 Example:
 
 ```bash
-python src/train.py --config-name=train.yaml experiment=finetune/llama2 \
-  trainer.args.learning_rate=5e-5 task_name=llama2_finetune_example
+python src/train.py --config-name=train.yaml experiment=finetune/tofu/default \
+  trainer.args.learning_rate=5e-5 task_name=llama3.2-1B_finetune_example
 ```
 
 <!-- --- -->

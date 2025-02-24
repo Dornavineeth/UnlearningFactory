@@ -3,7 +3,7 @@
 The OpenUnlearning framework requires a structured approach for adding new components in the unlearning pipeline.
 
 This process involves three main steps:
-1. __Implementing a handler__: Define the core logic for the component. A single handler can be reused across multiple components. For example, a handler that computes the ROUGE score can support various evaluation metrics across multiple datasets.
+1. __Implementing a handler__: Define the core logic for the component (usually a python class or function). A single handler can be reused across multiple components. For example, a handler that computes the ROUGE score can support various evaluation metrics across multiple datasets.
 2. __Registering the handler__: Add the handler to a registry that links it to a key, allowing access during execution through the config files.
 3. __Adding a config file__: Set up a configuration using Hydra that specifies the handler and relevant parameters. These configurations can then be passed directly as arguments when running Python scripts.
 
@@ -28,7 +28,7 @@ __Note:__ adding each component requires Hydra config management features, which
 To add a new **Trainer**:
 
 ### Implement a handler
-We extend HuggingFace's [`Trainer`](https://github.com/huggingface/transformers/blob/v4.45.1/src/transformers/trainer.py) for for custom training algorithms. Trainer handlers are written in [`src/trainer`](../src/trainer/).
+We extend HuggingFace's [`Trainer`](https://github.com/huggingface/transformers/blob/v4.45.1/src/transformers/trainer.py) for custom training algorithms. Trainer handlers are written in [`src/trainer`](../src/trainer/).
 
 Example: defining a gradient-difference based unlearning trainer.
 
@@ -59,7 +59,7 @@ Add a config that uses the new trainer and set parameters. Trainer configuration
 
 Example: Config file ([`configs/trainer/GradDiff.yaml`](../configs/trainer/GradDiff.yaml)) for GradDiff.
 ```yaml
-handler: GradDiff
+handler: GradDiff # corresponds to the class defined in src/trainer/unlearn/grad_diff.py
 args: # HuggingFace TrainingArguments
   per_device_train_batch_size: 2
   per_device_eval_batch_size: 16
@@ -104,12 +104,12 @@ _register_data(PretrainingDataset)
 ```
 
 ### Add a dataset to configs
-Add a specific dataset that uses the `PretrainingDataset` class format. Dataset configurations go in [`configs/data/datasets`](../configs/data/datasets/). Each config contains a handler that points to the defined dataset class and the arguments used to create the dataset.
+Add a specific instance of dataset class that uses the `PretrainingDataset` class format. Dataset configurations go in [`configs/data/datasets`](../configs/data/datasets/). Each config contains a handler that points to the defined dataset class and the arguments used to create the dataset.
 
 Example: add a config file for the `MUSE_forget` and `MUSE_forget_sust` datasets using the `PretrainingDataset` handler
 ```yaml
 MUSE_forget: # the name of a particular dataset instance
-  handler: PretrainingDataset
+  handler: PretrainingDataset # name of the dataset class
   args:
     hf_args:
       path: "muse-bench/MUSE-News"
@@ -119,7 +119,7 @@ MUSE_forget: # the name of a particular dataset instance
     max_length: 2048
 
 MUSE_forget_sust: # another dataset
-  handler: PretrainingDataset
+  handler: PretrainingDataset # name of the dataset class
   args:
     hf_args:
       path: "muse-bench/MUSE-Books"
@@ -233,6 +233,7 @@ defaults: # load pre-defined configs for model, trainer, data format, datasets e
   - override /eval: tofu
 
 # Now, we have to further modify specific arguments from the defaults imported above
+# This enables to easily run multiple experiments varying hyper paramters, data splits, models etc
 forget_split: forget10 
 retain_split: retain90
 retain_logs_path: null

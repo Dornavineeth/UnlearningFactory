@@ -16,9 +16,9 @@ trainers_experiments=(
     "DPO unlearn/tofu/default.yaml"
 )
 forget_retain_splits=(
-    "forget01" "retain99"
-    "forget05" "retain95"
-    "forget10" "retain90"
+    "forget01 retain99"
+    "forget05 retain95"
+    "forget10 retain90"
 )
 
 per_device_train_batch_size=4 # on two gpus would make effective batch size 32
@@ -38,7 +38,8 @@ for split in "${forget_retain_splits[@]}"; do
             trainer=$(echo $trainer_experiment | cut -d' ' -f1)
             experiment=$(echo $trainer_experiment | cut -d' ' -f2)
             
-            task_name=${model}_${forget_split}_${trainer} 
+            task_name=tofu_${model}_${forget_split}_${trainer} 
+            echo Processing ${task_name}
 
             # Unlearn
             CUDA_VISIBLE_DEVICES=0,1 accelerate launch --config_file configs/accelerate/default_config.yaml --main_process_port $MASTER_PORT \
@@ -63,6 +64,8 @@ for split in "${forget_retain_splits[@]}"; do
             model=${model} \
             task_name=${task_name} \
             model.model_args.pretrained_model_name_or_path=saves/unlearn/${task_name} \
-            paths.output_dir=saves/unlearn/${task_name}/evals
+            paths.output_dir=saves/unlearn/${task_name}/evals \
+            retain_logs_path=saves/eval/tofu_${model}_${retain_split}/TOFU_EVAL.json
         done
+    done
 done
