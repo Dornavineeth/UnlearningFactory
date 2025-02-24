@@ -25,42 +25,16 @@ For all the experiments below, we used the following setup
 __NOTE__: Results may vary even with the same effective hyperparameters when trained on a single GPU. **Please use these numbers only for reproducibility purposes**. Some methods, such as SimNPO, can be significantly improved with careful tuning.
 
 
-<style>
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 20px;
-    overflow-x: auto;
-    white-space: nowrap;
-  }
-  th, td {
-    border: 1px solid #000;
-    padding: 4px;
-    word-wrap: break-word;
-    word-break: break-all;
-    text-align: center;
-  }
-  th {
-    text-align: center;
-  }
-  col.argument {
-    width: 30%;
-  }
-  col.description {
-    width: 70%;
-  }
-</style>
-
 ### TOFU  unlearning on `Llama-2-7b-hf-chat`
 
-<div style="overflow-x: auto; max-width: 100%;">
+<div style="overflow-x: auto; max-width: 100%;"t>
 <table class="dataframe">
   <thead>
     <tr>
       <th>Method</th>
-      <th colspan="3" halign="left">forget01</th>
-      <th colspan="3" halign="left">forget05</th>
-      <th colspan="3" halign="left">forget10</th>
+      <th style="text-align: center;" colspan="3" halign="left">forget01</th>
+      <th style="text-align: center;" colspan="3" halign="left">forget05</th>
+      <th style="text-align: center;" colspan="3" halign="left">forget10</th>
     </tr>
     <tr>
       <th></th>
@@ -175,9 +149,9 @@ __NOTE__: Results may vary even with the same effective hyperparameters when tra
   <thead>
     <tr>
       <th>Method</th>
-      <th colspan="3" halign="left">forget01</th>
-      <th colspan="3" halign="left">forget05</th>
-      <th colspan="3" halign="left">forget10</th>
+      <th style="text-align: center;" colspan="3" halign="left">forget01</th>
+      <th style="text-align: center;" colspan="3" halign="left">forget05</th>
+      <th style="text-align: center;" colspan="3" halign="left">forget10</th>
     </tr>
     <tr>
       <th></th>
@@ -291,9 +265,9 @@ __NOTE__: Results may vary even with the same effective hyperparameters when tra
 <table class="dataframe">
   <thead>
     <tr>
-      <th>Method</th>
-      <th colspan="4" halign="left">News</th>
-      <th colspan="4" halign="left">Books</th>
+      <th style="text-align: center;">Method</th>
+      <th style="text-align: center;" colspan="4" halign="left">News</th>
+      <th style="text-align: center;" colspan="4" halign="left">Books</th>
     </tr>
     <tr>
       <th></th>
