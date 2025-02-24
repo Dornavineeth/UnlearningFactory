@@ -4,7 +4,7 @@
 
 </div>
 
-The evaluation pipeline consists of an evaluator (a benchmark) which takes a model and a group of evaluation metrics, computes and reports the evaluations. The evaluation settings are stored in experiment configs which can be used off-the-shelf.
+The evaluation pipeline consists of an evaluator (specific to a benchmark) which takes a model and a group of evaluation metrics, computes and reports the evaluations. The evaluation settings are stored in experiment configs which can be used off-the-shelf.
 
 We discuss full details of creating metrics in [#metrics](#metrics) and benchmarks in [#benchmarks](#benchmarks).
 
@@ -19,7 +19,7 @@ python src/eval.py --config-name=eval.yaml \
 ```
 - `--config-name=eval.yaml`-sets task to be [`configs/eval.yaml`](../configs/eval.yaml)
 - `experiment=eval/tofu/default`-set experiment to use [`configs/eval/tofu/default.yaml`](../configs/eval/tofu/default.yaml)
-- `model=Llama-3.2-3B-Instruct`-override the default LLaMA-2 model config set above to use [`configs/model/Phi-3.5-mini-instruct.yaml`](../configs/model/Phi-3.5-mini-instruct.yaml).
+- `model=Llama-3.2-3B-Instruct`-override the default (`Llama-3.2-1B-Instruct`) model config to use [`configs/model/Llama-3.2-3B-Instruct`](../configs/model/Phi-3.5-mini-instruct.yaml).
 
 
 Run the MUSE-Books benchmark evaluation on a checkpoint of a Phi-3.5 model:
@@ -27,11 +27,11 @@ Run the MUSE-Books benchmark evaluation on a checkpoint of a Phi-3.5 model:
 python src/eval.py --config-name=eval.yaml \
   experiment=eval/muse/llama2 \
   data_split=Books
-  model=Phi-3.5-mini-instruct \
+  model=Llama-2-7b-hf.yaml \
   model.model_args.pretrained_model_name_or_path=<LOCAL_MODEL_PATH>
 ```
 - `---config-name=eval.yaml`-this is set by default so can be omitted
-- `data_split=Books`-override the default MUSE data split.
+- `data_split=Books`-override the default MUSE data split(News). See [`configs/experiment/eval/muse/default.yaml`](../configs/experiment/eval/muse/default.yaml)
 
 ## Metrics
 
@@ -57,6 +57,7 @@ Example: implementing the `rouge` and `forget_quality` handlers
 def rouge(model, **kwargs):
     """Calculate ROUGE metrics and return the aggregated value along with per-index scores."""
     # kwargs is populated on the basic of the metric configuration
+    # The configuration for datasets, collators mentioned in metric config are automatically instantiatied and are provided in kwargs
     tokenizer = kwargs["tokenizer"]
     data = kwargs["data"]
     collator = kwargs["collators"]
@@ -140,11 +141,13 @@ defaults:
 reference_logs:
  # forget quality is computed by comparing truth_ratio 
  # of the given model to a retain model
-  retain_model_logs:
-    path: ${eval.tofu.retain_logs_path}
+ # Way to access in metric function: kwargs["reference_logs"]["retain_model_logs"]["retain"]
+  retain_model_logs: # name to acess the loaded logs in metric function
+    path: ${eval.tofu.retain_logs_path} # path to load the logs
     include: 
-      forget_truth_ratio:
-        access_key: retain
+      forget_truth_ratio: # keys to include from the logs
+        access_key: retain # name of the key to access it inside metric
+      
 # since the forget_quality metric depends on another metric, truth ratio
 pre_compute:
   forget_truth_ratio:
