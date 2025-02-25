@@ -25,7 +25,7 @@ For all the experiments below, we used the following setup
 __Note:__ Results may vary even with the same effective hyperparameters when trained on a single GPU. **Please use these numbers only for reproducibility purposes**. Some methods, such as SimNPO, can be significantly improved with careful tuning.
 
 
-### TOFU  unlearning on `Llama-2-7b-hf-chat`
+### TOFU unlearning on the `Llama-2-7b-hf-chat` architecture
 
 <div style="overflow-x: auto; max-width: 100%;"t>
 <table class="dataframe">
@@ -64,13 +64,13 @@ __Note:__ Results may vary even with the same effective hyperparameters when tra
     </tr>
     <tr>
       <th>Retain</th>
-      <td>0.0</td>
+      <td>1.0</td>
       <td>0.63</td>
       <td>0.68</td>
-      <td>0</td>
+      <td>1.0</td>
       <td>0.63</td>
       <td>0.67</td>
-      <td>0.0</td>
+      <td>1.0</td>
       <td>0.61</td>
       <td>0.68</td>
     </tr colspan=20>
@@ -142,7 +142,7 @@ __Note:__ Results may vary even with the same effective hyperparameters when tra
 </div>
 
 
-### TOFU  unlearning on `Llama-3.2-1B-Instruct`
+### TOFU unlearning on the `Llama-3.2-1B-Instruct` architecture
 
 <div style="overflow-x: auto; max-width: 100%;">
 <table class="dataframe">
@@ -181,13 +181,13 @@ __Note:__ Results may vary even with the same effective hyperparameters when tra
     </tr>
     <tr>
       <th>Retain</th>
-      <td>0</td>
+      <td>1.0</td>
       <td>0.60</td>
       <td>0.65</td>
-      <td>0</td>
+      <td>1.0</td>
       <td>0.6</td>
       <td>0.63</td>
-      <td>0</td>
+      <td>1.0</td>
       <td>0.59</td>
       <td>0.63</td>
     </tr>
@@ -259,7 +259,7 @@ __Note:__ Results may vary even with the same effective hyperparameters when tra
 </div>
 
 
-### MUSE  unlearning on `Llama-2-7b-hf`
+### MUSE unlearning on the benchmark's target models
 
 <div style="overflow-x: auto; max-width: 100%;">
 <table class="dataframe">
@@ -297,11 +297,11 @@ __Note:__ Results may vary even with the same effective hyperparameters when tra
       <th>Retain</th>
       <td>0.33</td>
       <td>0.21</td>
-      <td>-4.54</td>
+      <td>0</td>
       <td>0.56</td>
       <td>0.3</td>
       <td>0.14</td>
-      <td>7.96</td>
+      <td>0</td>
       <td>0.69</td>
     </tr>
     <tr>
