@@ -7,8 +7,8 @@
 
   <div style="display: flex; gap: 10px; justify-content: center; align-items: center;">
       <!-- Build Status Badge -->
-      <a href="https://github.com/Dornavineeth/UnlearningFactory/actions">
-          <img src="https://github.com/Dornavineeth/UnlearningFactory/actions/workflows/tests.yml/badge.svg" alt="Build Status">
+      <a href="https://github.com/locuslab/open-unlearning/actions">
+          <img src="https://github.com/locuslab/open-unlearning/actions/workflows/tests.yml/badge.svg" alt="Build Status">
       </a>
       <!-- Tests Badge (If Available) -->
       <a href="https://huggingface.co/open-unlearning">
