@@ -54,22 +54,25 @@ trainer:
         # optim: paged_adamw_32bit
         # optim: adamw_torch
 
-task_name: ???
+task_name: ??? # ??? raises and error if this attribute is not 
 ```
 
-- **Defaults & Overrides:**  Base configurations are overridden using the `defaults` list. 
+- **Structure & Attribute Access:** Configs are written in YAML and structured hierarchically like a dictionary. Attributes are accessed using dot notation: In code `cfg.model.args.learning_rate`, in command-line: `model.args.learning_rate=1e-5`.
 
-- **Package Directives:**  The `# @package` directive organizes configurations into namespaces for cleaner composition and specifies the configuration path. At the head of a YAML file, you might see directives like `# @package _global_` or more specific ones such as `# @package eval.muse.metrics.forget_knowmem_ROUGE` which inform Hydra exactly where the configuration parameters should be placed within the final composed config.
-
-    For example, refer [`configs/eval/muse_metrics/forget_knowmem_ROUGE.yaml`](../configs/eval/muse_metrics/forget_knowmem_ROUGE.yaml) 
-
-- **Variable Substitution:**  Variables are defined once and reused using the `${}` syntax:
+- **Defaults & Overrides:**  Configs are files are included in one another using defaults and overrides. 
 
 - **Command-Line Overrides:**  Any parameter can be overridden directly from the command line. For instance:
 ```bash
 python src/train.py --config-name=unlearn.yaml experiment=unlearn/muse/default \
 trainer.args.num_train_epochs=50 data_split=Books trainer=SimNPO trainer.method_args.
 ```
+
+- **Package Directives:**  The `# @package` directive organizes configurations into namespaces for cleaner composition and specifies the configuration path. At the head of a YAML file, you might see directives like `# @package _global_` or more specific ones such as `# @package eval.muse.metrics.forget_knowmem_ROUGE` which inform Hydra exactly where the configuration parameters should be placed within the final composed config.
+
+    For example, refer [`configs/eval/muse_metrics/forget_knowmem_ROUGE.yaml`](../configs/eval/muse_metrics/forget_knowmem_ROUGE.yaml) 
+
+- **Variable Substitution:**  Variabl0es are defined once and reused using the `${}` syntax:
+
 
 
 To understand the structure of an evaluation config and the available parameters for overriding, refer to: [`configs/experiment/examples/tofu_eval.yaml`](../configs/experiment/examples/tofu_eval.yaml).

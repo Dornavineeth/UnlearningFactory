@@ -14,17 +14,16 @@ At the core, three main Hydra configs—`train.yaml` (generic training), `eval.y
 ---
 
 ### Table of Contents
-- [Configuring and running experiments](#configuring-and-running-experiments)
-  - [Overview](#overview)
-    - [Table of Contents](#table-of-contents)
-  - [Example Commands](#example-commands)
-  - [Commonly Overridden Arguments](#commonly-overridden-arguments)
-    - [Model Settings](#model-settings)
-    - [Trainer Settings](#trainer-settings)
-    - [Data Settings](#data-settings)
-    - [Experiment Settings](#experiment-settings)
-  - [Simple Finetuning](#simple-finetuning)
-  - [Distributed Training](#distributed-training)
+- [Overview](#overview)
+- [Table of Contents](#table-of-contents)
+- [Example Commands](#example-commands)
+- [Commonly Overridden Arguments](#commonly-overridden-arguments)
+  - [Model Settings](#model-settings)
+  - [Trainer Settings](#trainer-settings)
+  - [Data Settings](#data-settings)
+  - [Experiment Settings](#experiment-settings)
+- [Simple Finetuning](#simple-finetuning)
+- [Distributed Training](#distributed-training)
 
 ---
 
