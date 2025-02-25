@@ -1,12 +1,30 @@
-<div align="center">    
+<div align="center">
 
-![*Open*Unlearning](assets/banner_dark.png#gh-dark-mode-only)
-![*Open*Unlearning](assets/banner_light.png#gh-light-mode-only)
+<!-- Dark mode banner -->
+<a href="#"><img src="assets/banner_dark.png#gh-dark-mode-only" alt="*Open*Unlearning" width="80%"></a>
+
+<!-- Light mode banner -->
+<a href="#"><img src="assets/banner_light.png#gh-light-mode-only" alt="*Open*Unlearning" width="80%"></a>
+
 <h3><strong>An easily extensible framework unifying LLM unlearning evaluation benchmarks.</strong></h3>
-<!-- [![Paper]()]() -->
-<!-- [![Conference](url)]() -->
-<!-- ![CI testing](url) -->
+
+  <div style="display: flex; gap: 10px; justify-content: center; align-items: center;">
+      <!-- Build Status Badge -->
+      <a href="https://github.com/Dornavineeth/UnlearningFactory/actions">
+          <img src="https://github.com/Dornavineeth/UnlearningFactory/actions/workflows/tests.yml/badge.svg" alt="Build Status">
+      </a>
+      <!-- Tests Badge (If Available) -->
+      <a href="https://huggingface.co/open-unlearning">
+        <img src="https://img.shields.io/badge/Hugging%20Face-white?logo=huggingface" alt="Hugging Face">
+      </a>
+      <!-- GitHub Stars Badge -->
+      <a href="https://github.com/locuslab/open-unlearning">
+        <img src="https://img.shields.io/github/stars/locuslab/open-unlearning?style=social" alt="GitHub Repo stars">
+      </a>
+  </div>
 </div>
+
+
 
 ---
 
