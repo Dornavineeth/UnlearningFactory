@@ -48,10 +48,11 @@ We provide several variants for each of the components in the unlearning pipelin
 - ⚡ [Quickstart](#-quickstart)
   - 🛠️ [Environment Setup](#-environment-setup)
   - 💾 [Data Setup](#-data-setup)
-  - 📜 [Running Baseline Experiments](#-running-baseline-experiments)
 - 🧪 [Running Experiments](#-running-experiments)
   - 🚀 [Perform Unlearning](#-perform-unlearning)
   - 📊 [Perform an Evaluation](#-perform-an-evaluation)
+  - 🔄 [Updated TOFU benchmark](#-updated-tofu-benchmark)
+  - 📜 [Running Baseline Experiments](#-running-baseline-experiments)
 - ➕ [How to Add New Components](#-how-to-add-new-components)
 - 📚 [Further Documentation](#-further-documentation)
 - 🔗 [Support & Contributors](#-support--contributors)
@@ -105,11 +106,17 @@ python src/eval.py --config-name=eval.yaml experiment=eval/tofu/default \
   model.model_args.pretrained_model_name_or_path=open-unlearning/tofu_Llama-3.2-1B-Instruct_full
 ```
 
-- `experiment`-Path to the evaluation configuration [`configs/experiment/eval/tofu/default.yaml`](configs/experiment/eval/tofu/default.yaml).
+- `experiment`- Path to the evaluation configuration [`configs/experiment/eval/tofu/default.yaml`](configs/experiment/eval/tofu/default.yaml).
 - `model`- Sets up the model and tokenizer configs for the `Llama-3.2-1B-Instruct` model.
 - `model.model_args.pretrained_model_name_or_path`- Overrides the default experiment config to evaluate a model from a HuggingFace ID (can use a local model checkpoint path as well).
 
 For more details about creating and running evaluations, refer [`docs/evaluation.md`](docs/evaluation.md).
+
+### 🔄 Updated TOFU benchmark
+
+We've updated Open-Unlearning's TOFU benchmark target models to use a wider variety of newer architectures with sizes varying from 1B to 8B. These include LLaMA 3.2 1B, LLaMA 3.2 3B, LLaMA 3.1 8B, and the original LLaMA-2 7B from [`github.com/locuslab/tofu`](github.com/locuslab/tofu). 
+
+For each, we have 4 models finetuned with different splits of the TOFU datasets: `full`, `retain90`, `retain95`, `retain99`, for a total of 16 finetuned models. The first serves as the target (base model for unlearning) and the rest are retain models used to measure performance against for each forget split. The paths to these models are set in the experimental configs, and they can also be found on [HuggingFace](`https://huggingface.co/collections/open-unlearning/tofu-new-models-67bcf636334ea81727573a9f0`).
 
 ### 📜 Running Baseline Experiments
 The scripts below execute standard baseline unlearning experiments on the TOFU and MUSE datasets, evaluated using their corresponding benchmarks. The expected results for these are in [`docs/results.md`](docs/results.md).

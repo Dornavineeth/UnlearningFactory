@@ -142,10 +142,10 @@ A benchmark, aggregates various evaluation metrics into a suite, e.g. TOFU, MUSE
 
 ## Model
 
-To add a new model:
+To add a new model architecture:
 
 ### Implement and register a handler
-For all the models currently supported, HuggingFace's `AutoModelForCausalLM` and `AutoTokenizer` are used, and therefore the user doesn't need to add or register any handler.
+For all the models currently supported, HuggingFace's `AutoModelForCausalLM` and `AutoTokenizer` are used, and therefore the user doesn't need to create or register any handler.
 
 __Note__: Currently, we do not support loading models modified with LoRA and related variants. If you wish use such features, please create define and register model handlers for this logic in [`src/model`](../src/model) and provide the config info as discussed next.
 
@@ -234,6 +234,11 @@ defaults: # load pre-defined configs for model, trainer, data format, datasets e
 
 # Now, we have to further modify specific arguments from the defaults imported above
 # This enables to easily run multiple experiments varying hyper paramters, data splits, models etc
+
+model:
+  model_args: # use our finetuned target models for the TOFU benchmark task
+    pretrained_model_name_or_path: open-unlearning/tofu_Llama-3.2-1B-Instruct_full
+
 forget_split: forget10 
 retain_split: retain90
 retain_logs_path: null

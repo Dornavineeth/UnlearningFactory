@@ -17,9 +17,9 @@ python src/eval.py --config-name=eval.yaml \
   model=Llama-3.2-3B-Instruct \ 
   model.model_args.pretrained_model_name_or_path=<LOCAL_MODEL_PATH>
 ```
-- `--config-name=eval.yaml`-sets task to be [`configs/eval.yaml`](../configs/eval.yaml)
-- `experiment=eval/tofu/default`-set experiment to use [`configs/eval/tofu/default.yaml`](../configs/eval/tofu/default.yaml)
-- `model=Llama-3.2-3B-Instruct`-override the default (`Llama-3.2-1B-Instruct`) model config to use [`configs/model/Llama-3.2-3B-Instruct`](../configs/model/Phi-3.5-mini-instruct.yaml).
+- `--config-name=eval.yaml`- sets task to be [`configs/eval.yaml`](../configs/eval.yaml)
+- `experiment=eval/tofu/default`- set experiment to use [`configs/eval/tofu/default.yaml`](../configs/eval/tofu/default.yaml)
+- `model=Llama-3.2-3B-Instruct`- override the default (`Llama-3.2-1B-Instruct`) model config to use [`configs/model/Llama-3.2-3B-Instruct`](../configs/model/Phi-3.5-mini-instruct.yaml).
 
 
 Run the MUSE-Books benchmark evaluation on a checkpoint of a Phi-3.5 model:
@@ -78,12 +78,12 @@ def forget_quality(model, **kwargs):
   return {"agg_value": pvalue}
 
 ```
-- `@unlearning_metric(name="rouge")`-Defines a `rouge` handler.
+- `@unlearning_metric(name="rouge")`- Defines a `rouge` handler.
 
 #### 2. Register the metric handler
 Register the handler to link the class to the configs via the class name in [`METRIC_REGISTRY`](../src/evals/metrics/__init__.py).
 
-Example: Registering `rouge` handler
+Example: Registering the `rouge` handler
 
 ```python
 from evals.metrics.memorization import rouge
@@ -148,7 +148,7 @@ reference_logs:
       forget_truth_ratio: # keys to include from the logs
         access_key: retain # name of the key to access it inside metric
       
-# since the forget_quality metric depends on another metric, truth ratio
+# since the forget_quality metric depends on another metric (truth ratio)
 pre_compute:
   forget_truth_ratio:
     access_key: forget
