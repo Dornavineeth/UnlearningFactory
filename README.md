@@ -62,7 +62,8 @@ pip install .[flash-attn]
 Download the log files containing metric results from the models used in the supported benchmarks (including the retain model logs used to compare the unlearned models against).
 
 ```bash
-TODO
+# Populates saves/eval with metric results
+python setup_data.py
 ```
 
 ---
