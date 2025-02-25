@@ -29,7 +29,7 @@ body:
         label: Reproduction
         description: |
           Please provide a code sample that reproduces the problem you ran into.
-          Please include relevant config information which you can find in .hydra folder of your experiment and deepspeed configs.
+          Please include relevant config information such as deepspeed configs and experiment configs in .hydra folder of your experiment.
           If you have code snippets, error messages, stack traces please provide them here as well.
           Important! Use code tags to correctly format your code. See https://help.github.com/en/github/writing-on-github/creating-and-highlighting-code-blocks#syntax-highlighting
           Do not use screenshots, as they are hard to read and (more importantly) don't allow others to copy-and-paste your code.
