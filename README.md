@@ -1,12 +1,24 @@
-<div align="center">    
+<div align="center">
 
 ![*Open*Unlearning](assets/banner_dark.png#gh-dark-mode-only)
 ![*Open*Unlearning](assets/banner_light.png#gh-light-mode-only)
+
 <h3><strong>An easily extensible framework unifying LLM unlearning evaluation benchmarks.</strong></h3>
-<!-- [![Paper]()]() -->
-<!-- [![Conference](url)]() -->
-<!-- ![CI testing](url) -->
+
+  <div style="display: flex; gap: 10px; justify-content: center; align-items: center;">
+      <a href="https://github.com/locuslab/open-unlearning/actions">
+          <img src="https://github.com/locuslab/open-unlearning/actions/workflows/tests.yml/badge.svg" alt="Build Status">
+      </a>
+      <a href="https://huggingface.co/open-unlearning">
+        <img src="https://img.shields.io/badge/Hugging%20Face-white?logo=huggingface" alt="Hugging Face">
+      </a>
+      <a href="https://github.com/locuslab/open-unlearning">
+        <img src="https://img.shields.io/github/stars/locuslab/open-unlearning?style=social" alt="GitHub Repo stars">
+      </a>
+  </div>
 </div>
+
+
 
 ---
 
@@ -23,11 +35,10 @@ We provide several variants for each of the components in the unlearning pipelin
 | **Component**          | **Available Options** |
 |------------------------|----------------------|
 | **Benchmarks**        | [TOFU](https://arxiv.org/abs/2401.06121), [MUSE](https://muse-bench.github.io/) |
-| **Unlearning Methods** | `GradAscent`, `GradDiff`, `NPO`, `SimNPO`, `DPO` |
-| **Evaluation Metrics** | `Verbatim Probability`, `Verbatim ROUGE`, `QA-ROUGE`, `MIA Attacks`, `TruthRatio`, `Model Utility` |
-| **Datasets**          | `MUSE-News (BBC)`, `MUSE-Books (Harry Potter)`, `TOFU (different splits)` |
-| **Model Families**    | `LLaMA 3.2`, `LLaMA 3.1`, `LLaMA-2`, `Phi-3.5`, `ICLM (from MUSE)`, `Phi-1.5`, `Gemma` |
-
+| **Unlearning Methods** | GradAscent, GradDiff, NPO, SimNPO, DPO |
+| **Evaluation Metrics** | Verbatim Probability, Verbatim ROUGE, QA-ROUGE, MIA Attacks, TruthRatio, Model Utility |
+| **Datasets**          | MUSE-News (BBC), MUSE-Books (Harry Potter), TOFU (different splits) |
+| **Model Families**    | LLaMA 3.2, LLaMA 3.1, LLaMA-2, Phi-3.5, ICLM (from MUSE), Phi-1.5, Gemma |
 
 ---
 
@@ -62,7 +73,7 @@ pip install .[flash-attn]
 Download the log files containing metric results from the models used in the supported benchmarks (including the retain model logs used to compare the unlearned models against).
 
 ```bash
-TODO
+python setup_data.py # populates saves/eval with evaluation results of the uploaded models
 ```
 
 ---
@@ -150,7 +161,7 @@ If you use OpenUnlearning in your research, please cite:
 ```bibtex
 @misc{openunlearning2025,
   title={OpenUnlearning: A Unified Framework for LLM Unlearning Benchmarks},
-  author={Dorna, Vineeth and Mekala, Anmol and Maini, Pratyush},
+  author={Dorna, Vineeth and Mekala, Anmol and Maini, Pratyush and Zhao, Wenlong},
   year={2025},
   note={\url{https://github.com/locuslab/open-unlearning}}
 }

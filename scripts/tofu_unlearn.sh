@@ -39,7 +39,8 @@ for split in "${forget_retain_splits[@]}"; do
             experiment=$(echo $trainer_experiment | cut -d' ' -f2)
             
             task_name=tofu_${model}_${forget_split}_${trainer} 
-            echo Processing ${task_name}
+            model_path=open-unlearning/tofu_${model}_full
+            echo ${task_name}: Unlearning ${model_path} using ${trainer}
 
             # Unlearn
             CUDA_VISIBLE_DEVICES=0,1 accelerate launch --config_file configs/accelerate/default_config.yaml --main_process_port $MASTER_PORT \
@@ -50,7 +51,7 @@ for split in "${forget_retain_splits[@]}"; do
             model=${model} \
             forget_split=${forget_split} \
             retain_split=${retain_split} \
-            model.model_args.pretrained_model_name_or_path=saves/finetune/tofu_${model}_full \
+            model.model_args.pretrained_model_name_or_path=${model_path} \
             retain_logs_path=saves/eval/tofu_${model}_${retain_split}/TOFU_EVAL.json \
             trainer.args.per_device_train_batch_size=$per_device_train_batch_size \
             trainer.args.gradient_accumulation_steps=$gradient_accumulation_steps \

@@ -53,35 +53,35 @@ __Note:__ Results may vary even with the same effective hyperparameters when tra
     <tr>
       <th>Finetuned</th>
       <td>1.27e-03</td>
-      <td>6.28e-01</td>
-      <td>5.31e-01</td>
+      <td>0.63</td>
+      <td>0.53</td>
       <td>1.33e-13</td>
-      <td>6.28e-01</td>
-      <td>5.12e-01</td>
+      <td>0.63</td>
+      <td>0.51</td>
       <td>4.35e-25</td>
-      <td>6.28e-01</td>
-      <td>5.19e-01</td>
+      <td>0.63</td>
+      <td>0.52</td>
     </tr>
     <tr>
       <th>Retain</th>
-      <td>0.00e+00</td>
-      <td>6.26e-01</td>
-      <td>6.77e-01</td>
-      <td>0.00e+00</td>
-      <td>6.27e-01</td>
-      <td>6.70e-01</td>
-      <td>0.00e+00</td>
-      <td>6.13e-01</td>
-      <td>6.81e-01</td>
-    </tr>
+      <td>0.0</td>
+      <td>0.63</td>
+      <td>0.68</td>
+      <td>0</td>
+      <td>0.63</td>
+      <td>0.67</td>
+      <td>0.0</td>
+      <td>0.61</td>
+      <td>0.68</td>
+    </tr colspan=20>
     <tr>
       <td colspan="20"> </td>
     </tr>
     <tr>
       <th>GradAscent</th>
       <td>1.88e-04</td>
-      <td>5.47e-01</td>
-      <td>3.63e-01</td>
+      <td>0.55</td>
+      <td>0.36</td>
       <td>1.94e-119</td>
       <td>0.00e+00</td>
       <td>8.82e-96</td>
@@ -92,49 +92,49 @@ __Note:__ Results may vary even with the same effective hyperparameters when tra
     <tr>
       <th>GradDiff</th>
       <td>3.02e-03</td>
-      <td>5.73e-01</td>
-      <td>4.09e-01</td>
+      <td>0.57</td>
+      <td>0.41</td>
       <td>1.94e-119</td>
-      <td>5.56e-01</td>
+      <td>0.56</td>
       <td>4.14e-95</td>
       <td>1.80e-229</td>
-      <td>5.81e-01</td>
+      <td>0.58</td>
       <td>1.46e-07</td>
     </tr>
     <tr>
       <th>IdkDPO</th>
-      <td>9.71e-02</td>
-      <td>5.63e-01</td>
-      <td>6.68e-01</td>
+      <td>0.1</td>
+      <td>0.56</td>
+      <td>0.67</td>
       <td>4.02e-06</td>
-      <td>3.65e-02</td>
-      <td>6.69e-01</td>
+      <td>0.04</td>
+      <td>0.67</td>
       <td>5.42e-13</td>
-      <td>4.13e-02</td>
-      <td>6.44e-01</td>
+      <td>0.04</td>
+      <td>0.64</td>
     </tr>
     <tr>
       <th>NPO</th>
-      <td>4.05e-01</td>
-      <td>5.83e-01</td>
-      <td>6.54e-01</td>
-      <td>8.78e-02</td>
-      <td>5.32e-01</td>
-      <td>7.11e-01</td>
-      <td>4.16e-01</td>
-      <td>5.37e-01</td>
-      <td>7.26e-01</td>
+      <td>0.4</td>
+      <td>0.58</td>
+      <td>0.65</td>
+      <td>0.09</td>
+      <td>0.53</td>
+      <td>0.71</td>
+      <td>0.42</td>
+      <td>0.54</td>
+      <td>0.73</td>
     </tr>
     <tr>
       <th>SimNPO</th>
       <td>1.27e-03</td>
-      <td>5.78e-01</td>
-      <td>4.14e-01</td>
+      <td>0.58</td>
+      <td>0.41</td>
       <td>1.06e-106</td>
-      <td>5.98e-01</td>
+      <td>0.6</td>
       <td>3.94e-05</td>
       <td>1.47e-198</td>
-      <td>5.96e-01</td>
+      <td>0.6</td>
       <td>3.17e-04</td>
     </tr>
   </tbody>
@@ -169,89 +169,89 @@ __Note:__ Results may vary even with the same effective hyperparameters when tra
   <tbody>
     <tr>
       <th>Finetuned</th>
-      <td>1.43e-02</td>
-      <td>5.98e-01</td>
-      <td>4.75e-01</td>
+      <td>0.01</td>
+      <td>0.60</td>
+      <td>0.47</td>
       <td>2.96e-13</td>
-      <td>5.98e-01</td>
-      <td>4.73e-01</td>
+      <td>0.6</td>
+      <td>0.47</td>
       <td>8.08e-22</td>
-      <td>5.98e-01</td>
-      <td>4.76e-01</td>
+      <td>0.6</td>
+      <td>0.48</td>
     </tr>
     <tr>
       <th>Retain</th>
-      <td>0.00e+00</td>
-      <td>5.96e-01</td>
-      <td>6.48e-01</td>
-      <td>0.00e+00</td>
-      <td>5.98e-01</td>
-      <td>6.34e-01</td>
-      <td>0.00e+00</td>
-      <td>5.93e-01</td>
-      <td>6.28e-01</td>
+      <td>0</td>
+      <td>0.60</td>
+      <td>0.65</td>
+      <td>0</td>
+      <td>0.6</td>
+      <td>0.63</td>
+      <td>0</td>
+      <td>0.59</td>
+      <td>0.63</td>
     </tr>
     <tr>
       <td colspan="20"> </td>
     </tr>
     <tr>
       <th>GradAscent</th>
-      <td>2.66e-01</td>
-      <td>3.25e-01</td>
-      <td>5.91e-01</td>
+      <td>0.27</td>
+      <td>0.33</td>
+      <td>0.59</td>
       <td>1.94e-119</td>
-      <td>0.00e+00</td>
+      <td>0</td>
       <td>2.52e-23</td>
       <td>1.06e-239</td>
-      <td>0.00e+00</td>
+      <td>0</td>
       <td>2.25e-18</td>
     </tr>
     <tr>
       <th>GradDiff</th>
-      <td>7.66e-01</td>
-      <td>4.28e-01</td>
-      <td>5.74e-01</td>
+      <td>0.77</td>
+      <td>0.43</td>
+      <td>0.57</td>
       <td>1.94e-119</td>
-      <td>5.35e-01</td>
+      <td>0.53</td>
       <td>3.87e-34</td>
       <td>1.06e-239</td>
-      <td>4.91e-01</td>
+      <td>0.49</td>
       <td>3.53e-27</td>
     </tr>
     <tr>
       <th>IdkDPO</th>
-      <td>1.43e-02</td>
-      <td>5.06e-01</td>
-      <td>5.96e-01</td>
+      <td>0.01</td>
+      <td>0.51</td>
+      <td>0.60</td>
       <td>1.12e-05</td>
-      <td>6.82e-02</td>
-      <td>6.22e-01</td>
+      <td>0.07</td>
+      <td>0.62</td>
       <td>4.64e-12</td>
-      <td>2.35e-01</td>
-      <td>5.99e-01</td>
+      <td>0.23</td>
+      <td>0.6</td>
     </tr>
     <tr>
       <th>NPO</th>
-      <td>9.19e-01</td>
-      <td>5.61e-01</td>
-      <td>6.60e-01</td>
-      <td>1.42e-01</td>
-      <td>4.53e-01</td>
-      <td>7.03e-01</td>
-      <td>1.58e-02</td>
-      <td>4.64e-01</td>
-      <td>6.98e-01</td>
+      <td>0.92</td>
+      <td>0.56</td>
+      <td>0.66</td>
+      <td>0.14</td>
+      <td>0.45</td>
+      <td>0.7</td>
+      <td>0.02</td>
+      <td>0.46</td>
+      <td>0.7</td>
     </tr>
     <tr>
       <th>SimNPO</th>
-      <td>5.79e-01</td>
-      <td>4.59e-01</td>
-      <td>5.45e-01</td>
+      <td>0.58</td>
+      <td>0.46</td>
+      <td>0.55</td>
       <td>5.01e-100</td>
-      <td>5.80e-01</td>
+      <td>0.58</td>
       <td>4.19e-03</td>
       <td>2.47e-203</td>
-      <td>5.43e-01</td>
+      <td>0.54</td>
       <td>1.07e-05</td>
     </tr>
   </tbody>
@@ -284,72 +284,72 @@ __Note:__ Results may vary even with the same effective hyperparameters when tra
   <tbody>
     <tr>
       <th>Finetuned</th>
-      <td>6.44e-01</td>
-      <td>5.76e-01</td>
-      <td>-9.98e+01</td>
-      <td>5.55e-01</td>
-      <td>4.71e-01</td>
-      <td>9.97e-01</td>
-      <td>-5.73e+01</td>
-      <td>6.91e-01</td>
+      <td>0.64</td>
+      <td>0.58</td>
+      <td>-99.81</td>
+      <td>0.55</td>
+      <td>0.47</td>
+      <td>1.0</td>
+      <td>-57.26</td>
+      <td>0.69</td>
     </tr>
     <tr>
       <th>Retain</th>
-      <td>3.34e-01</td>
-      <td>2.06e-01</td>
-      <td>-4.54e+00</td>
-      <td>5.59e-01</td>
-      <td>3.04e-01</td>
-      <td>1.41e-01</td>
-      <td>7.96e+00</td>
-      <td>6.86e-01</td>
+      <td>0.33</td>
+      <td>0.21</td>
+      <td>-4.54</td>
+      <td>0.56</td>
+      <td>0.3</td>
+      <td>0.14</td>
+      <td>7.96</td>
+      <td>0.69</td>
     </tr>
     <tr>
       <td colspan="20"> </td>
     </tr>
     <tr>
       <th>GradAscent</th>
-      <td>0.00e+00</td>
-      <td>0.00e+00</td>
-      <td>5.21e+01</td>
-      <td>0.00e+00</td>
-      <td>0.00e+00</td>
-      <td>0.00e+00</td>
-      <td>-6.67e-01</td>
-      <td>0.00e+00</td>
+      <td>0</td>
+      <td>0</td>
+      <td>52.11</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>-0.67</td>
+      <td>0</td>
     </tr>
     <tr>
       <th>GradDiff</th>
-      <td>4.10e-01</td>
+      <td>0.41</td>
       <td>8.92e-03</td>
-      <td>9.32e+01</td>
-      <td>3.72e-01</td>
-      <td>1.76e-01</td>
-      <td>1.64e-01</td>
-      <td>-3.78e+01</td>
-      <td>3.00e-01</td>
+      <td>93.23</td>
+      <td>0.37</td>
+      <td>0.18</td>
+      <td>0.16</td>
+      <td>-37.79</td>
+      <td>0.3</td>
     </tr>
     <tr>
       <th>NPO</th>
-      <td>5.57e-01</td>
-      <td>3.49e-01</td>
-      <td>-8.60e+01</td>
-      <td>5.13e-01</td>
-      <td>3.23e-01</td>
-      <td>8.42e-01</td>
-      <td>-5.42e+01</td>
-      <td>5.52e-01</td>
+      <td>0.56</td>
+      <td>0.35</td>
+      <td>-86.00</td>
+      <td>0.51</td>
+      <td>0.32</td>
+      <td>0.84</td>
+      <td>-54.24</td>
+      <td>0.55</td>
     </tr>
     <tr>
       <th>SimNPO</th>
-      <td>5.35e-01</td>
-      <td>3.60e-01</td>
-      <td>-8.61e+01</td>
-      <td>5.09e-01</td>
-      <td>3.24e-01</td>
-      <td>8.42e-01</td>
-      <td>-5.43e+01</td>
-      <td>5.42e-01</td>
+      <td>0.54</td>
+      <td>0.36</td>
+      <td>-86.11</td>
+      <td>0.51</td>
+      <td>0.32</td>
+      <td>0.84</td>
+      <td>-54.26</td>
+      <td>0.54</td>
     </tr>
   </tbody>
 </table>
