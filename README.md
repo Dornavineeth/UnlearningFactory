@@ -169,7 +169,7 @@ If you use OpenUnlearning in your research, please cite:
 ```bibtex
 @misc{openunlearning2025,
   title={OpenUnlearning: A Unified Framework for LLM Unlearning Benchmarks},
-  author={Dorna, Vineeth and Mekala, Anmol and Maini, Pratyush},
+  author={Dorna, Vineeth and Mekala, Anmol and Maini, Pratyush and Zhao, Wenlong},
   year={2025},
   note={\url{https://github.com/locuslab/open-unlearning}}
 }
