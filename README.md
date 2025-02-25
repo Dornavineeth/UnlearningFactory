@@ -1,10 +1,7 @@
 <div align="center">
 
-<!-- Dark mode banner -->
-<a href="#"><img src="assets/banner_dark.png#gh-dark-mode-only" alt="*Open*Unlearning" width="80%"></a>
-
-<!-- Light mode banner -->
-<a href="#"><img src="assets/banner_light.png#gh-light-mode-only" alt="*Open*Unlearning" width="80%"></a>
+![*Open*Unlearning](assets/banner_dark.png#gh-dark-mode-only)
+![*Open*Unlearning](assets/banner_light.png#gh-light-mode-only)
 
 <h3><strong>An easily extensible framework unifying LLM unlearning evaluation benchmarks.</strong></h3>
 
